@@ -1,0 +1,227 @@
+@mixin flex($direction: row, $justifyContent: center, $alignItems: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+}
+
+$headerColour: rgb(27, 23, 69);
+$asideColour: rgb(41, 44, 83);
+
+// Header
+.headerContainer {
+    @include flex();
+    background-color: $headerColour;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    .nav {
+        @include flex();
+        width: 100%;
+
+        .navLinks {
+            @include flex(row, space-between, center);
+            width: 95%;
+            gap: 20px;
+
+            .leftNavLinks, .rightNavLinks {
+                @include flex();
+                gap: 15px;
+                width: 100%;
+            }
+
+            .leftNavLinks {
+                @include flex(row, flex-start, center);
+            }
+
+            .rightNavLinks {
+                @include flex(row, flex-end, center);
+            }
+
+            .leftNavLinks, .rightNavLinks {
+                .interact {
+                    cursor: pointer;
+                    transition: text-shadow 0.3s ease-in-out;
+
+                    &:hover {
+                        text-shadow: 0 0 5px white;
+                    }
+                }
+
+                .icon {
+                    color: white;
+                    font-size: 24px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    transition: color 0.3s ease;
+
+                    &:hover {
+                        color: rgb(51, 181, 62);
+                    }
+                }
+            }
+
+            .tooltip {
+                position: relative;
+                display: inline-block;
+                cursor: pointer;
+
+                .icon {
+                    font-size: 20px;
+                    color: white;
+                    transition: color 0.3s ease;
+                }
+
+                .tooltipText {
+                    visibility: hidden;
+                    background-color: rgb(6, 97, 38);
+                    color: white;
+                    text-align: center;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    position: absolute;
+                    bottom: -130%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    opacity: 0;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    white-space: nowrap;
+                    z-index: 10;
+                    font-size: 14px;
+                }
+
+                &:hover {
+                    .icon {
+                        color: rgb(51, 181, 62);
+                    }
+
+                    .tooltipText {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+} 
+
+// Aside
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.showAside {
+    animation: slideIn 0.3s ease-in-out both;
+}
+
+.hideAside {
+    animation: slideOut 0.3s ease-in-out both;
+}
+
+.asideContainer {
+    @include flex(column);
+    background-color: $asideColour;
+    width: 300px;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 90;
+    transform: translateX(-100%); // starts off screen
+
+    .asideContent {
+        margin-top: 5em;
+        @include flex(column, space-between);
+        gap: 20px;
+
+        .profilePicture {
+            position: relative;
+
+            img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+            }
+
+            .icon {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                font-size: 24px;
+                background-color: $headerColour;
+                padding: 10px;
+                border-radius: 50%;
+                color: white;
+                cursor: pointer;
+                transition: color 0.3s ease;
+
+                &:hover {
+                    color: rgb(51, 181, 62);
+                }
+            }
+        }
+
+        .asideRedirects {
+            @include flex(column);
+
+            .redirect {
+                text-align: center;
+                color: white;
+                font-weight: 500;
+                font-size: 1.5rem;
+                cursor: pointer;
+                transition: filter 0.3s ease;
+
+                &:hover {
+                    filter: brightness(0.8);
+                }
+            }
+        }
+
+        .asideFooter {
+            @include flex();
+            gap: 20px;
+
+            .redirect {
+                text-align: center;
+                color: white;
+                font-weight: 500;
+                font-size: 0.7rem;
+                cursor: pointer;
+                transition: filter 0.3s ease;
+
+                &:hover {
+                    filter: brightness(0.8);
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 380px) {
+    .headerContainer {
+        .settingsIcon {
+            display: none;
+        }
+    }
+}

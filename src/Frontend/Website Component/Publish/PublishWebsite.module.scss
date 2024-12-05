@@ -1,0 +1,306 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+.publishContainer {
+    @include flex();
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.501);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 150;
+
+    .title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 1px rgb(84, 84, 84);
+    }
+
+    .publishContent {
+        @include flex(row, center, stretch); // stretch makes the children equal size
+        gap: 20px;
+        background-color: rgb(26, 42, 82);
+        padding: 10px 25px;
+        border-radius: 10px;
+        position: relative;
+    }
+
+    .publishForm {
+        position: relative;
+        box-sizing: border-box; // Ensures padding doesn't affect container height
+        flex: 1;
+        @include flex(column);
+        background-color: rgb(29, 54, 117);
+        padding: 10px 25px;
+        width: 100%;
+        min-width: 420px;
+        height: 100%;
+        border-radius: 10px;
+
+        .titleIcon {
+            display: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 30px;
+        }
+
+        .form {
+            flex: 1;
+            @include flex(column, flex-start, flex-start);
+            width: 100%;
+
+            .info {
+                font-size: 1rem;
+                font-weight: 500;
+                color: white;
+                margin-bottom: 10px;
+
+                .required {
+                    color: red;
+                }
+            }
+
+            .formGroup {
+                @include flex();
+                background-color: rgb(14, 35, 88);
+                padding: 10px;
+                border-radius: 10px;
+                width: 95%;
+
+                .icon {
+                    color: white;
+                    object-fit: cover;
+                }
+
+                .input {
+                    width: 100%;
+                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                    border-radius: 5px;
+                    padding: 0 10px;
+                    color: white;
+                    font-size: 1rem;
+                    font-weight: 500;
+                }
+
+                .textArea {
+                    width: 100%;
+                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                    resize: none;
+                    border-radius: 5px;
+                    padding: 10px;
+                    color: white;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    height: 100px;
+                }
+            }
+
+            .actions {
+                margin: 20px 0;
+                width: 100%;
+                @include flex();
+                gap: 20px;
+
+                .publish {
+                    background-color: rgb(0, 255, 0);
+                    color: white;
+                    font-weight: bold;
+
+                    &:hover {
+                        background-color: rgb(0, 200, 0);
+                    }
+                }
+
+                .discard {
+                    background-color: rgb(255, 0, 0);
+                    color: white;
+                    font-weight: bold;
+
+                    &:hover {
+                        background-color: rgb(200, 0, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    .publishPreview {
+        position: relative;
+        box-sizing: border-box; // Ensures padding doesn't affect container height
+        flex: 1;
+        @include flex(column);
+        background-color: rgb(14, 35, 88);
+        padding: 10px 25px;
+        width: 95%;
+        max-width: 600px;
+        min-width: 420px;
+        max-height: 95%;
+        border-radius: 10px;
+
+        .titleIcon {
+            display: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+        }
+
+        .preview {
+            flex: 1;
+            @include flex(column, flex-start, flex-start);
+
+            .previewHeader {
+                width: 100%;
+                @include flex(row, center, center);
+
+                .image {
+                    width: 360px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                    border: 2px solid transparent;
+                    transition: border 0.3s;
+    
+                    &:hover {
+                        border: 2px solid white;
+                    }
+                }
+            }
+
+            .previewDetails {
+                max-width: 90%;
+                overflow: hidden;
+                @include flex(column, flex-start, flex-start);
+                
+                .previewTitle {
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    color: white;
+
+                    // These styles are for text overflow if the text is too long, "..." will be shown
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+
+                .previewDescription {
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: white;
+                    margin-top: 10px;
+                
+                    white-space: normal; // Allows text to wrap
+                    word-break: break-word; // Ensures words break when needed
+                    overflow-wrap: anywhere; // Breaks at any suitable point
+                    max-width: 100%; // Prevents it from exceeding the container
+                }
+
+                .previewOwner {
+                    margin-top: -10px;
+                    @include flex(row);
+                    gap: 10px;
+
+                    .profilePicture {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+
+                    .ownerName {
+                        font-size: 1rem;
+                        font-weight: 500;
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    @keyframes slideIn {
+        from {
+            transform: translate(110%, -50%); 
+        }
+
+        to {
+            transform: translate(-50%, -50%); 
+        }
+    }
+
+    @keyframes slideOut {
+        from {
+            transform: translate(-50%, -50%); 
+        }
+
+        to {
+            transform: translate(110%, -50%); 
+        }
+    }
+
+    .slideIn {
+        animation: slideIn 0.5s both;
+    }
+
+    .slideOut {
+        animation: slideOut 0.5s both;
+    }
+
+    .publishContent {
+        .titleIcon {
+            display: block !important;
+        }
+
+        .publishPreview {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            height: 100%;
+
+            .preview {
+                width: 95%;
+
+                .image {
+                    width: 90% !important;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .publishContainer {
+        .publishContent {
+            .publishForm {
+                max-width: 350px !important;
+                min-width: unset !important; 
+            }
+
+            .publishPreview {
+                max-width: 350px !important;
+                min-width: unset !important; 
+            }
+        }
+    }
+}

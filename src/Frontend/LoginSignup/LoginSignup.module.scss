@@ -1,0 +1,124 @@
+@mixin flex($direction: row, $justifyContent: center, $alignItems: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justifyContent;
+  align-items: $alignItems;
+}
+
+.mainContainer {
+    @include flex();
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.501);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 150;
+
+    .inputContainer {
+        @include flex(column, center, center);        
+        background-color: rgba(57, 59, 87, 0.694);
+        backdrop-filter: blur(5px);
+        padding: 10px;
+        color: white;
+        min-width: 500px;
+        border-radius: 10px;
+        position: relative;
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: red;
+            transition: filter 0.2s;
+
+            &:hover {
+                filter: brightness(0.8);
+            }
+        }
+
+        .formContent {
+            @include flex(column);
+            gap: 10px;
+            width: 95%;
+
+            .inputField {
+                @include flex();
+                background-color: rgba(0, 0, 0, 0.5);
+                width: 100%;
+                border-radius: 5px;
+                position: relative;
+    
+                .input {
+                    width: 100%;
+                    padding: 10px;
+                    border: none;
+                    background-color: transparent;
+                    color: white;
+                    font-size: 1.2rem;
+
+
+                    &:focus {
+                        outline: none;
+                    }
+    
+                    &::placeholder {
+                        color: rgb(171, 171, 171);
+                    }
+                }
+
+                .icon {
+                    position: absolute;
+                    right: 20px;
+                    
+                    &.password {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .button {
+                // default button styles
+                background-color: black;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1.2rem;
+                transition: filter 0.2s;
+
+                &.submit {
+                    background-color: rgb(45, 168, 61);
+
+                    &:hover {
+                        filter: brightness(0.8);
+                    }
+                }
+            }
+        }
+
+        .switchRequest {
+            @include flex();
+            width: 100%;
+            
+            .switch {
+                cursor: pointer;
+                text-align: center;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .mainContainer {
+        .inputContainer {
+            min-width: 90% !important;
+        }
+    }
+}

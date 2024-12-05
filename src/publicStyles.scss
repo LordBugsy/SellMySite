@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Signika:wght@300..700&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes growIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes growOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0
+  }
+}
+
+@mixin flex($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+.fadeIn {
+  animation: fadeIn 0.3s ease-in-out both;
+}
+
+.fadeOut {
+  animation: fadeOut 0.3s ease-in-out both;
+}
+
+.growIn {
+  animation: growIn 0.5s ease-in-out both;
+}
+
+.growOut {
+  animation: growOut 0.5s ease-in-out both;
+}
+
+
+$bodyColourDefault: rgb(54, 49, 113);
+$bodyColourLight: rgb(187, 159, 133);
+
+
+* {
+  font-family: "Signika", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    "GRAD" 0;
+}
+
+.logo {
+  font-family: "Sour Gummy", serif;
+  font-optical-sizing: auto;
+  font-weight: bold;
+  color: white;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+    cursor: default;
+    user-select: none;
+
+}
+
+.link {
+  text-decoration: none;
+  color: white;
+}
+
+.componentTitle {
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  text-shadow: 0 2px 1px gray ;
+  margin-top: 3em;
+}
+
+.button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(0.8);
+  }
+}
+
+body {
+  position: relative;
+  background-color: $bodyColourDefault;
+}
+
+html {
+  scrollbar-color: rgb(71, 72, 125) transparent;
+}
+
+@media only screen and (max-width: 500px) {
+  .componentTitle {
+      margin-top: 2.5em;
+  }
+}
