@@ -1,5 +1,5 @@
 import styles from './SellMySite.module.scss';
-import PublishWebsite from '../Website Component/Publish/PublishWebsite';
+import PublishWebsite from '../Website Component/Publish Website/PublishWebsite';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPublishWebsiteShown, setPublishPostShown } from '../Redux/store';
 import { useRef } from 'react';
@@ -33,7 +33,7 @@ const SellMySite = () => {
     return (
         <>
             {/* Publish a Website / Post */}
-            <div className={`${styles.publish} ${styles.iconContainer}`}>
+            <div className={`${styles.publish} ${styles.iconContainer} fadeIn`}>
                 <div ref={publishOptionsRef} className={`${styles.publishOptions} ${styles.hidden}`}>
                     <div onClick={() => dispatch(setPublishWebsiteShown(true))} className={styles.publishGroup}>
                         <i className={`fas fa-globe ${styles.icon}`}></i>

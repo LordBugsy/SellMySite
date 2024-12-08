@@ -147,6 +147,21 @@ const publishPostState = createSlice({
     }
 });
 
+// --- Comments slice
+const initialCommentsState = {
+    isCommentSectionShown: false,
+};
+
+const commentsState = createSlice({
+    name: 'comments',
+    initialState: initialCommentsState,
+    reducers : {
+        setCommentSectionShown: (state, action) => {
+            state.isCommentSectionShown = action.payload;
+        }
+    }
+});
+
 
 // Extract actions to use in components
 export const { loginUser, logoutUser, updatebalance } = userSlice.actions;
@@ -157,6 +172,7 @@ export const { setSearchQueryShown } = searchState.actions;
 export const { setNotificationShown } = notificationState.actions;
 export const { setPublishWebsiteShown } = publishWebsiteState.actions;
 export const { setPublishPostShown } = publishPostState.actions;
+export const { setCommentSectionShown } = commentsState.actions;
 
 
 // Create store using configureStore with combined reducers
@@ -170,6 +186,7 @@ const store = configureStore({
     notification: notificationState.reducer, // Notification reducer
     publishWebsite: publishWebsiteState.reducer, // Publish Website reducer
     publishPost: publishPostState.reducer, // Publish Post reducer
+    comments: commentsState.reducer, // Comments reducer
   },
 });
 

@@ -1,0 +1,165 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+.viewWebsiteContainer {
+    @include flex();
+    width: 100%;
+    height: 100%;
+    margin-top: 5rem;
+
+    .viewWebsite {
+        @include flex(row, center, stretch);
+        background-color: rgb(34, 72, 121);
+        padding: 20px;
+        border-radius: 10px;
+        width: 95%;
+        max-width: 2500px;
+        color: white;
+
+        .websiteInformations {
+            flex: 1;
+            @include flex(column, flex-start, flex-start);
+            gap: 1rem;
+
+            .image {
+                width: 95%;
+                height: 550px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+
+            .informations {
+                @include flex(column, flex-start, flex-start);
+
+                .title {
+                    font-size: 2rem;
+                    font-weight: 600;
+
+                    .icon {
+                        font-size: 2rem;
+                        cursor: pointer;
+                        transition: filter 0.3s;
+
+                        &:hover {
+                            filter: brightness(0.8);
+                        }
+                    }
+                }
+
+                .description {
+                    margin-top: -1rem;
+                    font-size: 1.5rem;
+                    width: 95%;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        .websiteContent {
+            @include flex(column, flex-start, flex-start);
+            max-width: 30%;
+
+            .content {
+                @include flex(row, flex-start, center);
+                gap: 1rem;
+
+                .price {
+                    font-size: 2rem;
+                    font-weight: 600;
+
+                    .status {
+                        font-size: 1.5rem;
+
+                        &.onSale {
+                            color: rgb(0, 255, 0);
+                        }
+
+                        &.notOnSale {
+                            color: rgb(255, 0, 0);
+                        }
+                    }
+                }
+
+                .profilePicture {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .username {
+                    font-size: 1.2rem;
+                    font-weight: 400;
+                }
+
+                .contentText {
+                    font-size: 1.5rem;
+                    font-weight: 400;
+                }
+            }
+
+            .actions {
+                flex: 1;
+                max-height: 20%;
+                @include flex(row, flex-start, center);
+                flex-wrap: wrap;
+                gap: 1rem;
+
+                .icon {
+                    font-size: 2rem;
+                    padding: 20px;
+                    cursor: pointer;
+                    border-radius: 10px;
+                    background-color: rgb(40, 68, 105);
+
+                    &:hover {
+                        background-color: rgb(50, 78, 115);
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1130px) {
+    .viewWebsiteContainer {
+        .viewWebsite {
+            flex-direction: column;
+
+            .websiteInformations {
+                justify-content: center !important;
+                align-items: center !important;
+
+                .image {
+                    width: 80%;
+                    height: 30%;
+                }
+
+                .informations {
+                    margin-top: -1rem;
+                    margin-bottom: 1rem;
+                    
+                    .title {
+                        font-size: 1.5rem;
+                    }
+
+                    .description {
+                        font-size: 1rem;
+                    }
+                }
+            }
+
+            .websiteContent {
+                background-color: rgb(66, 97, 140) !important;
+                padding: 10px;
+                border-radius: 10px;
+                max-width: 100%;
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@ import Header from "./Frontend/Header Component/Header.jsx"
 import SellMySite from "./Frontend/SellMySite/SellMySite.jsx"
 import Profile from "./Frontend/Profile Component/Profile.jsx"
 import Messages from "./Frontend/Private Messages Component/Messages.jsx"
-import PublishWebsite from "./Frontend/Website Component/Publish/PublishWebsite.jsx"
+import ViewWebsite from "./Frontend/Website Component/View/Website/ViewWebsite.jsx"
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Header />
 
         <Routes>
+
           <Route path="/" element={
             <SellMySite />
           } />
@@ -25,9 +26,15 @@ function App() {
             <Profile />
           } />
 
+          {/* The route I'm currently working on */}
+          <Route path="testing" element={
+            <ViewWebsite />
+          } />
+
           <Route path="*" element={
             <SellMySite />
           } />
+          
         </Routes>
       </Router>
     </>
