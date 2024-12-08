@@ -6,7 +6,7 @@ const initialUserState = {
     localUserId: "1",
     localUsername: "JohnDoe",
     displayName: "",
-    profilePicture: "",
+    profilePicture: Math.floor(Math.random() * 9) ,
     balance: 0,
     role: ""
   },
@@ -132,6 +132,21 @@ const publishWebsiteState = createSlice({
     }
 });
 
+// --- Publish Post slice
+const initialPublishPostState = {
+    isPublishPostShown: false,
+};
+
+const publishPostState = createSlice({
+    name: 'publishPost',
+    initialState: initialPublishPostState,
+    reducers : {
+        setPublishPostShown: (state, action) => {
+            state.isPublishPostShown = action.payload;
+        }
+    }
+});
+
 
 // Extract actions to use in components
 export const { loginUser, logoutUser, updatebalance } = userSlice.actions;
@@ -141,6 +156,7 @@ export const { setReportFormShown } = reportFormState.actions;
 export const { setSearchQueryShown } = searchState.actions;
 export const { setNotificationShown } = notificationState.actions;
 export const { setPublishWebsiteShown } = publishWebsiteState.actions;
+export const { setPublishPostShown } = publishPostState.actions;
 
 
 // Create store using configureStore with combined reducers
@@ -153,6 +169,7 @@ const store = configureStore({
     search: searchState.reducer, // Search reducer
     notification: notificationState.reducer, // Notification reducer
     publishWebsite: publishWebsiteState.reducer, // Publish Website reducer
+    publishPost: publishPostState.reducer, // Publish Post reducer
   },
 });
 

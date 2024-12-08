@@ -112,7 +112,7 @@ const Header = () => {
             <aside ref={asideRef} className={`${styles.asideContainer} ${isAsideShown ? styles.showAside : styles.hideAside}`}>
                 <div className={styles.asideContent}>
                     <div className={styles.profilePicture}>
-                        <img src={profilePicture || "/error.png"} className={styles.profilePicture} alt='Profile Picture' />
+                        <img src={`/${profilePicture}.png`} className={styles.profilePicture} alt='Profile Picture' />
                         <i className={`${styles.icon} fa-solid fa-pencil-alt`}></i>
                     </div>
 

@@ -8,10 +8,8 @@ const PublishWebsite = () => {
     // Redux 
     const dispatch = useDispatch();
 
-    const { localUsername } = useSelector(state => state.user.user);
+    const { localUsername, profilePicture } = useSelector(state => state.user.user);
     const { isPublishWebsiteShown } = useSelector(state => state.publishWebsite);
-
-
 
     // React
     const navigate = useNavigate();
@@ -101,7 +99,7 @@ const PublishWebsite = () => {
                             <p className={styles.previewDescription}>{websiteDescription || 'Website Description'}</p>
 
                             <div className={styles.previewOwner}>
-                                <img className={styles.profilePicture} src={`${Math.floor(Math.random() * 9)}.png`} alt={`${localUsername}'s profile picture`} />
+                                <img className={styles.profilePicture} src={`${profilePicture}.png`} alt={`${localUsername}'s profile picture`} />
                                 <p className={styles.ownerName}>{localUsername}</p>
                             </div>
                         </div>

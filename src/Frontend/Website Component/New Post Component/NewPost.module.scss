@@ -1,0 +1,138 @@
+@mixin flex($flexDirection: row, $justifyContent: center, $alignItems: center) {
+    display: flex;
+    flex-direction: $flexDirection;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+}
+
+.newPostContainer {
+    @include flex();
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.501);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 150;
+
+    .newPostContent {
+        @include flex(column); 
+        gap: 20px;
+        background-color: rgb(26, 42, 82);
+        padding: 10px 25px;
+        border-radius: 10px;
+        position: relative;
+        width: 500px;
+
+        >.icon {
+            color: red;
+            position: absolute;
+            top: 10px;
+            right: 30px;
+            cursor: pointer;
+            font-size: 2rem;
+        }
+
+        .newPostHeader {
+            margin-top: 0.5em;
+            width: 100%;
+            @include flex(row, flex-start, center); 
+            gap: 20px;
+
+            .profilePicture {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .username {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+        }
+
+        .info { 
+            margin-top: -10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+
+            .terms { 
+                color: rgb(195, 54, 54);
+                cursor: pointer;
+                font-weight: bold;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .textAreaContainer {
+        @include flex(row, center, flex-end); 
+        width: 100%;
+        overflow-y: hidden;
+        background-color: rgb(49, 56, 117);
+        padding: 10px 0;
+        gap: 20px;
+        border-radius: 10px;
+    
+        .textArea {
+            margin-left: 1em;
+            font-family: "Roboto", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+            color: rgb(243, 243, 243);
+    
+            width: 100%;
+            font-size: 1.2em;
+            border: 1px solid transparent;
+            background-color: transparent;
+            scrollbar-color: transparent transparent;
+            border-radius: 5px;
+            resize: none;
+            outline: none;
+    
+            &::placeholder {
+                color: rgb(150, 150, 150)
+            }
+        }
+    
+        .iconBackground {
+            @include flex(); 
+            
+            border-radius: 10px;
+            background-color: transparent;
+            width: 3em;
+            height: 3em;
+            margin-right: 1em;
+            cursor: pointer;
+    
+            .icon {
+                cursor: pointer;
+                font-size: 1.75em;
+                padding: 10px;
+                color: rgba(255, 255, 255, 0.769);
+                transition: color 0.3s;
+        
+                &:hover {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .newPostContainer {
+        .newPostContent {
+            width: 100% !important;
+        }
+    }
+}

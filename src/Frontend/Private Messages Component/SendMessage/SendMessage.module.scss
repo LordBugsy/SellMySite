@@ -6,7 +6,7 @@
 }
 
 .textAreaContainer {
-    @include flex(row, center, flex-start); // flexDirection: row, justifyContent: flex-start, alignItems: flex-end
+    @include flex(row, center, flex-end);
     width: 100%;
     overflow-y: hidden;
     background-color: rgb(38, 28, 82);
@@ -36,7 +36,7 @@
     }
 
     .iconBackground {
-        @include flex(); // flexDirection: row, justifyContent: center, alignItems: center
+        @include flex();
         
         border-radius: 10px;
         background-color: transparent;
