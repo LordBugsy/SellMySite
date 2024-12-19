@@ -14,7 +14,6 @@ const ViewWebsite = (props) => {
     // React
     const openComments = () => {
         dispatch(setCommentSectionShown(true));
-        console.log(isCommentSectionShown);
     }
 
     useEffect(() => {

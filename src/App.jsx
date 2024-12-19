@@ -5,6 +5,10 @@ import SellMySite from "./Frontend/SellMySite/SellMySite.jsx"
 import Profile from "./Frontend/Profile Component/Profile.jsx"
 import Messages from "./Frontend/Private Messages Component/Messages.jsx"
 import ViewWebsite from "./Frontend/Website Component/View/Website/ViewWebsite.jsx"
+import SearchResults from "./Frontend/Search Component/SearchResults/SearchResults.jsx"
+import ViewPost from "./Frontend/Website Component/View/Post/ViewPost.jsx"
+import BuyTokens from "./Frontend/Buy Tokens Component/BuyTokens.jsx"
+import Settings from "./Frontend/Settings Component/Settings.jsx"
 
 function App() {
   return (
@@ -26,9 +30,28 @@ function App() {
             <Profile />
           } />
 
-          {/* The route I'm currently working on */}
           <Route path="testing" element={
+            <BuyTokens />
+          } />
+
+          <Route path="/search/:query" element={
+            <SearchResults />
+          } />
+
+          <Route path="/website/:username/:website" element={
             <ViewWebsite />
+          } />
+
+          <Route path="/post/:username/:post" element={
+            <ViewPost />
+          } />
+
+          <Route path="shop" element={
+            <BuyTokens />
+          } />
+
+          <Route path="settings" element={
+            <Settings />
           } />
 
           <Route path="*" element={

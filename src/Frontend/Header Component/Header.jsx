@@ -80,11 +80,13 @@ const Header = () => {
                             </div>
 
                             <div className={styles.tooltip}>
-                                <i className={`${styles.icon} fa-brands fa-github`}></i>
-                                <span className={styles.tooltipText}>GitHub Repo</span>
+                                <a href="https://github.com/LordBugsy/Projectarium" target="_blank" rel="noreferrer">
+                                    <i className={`${styles.icon} fa-brands fa-github`}></i>
+                                    <span className={styles.tooltipText}>GitHub Repo</span>
+                                </a>
                             </div>
 
-                            <div className={styles.tooltip}>
+                            <div onClick={() => navigate('/settings')} className={styles.tooltip}>
                                 <i className={`${styles.icon} ${styles.settingsIcon} fa-solid fa-cog`}></i>
                                 <span className={styles.tooltipText}>Settings</span>
                             </div>
@@ -118,9 +120,9 @@ const Header = () => {
 
                     <div className={styles.asideRedirects}>
                         <p onClick={() => navigateToComponent(`/profile/${localUsername}`)} className={styles.redirect}>View Profile</p>
-                        <p className={styles.redirect}>Following</p>
+                        <p onClick={() => navigateToComponent('/shop')} className={styles.redirect}>SiteTokens</p>
                         <p className={styles.redirect}>Your Auctions</p>
-                        <p className={styles.redirect}>Settings</p>
+                        <p onClick={() => navigateToComponent('/settings')} className={styles.redirect}>Settings</p>
                         <p className={styles.redirect}>Help</p>
                         <p onClick={() => dispatch(setContactFormShown(true))} className={styles.redirect}>Contact</p>
                         { role === "admin" && <p className={styles.redirect}>Admin Panel</p> }

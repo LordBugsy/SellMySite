@@ -16,6 +16,17 @@ const SellMySite = () => {
     const iconRef = useRef();
     const publishOptionsRef = useRef();
 
+    const defaultProject = [ 
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+        {name: "Loading Title", thumbnailImage: ""},
+    ];
+
     const togglePublishOptions = (event) => {
         if (iconRef.current && event.target === iconRef.current) {
             if (publishOptionsRef.current.classList.contains(styles.hidden)) {
@@ -32,6 +43,9 @@ const SellMySite = () => {
 
     return (
         <>
+
+
+
             {/* Publish a Website / Post */}
             <div className={`${styles.publish} ${styles.iconContainer} fadeIn`}>
                 <div ref={publishOptionsRef} className={`${styles.publishOptions} ${styles.hidden}`}>

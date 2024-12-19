@@ -2,6 +2,8 @@ import styles from './Search.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchQueryShown } from '../Redux/store';
 import { useEffect, useRef } from 'react';
+import SearchResults from './SearchResults/SearchResults';
+import { useNavigate } from 'react-router-dom';
 
 const Search = () => {
     // Redux
@@ -13,13 +15,15 @@ const Search = () => {
     const searchQuery = useRef(null);
     const searchIcon = useRef(null);
 
+    const navigate = useNavigate();
+
     const searchSuggestions = ["Fun Website", "Discasery", "ReactTalk", "Projectarium", "LordBugsy's Projects"];
 
     const search = query => {
         if (searchIcon.current.classList.contains(styles.disabled)) return;
         else {
-            // Redirect to search page logic here
-            console.log(`Searching for ${query}`);
+            navigate(`/search/${encodeURIComponent(query)}`);
+            closeComponent();
         }
     }
 
@@ -43,6 +47,22 @@ const Search = () => {
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        const handleKeyPress = event => {
+            if (event.key === 'Enter') search(searchQuery.current.value);
+        }
+
+        document.addEventListener('keydown', handleKeyPress);
+
+        return () => document.removeEventListener('keydown', handleKeyPress);
+    }, []);
+
+    useEffect(() => {
+        if (isSearchQueryShown) {
+            searchQuery.current.focus();
+        }
     }, []);
 
     return (

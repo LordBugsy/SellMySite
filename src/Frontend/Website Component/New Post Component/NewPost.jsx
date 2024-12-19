@@ -59,7 +59,7 @@ const NewPost = () => {
         <>
             { isPublishPostShown && <div ref={containerRef} className={`${styles.newPostContainer} growIn`}>
                 <div className={styles.newPostContent}>
-                    <i className={`fas fa-times ${styles.icon}`}></i>
+                    <i onClick={closeContainer} className={`fas fa-times ${styles.icon}`}></i>
                     <div className={styles.newPostHeader}>
                         <img src={`/${profilePicture}.png`} alt="Profile" className={styles.profilePicture} />
                         <p className={styles.username}>{localUsername}</p>

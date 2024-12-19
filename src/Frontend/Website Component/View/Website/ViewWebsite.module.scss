@@ -16,18 +16,18 @@
         background-color: rgb(34, 72, 121);
         padding: 20px;
         border-radius: 10px;
-        width: 95%;
+        width: 80%;
         max-width: 2500px;
         color: white;
 
         .websiteInformations {
             flex: 1;
-            @include flex(column, flex-start, flex-start);
+            @include flex(column, flex-start, center);
             gap: 1rem;
 
             .image {
-                width: 95%;
-                height: 550px;
+                width: 80%;
+                height: 450px;
                 border-radius: 10px;
                 object-fit: cover;
             }

@@ -30,6 +30,7 @@
 
         .title {
             font-size: 2rem;
+            text-align: center;
         }
 
         >.icon {
@@ -88,6 +89,12 @@
             }
         }
     }
+}
 
-
+@media only screen and (max-width: 550px) {
+    .searchContainer {
+        .searchSection {
+            min-width: 90%;
+        }
+    }
 }

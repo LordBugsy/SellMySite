@@ -1,0 +1,199 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+.viewPostContainer {
+    opacity: 0;
+    @include flex(column);
+    width: 100%;
+    height: 100%;
+    margin-top: 5rem;
+
+    .viewPost {
+        @include flex(column, center, stretch);
+        background-color: rgb(34, 72, 121);
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 2500px;
+        color: white;
+
+        .postContent {
+            @include flex(column, flex-start, flex-start);
+
+            .contentHeader {
+                width: 100%;
+                position: relative;
+                @include flex(row, flex-start, center);
+                gap: 1rem;
+
+                .profilePicture {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .userInfo {
+                    @include flex(column, flex-start, flex-start);
+                    gap: 0;
+
+                    font-size: 1.25rem;
+                    .username {
+                        color: rgb(179, 179, 179);
+                        margin: 0;
+                    }
+
+                    .displayName {
+                        margin: 0;
+                        font-weight: bold;
+                    }
+                }
+
+                .icon {
+                    position: absolute;
+                    right: 30px;
+                    font-size: 2rem;
+                    cursor: pointer;
+                }
+
+                .optionsContainer {
+                    @include flex(column);
+                    position: absolute;
+                    right: 60px;
+                    top: 30px;
+                    background-color: rgb(29, 29, 120);
+                    border: 2px solid white;
+                    border-radius: 10px;
+                    padding: 10px;
+                    width: 100px;
+                    gap: 1rem;
+
+                    &.hidden {
+                        display: none;
+                    }
+
+                    &.visible {
+                        display: block;
+                    }         
+                    
+                    .option {
+                        color: white;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: color 0.3s ease;
+
+                        &:hover {
+                            color: rgb(179, 179, 179);
+                        }
+                    }
+                }
+            }
+
+            .content {
+                @include flex(column, flex-start, center);
+                
+                .text {
+                    font-size: 1.5rem;
+                    font-weight: 400;
+                }
+
+                .imageContainer { // if I have time, it will be possible to make posts with images
+                    width: 100%;
+                    max-height: 30%;
+                    border-radius: 10px;
+                    overflow: hidden;
+
+                    .image {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 10px;
+                    }
+                }
+
+                .dateInformation {
+                    margin-top: -5px;
+
+                    @include flex(row, flex-end, flex-end);
+                    width: 100%;
+                }
+            }
+
+            .actions {
+                width: 100%;
+                @include flex(row, flex-end, flex-end);
+                gap: 1rem;
+
+                .icon {
+                    font-size: 2rem;
+                    padding: 20px;
+                    cursor: pointer;
+                    border-radius: 10px;
+                    background-color: rgb(40, 68, 105);
+
+                    &:hover {
+                        background-color: rgb(50, 78, 115);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .viewPostContainer {
+        .viewPost {
+            .postContent {
+                .contentHeader {
+                    .profilePicture {
+                        width: 50px !important;
+                        height: 50px !important;
+                    }
+
+                    .userInfo {
+                        font-size: 1rem !important;
+                    }
+                }
+
+                .content {
+                    .text {
+                        font-size: 1rem !important;
+                    }
+                }
+
+                .actions {
+                    flex-wrap: wrap;
+                    .icon {
+                        font-size: 1.5rem !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .contentHeader {
+        .icon {
+            right: 10px !important;
+            top: 0 !important;
+            font-size: 1rem !important;
+        }
+
+        .optionsContainer {
+            right: 20px !important;
+            top: 10px !important;
+            width: 50px !important;
+            padding: 5px !important;
+            gap: 0.5rem !important;
+
+            .option {
+                font-size: 0.75rem !important;
+            }
+        }
+    }
+}
