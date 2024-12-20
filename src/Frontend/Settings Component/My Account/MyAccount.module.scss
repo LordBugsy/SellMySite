@@ -1,0 +1,70 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+.accountContainer {
+    opacity: 0;
+    @include flex(column);
+    width: 100%;
+
+    .accountEdit {
+        width: 100%;
+        @include flex(column);
+        gap: 1em;
+
+        .account {
+            width: 90%;
+            @include flex(row, space-between, center);          
+
+            .category {
+                width: 100%;
+                @include flex(row, flex-start, center);
+                gap: 1em;
+                color: white;
+
+                .icon {
+                    font-size: 2.5em;
+                }
+
+                .label {
+                    font-size: 1.75em;
+                    font-weight: bold;
+
+                    >.userInfo {
+                        color: rgb(99, 212, 99);
+                        font-weight: bold;
+                    }
+                }
+            }
+
+            .edit {
+                @include flex();
+                background-color: rgb(62, 62, 150);
+                border-radius: 10px;
+                cursor: pointer;
+                transition: filter 0.3s;
+
+                &.password {
+                    background-color: rgb(62, 150, 131);
+                }
+
+                &.delete {
+                    background-color: rgb(194, 43, 43);
+                }
+
+                .icon {
+                    font-size: 2.5em;
+                    color: white;
+                    padding: 15px;
+                }
+
+                &:hover {
+                    filter: brightness(0.9);
+                }
+            }
+        }
+    }
+}

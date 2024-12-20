@@ -16,15 +16,21 @@ const SellMySite = () => {
     const iconRef = useRef();
     const publishOptionsRef = useRef();
 
-    const defaultProject = [ 
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
-        {name: "Loading Title", thumbnailImage: ""},
+    const defaultWebsites = [ 
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+    ];
+
+    const defaultPosts = [
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
     ];
 
     const togglePublishOptions = (event) => {
@@ -43,7 +49,33 @@ const SellMySite = () => {
 
     return (
         <>
+            <div className={`${styles.sellMySiteContainer} fadeIn`}>
+                <div className={styles.category}>
+                    <h1 className='title'>Trending Websites</h1>
 
+                    <div className={styles.websites}>
+                        { defaultWebsites.map((website, index) => (
+                            <div className={styles.website} key={index}>
+                                <img src={website.thumbnailImage} alt={website.name} />
+                                <p className={styles.websiteTitle}>{website.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className={styles.category}>
+                    <h1 className='title'>Trending Posts</h1>
+
+                    <div className={styles.posts}>
+                        { defaultPosts.map((post, index) => (
+                            <div className={styles.post} key={index}>
+                                <img src={post.thumbnailImage} alt={post.name} />
+                                <p className={styles.postTitle}>{post.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
 
             {/* Publish a Website / Post */}

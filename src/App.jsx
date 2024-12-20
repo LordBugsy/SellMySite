@@ -9,6 +9,7 @@ import SearchResults from "./Frontend/Search Component/SearchResults/SearchResul
 import ViewPost from "./Frontend/Website Component/View/Post/ViewPost.jsx"
 import BuyTokens from "./Frontend/Buy Tokens Component/BuyTokens.jsx"
 import Settings from "./Frontend/Settings Component/Settings.jsx"
+import Redeem from "./Frontend/Redeem Component/Redeem.jsx"
 
 function App() {
   return (
@@ -52,6 +53,10 @@ function App() {
 
           <Route path="settings" element={
             <Settings />
+          } />
+
+          <Route path="redeem" element={
+            <Redeem />
           } />
 
           <Route path="*" element={

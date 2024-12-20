@@ -25,6 +25,12 @@
     align-items: $align;
 }
 
+.sellMySiteContainer {
+    opacity: 0;
+    @include flex(column);
+    margin-top: 5em;
+}
+
 .publish {
     opacity: 0;
     position: fixed;

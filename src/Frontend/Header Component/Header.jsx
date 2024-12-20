@@ -121,9 +121,9 @@ const Header = () => {
                     <div className={styles.asideRedirects}>
                         <p onClick={() => navigateToComponent(`/profile/${localUsername}`)} className={styles.redirect}>View Profile</p>
                         <p onClick={() => navigateToComponent('/shop')} className={styles.redirect}>SiteTokens</p>
-                        <p className={styles.redirect}>Your Auctions</p>
+                        <p onClick={() => navigateToComponent('/auctions')} className={styles.redirect}>Auctions</p>
                         <p onClick={() => navigateToComponent('/settings')} className={styles.redirect}>Settings</p>
-                        <p className={styles.redirect}>Help</p>
+                        <p onClick={() => navigateToComponent('/redeem')} className={styles.redirect}>Redeem</p>
                         <p onClick={() => dispatch(setContactFormShown(true))} className={styles.redirect}>Contact</p>
                         { role === "admin" && <p className={styles.redirect}>Admin Panel</p> }
                     </div>

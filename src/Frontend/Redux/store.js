@@ -5,7 +5,7 @@ const initialUserState = {
   user: {
     localUserId: "1",
     localUsername: "JohnDoe",
-    displayName: "",
+    displayName: "John",
     profilePicture: Math.floor(Math.random() * 9) ,
     balance: 0,
     role: ""
@@ -162,6 +162,21 @@ const commentsState = createSlice({
     }
 });
 
+// --- Account Settings Popup slice
+const initialAccountSettingsState = {
+    isAccountSettingsShown: false,
+};
+
+const accountSettingsState = createSlice({
+    name: 'accountSettings',
+    initialState: initialAccountSettingsState,
+    reducers : {
+        setAccountSettingsShown: (state, action) => {
+            state.isAccountSettingsShown = action.payload;
+        }
+    }
+});
+
 
 // Extract actions to use in components
 export const { loginUser, logoutUser, updatebalance } = userSlice.actions;
@@ -173,6 +188,7 @@ export const { setNotificationShown } = notificationState.actions;
 export const { setPublishWebsiteShown } = publishWebsiteState.actions;
 export const { setPublishPostShown } = publishPostState.actions;
 export const { setCommentSectionShown } = commentsState.actions;
+export const { setAccountSettingsShown } = accountSettingsState.actions;
 
 
 // Create store using configureStore with combined reducers
@@ -187,6 +203,7 @@ const store = configureStore({
     publishWebsite: publishWebsiteState.reducer, // Publish Website reducer
     publishPost: publishPostState.reducer, // Publish Post reducer
     comments: commentsState.reducer, // Comments reducer
+    accountSettings: accountSettingsState.reducer, // Account Settings reducer
   },
 });
 
