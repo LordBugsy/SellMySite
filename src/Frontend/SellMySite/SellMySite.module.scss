@@ -29,6 +29,135 @@
     opacity: 0;
     @include flex(column);
     margin-top: 5em;
+    gap: 2em;
+
+    .category {
+        width: 100%;
+        max-width: 2500px;
+        @include flex(column);
+
+        .websites {
+            width: 95%;
+            @include flex(row, flex-start);
+            overflow-x: auto;
+            gap: 1em;
+
+            .website {
+                padding: 20px;
+                @include flex(column);
+                cursor: pointer;
+                border-radius: 10px;
+                border: 2px solid transparent;
+                transition: background-color 0.3s, border 0.3s;
+
+                &:hover {
+                    background-color: rgb(82, 82, 187);
+                    border: 2px solid white;
+                }
+
+                >img {
+                    width: 400px;
+                    height: 200px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                }
+
+                .websiteInfo {
+                    width: 100%;
+                    @include flex(column, flex-start);
+
+                    .websiteTitle {
+                        width: 100%;
+                        font-size: 1rem;
+                        font-weight: bold;
+                        color: white;
+                    }
+
+                    .profileContainer {
+                        margin: -10px 0;
+
+                        width: 100%;
+                        @include flex(row, flex-start, center);
+                        gap: 10px;
+                        color: white;
+                        
+                        .profilePicture {
+                            width: 35px;
+                            height: 35px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                        }
+
+                        .profileUsername {
+                            font-size: 1.2rem;
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+        }
+
+        .posts {
+            width: 95%;
+            @include flex(row, flex-start, flex-start);
+            overflow-x: auto;
+            gap: 1em;
+
+            .post {
+                width: 100%;
+                min-width: 400px;
+                padding: 20px;
+                @include flex(row, flex-start, flex-start);
+                gap: 1em;
+                cursor: pointer;
+                border-radius: 10px;
+                border: 2px solid transparent;
+                transition: background-color 0.3s, border 0.3s;
+
+                &:hover {
+                    background-color: rgb(82, 82, 187);
+                    border: 2px solid white;
+                }
+
+                .postHeader {
+                    width: 100%;
+                    color: white;
+                    @include flex(column);
+
+                    .profileContainer {
+                        width: 100%;
+                        @include flex(row, flex-start);
+                        gap: 10px;
+                        color: white;
+
+                        .profilePicture {
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                        }
+
+                        .profileUsername {
+                            color: white;
+                            font-weight: bold;
+                        }
+                    }
+
+                    .postContent {
+                        flex: 1;
+                        width: 100%;
+                    }
+                }
+
+                .postAttachment {
+                    max-width: 400px;
+                    max-height: 200px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                }
+            }
+        }
+    }
 }
 
 .publish {

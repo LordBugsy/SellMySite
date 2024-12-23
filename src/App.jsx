@@ -1,15 +1,17 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 
+import ProtectedRoute from "./ProtectedRoute.jsx"
 import Header from "./Frontend/Header Component/Header.jsx"
+import Redeem from "./Frontend/Redeem Component/Redeem.jsx"
 import SellMySite from "./Frontend/SellMySite/SellMySite.jsx"
 import Profile from "./Frontend/Profile Component/Profile.jsx"
+import Settings from "./Frontend/Settings Component/Settings.jsx"
+import BuyTokens from "./Frontend/Buy Tokens Component/BuyTokens.jsx"
 import Messages from "./Frontend/Private Messages Component/Messages.jsx"
+import ViewPost from "./Frontend/Website Component/View/Post/ViewPost.jsx"
 import ViewWebsite from "./Frontend/Website Component/View/Website/ViewWebsite.jsx"
 import SearchResults from "./Frontend/Search Component/SearchResults/SearchResults.jsx"
-import ViewPost from "./Frontend/Website Component/View/Post/ViewPost.jsx"
-import BuyTokens from "./Frontend/Buy Tokens Component/BuyTokens.jsx"
-import Settings from "./Frontend/Settings Component/Settings.jsx"
-import Redeem from "./Frontend/Redeem Component/Redeem.jsx"
+
 
 function App() {
   return (
@@ -24,15 +26,13 @@ function App() {
           } />
 
           <Route path="/messages" element={
-            <Messages />
+            <ProtectedRoute>
+              <Messages />
+            </ProtectedRoute>
           } />
 
           <Route path="/profile/:username" element={
             <Profile />
-          } />
-
-          <Route path="testing" element={
-            <BuyTokens />
           } />
 
           <Route path="/search/:query" element={
@@ -48,15 +48,21 @@ function App() {
           } />
 
           <Route path="shop" element={
-            <BuyTokens />
+            <ProtectedRoute>
+              <BuyTokens />
+            </ProtectedRoute>
           } />
 
           <Route path="settings" element={
-            <Settings />
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
           } />
 
           <Route path="redeem" element={
-            <Redeem />
+            <ProtectedRoute>
+              <Redeem />
+            </ProtectedRoute>
           } />
 
           <Route path="*" element={

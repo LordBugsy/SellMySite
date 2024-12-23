@@ -17,7 +17,7 @@ const Header = () => {
     const isSearchQueryShown = useSelector(state => state.search.isSearchQueryShown);
     const isNotificationShown = useSelector(state => state.notification.isNotificationShown);
 
-    const { localUserId, localUsername, profilePicture, role } = useSelector(state => state.user.user);
+    const { localUserId, localUsername, profilePicture, role, siteTokens } = useSelector(state => state.user.user);
 
     // React
     const navigate = useNavigate();
@@ -69,15 +69,15 @@ const Header = () => {
                         </div>
 
                         <div className={styles.rightNavLinks}>
-                            <div onClick={() => dispatch(setNotificationShown(!isNotificationShown))} className={styles.tooltip}>
+                            {localUserId && <div onClick={() => dispatch(setNotificationShown(!isNotificationShown))} className={styles.tooltip}>
                                 <i className={`${styles.icon} fa-solid fa-bell`}></i>
                                 <span className={styles.tooltipText}>Notifications</span>
-                            </div>
+                            </div>}
 
-                            <div onClick={() => navigate('/messages')} className={styles.tooltip}>
+                            {localUserId && <div onClick={() => navigate('/messages')} className={styles.tooltip}>
                                 <i className={`${styles.icon} fa-solid fa-envelope`}></i>
                                 <span className={styles.tooltipText}>Private Messages</span>
-                            </div>
+                            </div>}
 
                             <div className={styles.tooltip}>
                                 <a href="https://github.com/LordBugsy/Projectarium" target="_blank" rel="noreferrer">
@@ -86,24 +86,23 @@ const Header = () => {
                                 </a>
                             </div>
 
-                            <div onClick={() => navigate('/settings')} className={styles.tooltip}>
+                            {localUserId && <div onClick={() => navigate('/settings')} className={styles.tooltip}>
                                 <i className={`${styles.icon} ${styles.settingsIcon} fa-solid fa-cog`}></i>
                                 <span className={styles.tooltipText}>Settings</span>
-                            </div>
-
-                            {!localUserId && <div className={styles.controls}>                                
-                                <div className={styles.tooltip}>
-                                    <i onClick={toggleSignup} className={`${styles.icon} fa-solid fa-right-to-bracket`}></i>
-                                    <span className={styles.tooltipText}>
-                                        {/* logic to show login or signup, for now its only signup */}
-                                        Sign Up
-                                    </span>
-                                </div>
                             </div>}
+
+                            {!localUserId && (
+                                <div className={styles.controls}>                                
+                                    <div className={styles.tooltip}>
+                                        <i onClick={toggleSignup} className={`${styles.icon} fa-solid fa-right-to-bracket`}></i>
+                                        <span className={styles.tooltipText}>
+                                            Sign Up / Log In
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-
                     </div>
-
                 </nav>
             </header>
 
@@ -116,15 +115,15 @@ const Header = () => {
                     <div className={styles.profilePicture}>
                         <img src={`/${profilePicture}.png`} className={styles.profilePicture} alt='Profile Picture' />
                         <i className={`${styles.icon} fa-solid fa-pencil-alt`}></i>
+                        <i onClick={() => navigateToComponent('/shop')} className={`${styles.tokens} fa-solid fa-coins`}> {siteTokens}</i>
                     </div>
 
                     <div className={styles.asideRedirects}>
                         <p onClick={() => navigateToComponent(`/profile/${localUsername}`)} className={styles.redirect}>View Profile</p>
-                        <p onClick={() => navigateToComponent('/shop')} className={styles.redirect}>SiteTokens</p>
-                        <p onClick={() => navigateToComponent('/auctions')} className={styles.redirect}>Auctions</p>
-                        <p onClick={() => navigateToComponent('/settings')} className={styles.redirect}>Settings</p>
                         <p onClick={() => navigateToComponent('/redeem')} className={styles.redirect}>Redeem</p>
                         <p onClick={() => dispatch(setContactFormShown(true))} className={styles.redirect}>Contact</p>
+                        <p onClick={() => navigateToComponent('/settings')} className={styles.redirect}>Settings</p>
+                        <p className={styles.redirect}>Log Out</p>
                         { role === "admin" && <p className={styles.redirect}>Admin Panel</p> }
                     </div>
 
@@ -138,7 +137,7 @@ const Header = () => {
 
             {isContactFormShown && <Contact />}
             {isSearchQueryShown && <Search />}
-            { isNotificationShown && <Notifications />}
+            {isNotificationShown && <Notifications />}
             
         </>
     )

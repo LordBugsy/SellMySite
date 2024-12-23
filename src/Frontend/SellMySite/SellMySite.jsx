@@ -9,6 +9,7 @@ const SellMySite = () => {
     // Redux
     const { isPublishWebsiteShown } = useSelector(state => state.publishWebsite);
     const { isPublishPostShown } = useSelector(state => state.publishPost);
+    const { localUserId } = useSelector(state => state.user.user);
 
     const dispatch = useDispatch();
 
@@ -17,20 +18,68 @@ const SellMySite = () => {
     const publishOptionsRef = useRef();
 
     const defaultWebsites = [ 
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png", owner: {
+            username: "Loading Username",
+            profilePicture: Math.floor(Math.random() *9)
+        }},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png", owner: {
+            username: "Loading Username",
+            profilePicture: Math.floor(Math.random() *9)
+        }},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png", owner: {
+            username: "Loading Username",
+            profilePicture: Math.floor(Math.random() *9)
+        }},
+        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png", owner: {
+            username: "Loading Username",
+            profilePicture: Math.floor(Math.random() *9)
+        }},
     ];
 
     const defaultPosts = [
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
-        {name: "Loading Title", thumbnailImage: "/thumbnailPlaceholder.png"},
+        {text: "Loading content...", 
+            attachment: undefined, 
+            owner: {
+                username: "Loading Username",
+                profilePicture: Math.floor(Math.random() *9)
+        }},
+        {text: "Loading content...",
+            attachment: 'https://picsum.photos/id/237/500',
+            owner: {
+                username: "Loading Username",
+                profilePicture: Math.floor(Math.random() *9)
+        }},
+        {text: "Loading content...",
+            attachment: 'https://picsum.photos/id/237/500',
+            owner: {
+                username: "Loading Username",
+                profilePicture: Math.floor(Math.random() *9)
+        }},
+        {text: "Loading content...",
+            attachment: undefined,
+            owner: {
+                username: "Loading Username",
+                profilePicture: Math.floor(Math.random() *9)
+        }},
+        {text: "Loading content...",
+            attachment: 'https://picsum.photos/id/237/500',
+            owner: {
+                username: "Loading Username",
+                profilePicture: Math.floor(Math.random() *9)
+            }
+        },
+        {text: "Loading content...",
+            attachment: undefined,
+            owner: {
+            username: "Loading Username",
+            profilePicture: Math.floor(Math.random() *9)
+        }},
+        {  text: "Loading content...",
+            attachment: 'https://picsum.photos/id/237/500',
+            owner: {
+            username: "Loading Username",
+            profilePicture: Math.floor(Math.random() *9)
+        }}
     ];
 
     const togglePublishOptions = (event) => {
@@ -57,7 +106,15 @@ const SellMySite = () => {
                         { defaultWebsites.map((website, index) => (
                             <div className={styles.website} key={index}>
                                 <img src={website.thumbnailImage} alt={website.name} />
-                                <p className={styles.websiteTitle}>{website.name}</p>
+
+                                <div className={styles.websiteInfo}>
+                                    <p className={styles.websiteTitle}>{website.name}</p>
+
+                                    <div className={styles.profileContainer}>
+                                        <img className={styles.profilePicture} src={`/${website.owner.profilePicture}.png`} alt="Profile" />
+                                        <p className={styles.profileUsername}>@{website.owner.username}</p>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -69,17 +126,32 @@ const SellMySite = () => {
                     <div className={styles.posts}>
                         { defaultPosts.map((post, index) => (
                             <div className={styles.post} key={index}>
-                                <img src={post.thumbnailImage} alt={post.name} />
-                                <p className={styles.postTitle}>{post.name}</p>
+                                <div className={styles.postHeader}>
+                                    <div className={styles.profileContainer}>
+                                        <img className={styles.profilePicture} src={`/${post.owner.profilePicture}.png`} alt="Profile" />
+                                        <p className={styles.profileUsername}>@{post.owner.username}</p>
+                                    </div>
+
+                                    <div className={styles.postContent}>
+                                        <p className={styles.postText}>{post.text}</p>
+                                    </div>
+                                </div>
+
+                                { post.attachment && <img className={styles.postAttachment} src={post.attachment} alt="Attachment" /> }
                             </div>
                         ))}
                     </div>
+                </div>
+
+                <div className={styles.category}>
+                    <h1 className='title'>Ongoing Auctions</h1>
+
                 </div>
             </div>
 
 
             {/* Publish a Website / Post */}
-            <div className={`${styles.publish} ${styles.iconContainer} fadeIn`}>
+            {localUserId && <div className={`${styles.publish} ${styles.iconContainer} fadeIn`}>
                 <div ref={publishOptionsRef} className={`${styles.publishOptions} ${styles.hidden}`}>
                     <div onClick={() => dispatch(setPublishWebsiteShown(true))} className={styles.publishGroup}>
                         <i className={`fas fa-globe ${styles.icon}`}></i>
@@ -93,7 +165,7 @@ const SellMySite = () => {
                 </div>
 
                 <i ref={iconRef} onClick={togglePublishOptions} className={`fa-solid fa-plus ${styles.icon} ${styles.static}`}></i>
-            </div>
+            </div>}
 
             { isPublishWebsiteShown && <PublishWebsite /> }
             { isPublishPostShown && <NewPost /> }

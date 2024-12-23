@@ -4,10 +4,10 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 const initialUserState = {
   user: {
     localUserId: "1",
-    localUsername: "JohnDoe",
-    displayName: "John",
+    localUsername: "Joe",
+    displayName: "Joe",
     profilePicture: Math.floor(Math.random() * 9) ,
-    balance: 0,
+    siteTokens: 0,
     role: ""
   },
 };

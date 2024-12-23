@@ -32,6 +32,13 @@ const Redeem = () => {
                 Your code is a one-time use and should not be shared, an administrator or moderator will never ask for your code.
             </p>
 
+            <div className={styles.mainContainer}>
+                <p className={styles.main}>
+                    Enter redeemables codes below. Be sure to follow @mylordbugsy on Twitter to get the latest news and codes for SellMySite!
+                </p>
+            </div>
+            
+
             <div className={styles.redeemBox}>
                 <div className={styles.inputContainer}>
                     <i className={`fas fa-gift ${styles.icon}`}></i>

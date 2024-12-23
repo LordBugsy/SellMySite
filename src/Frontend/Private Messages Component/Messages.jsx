@@ -7,7 +7,7 @@ const Messages = () => {
     const { localUserId, localUsername } = useSelector((state) => state.user.user);
 
     // React
-    const [isRecipientVisible, setIsRecipientVisible] = useState(false); // Show the recipient list (mobile only)
+    const [isRecipientVisible, setIsRecipientVisible] = useState(true); // Show the recipient list (mobile only)
     const [lastChatIndex, setLastChatIndex] = useState(0); // The last chat that was selected
     const [searchQuery, setSearchQuery] = useState(""); // Search input state
     const [filteredChats, setFilteredChats] = useState([]); // State for filtered chats
