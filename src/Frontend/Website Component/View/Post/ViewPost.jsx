@@ -20,6 +20,7 @@ const ViewPost = () => {
     const [postData, updatePostData] = useState([]);
     const [likeStatus, updateLikeStatus] = useState(false); // true if the user has liked the post
     const [optionState, updateOptionState] = useState(false);
+    const [otherPosts, updateOtherPosts] = useState([]);
 
     const likeButtonRef = useRef(null);
     const shareButtonRef = useRef(null);
@@ -50,6 +51,21 @@ const ViewPost = () => {
         if (isCommentSectionShown) 
             dispatch(setCommentSectionShown(false));
     }, []);
+
+    useEffect(() => {
+        const loadOtherPosts = async () => {
+            updateIsLoading(true);
+
+            try {
+                const backendResponse = await axios.get(`http://localhost:5172/post/${username}/recent`);
+                updateOtherPosts(backendResponse.data);
+            }
+
+            catch (error) {
+                console.error(error);
+            }
+        };
+    }), [username];
 
     useEffect(() => {
         const loadPost = async () => {
@@ -98,7 +114,6 @@ const ViewPost = () => {
                     userID: localUserId,
                 });
     
-                // Update post data and like status
                 updatePostData((prev) => ({
                     ...prev,
                     likes: prev.likes.filter((like) => like !== localUserId),
@@ -186,8 +201,36 @@ const ViewPost = () => {
                         </div>
                     )}
                 </div>
+
+                {/* <div className={styles.otherPosts}>
+                    <h1 className='title'>Other posts</h1>
+                    <div className={styles.posts}>
+                        {otherPosts.map((post, index) => (
+                            <div className={styles.post} key={index}>
+                                <div className={styles.postHeader}>
+                                    <img src={`/${post.owner.profilePicture}.png`} alt={`${post.owner.username}'s profile picture`} className={styles.profilePicture} />
+                                    <div className={styles.userInfo}>
+                                        <p className={styles.displayName}>{post.owner.displayName}</p>
+                                        <p className={styles.username}>@{post.owner.username}</p>
+                                    </div>
+                                </div>
+
+                                <div className={styles.postContent}>
+                                    <p className={styles.text}>{post.content}</p>
+                                </div>
+
+                                <div className={styles.actions}>
+                                    <i className={`fas fa-heart ${styles.icon}`}></i>
+                                    <i className={`fas fa-comment ${styles.icon}`}></i>
+                                    <i className={`fas fa-share ${styles.icon}`}></i>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div> */}
+
             </div>
-            {isCommentSectionShown && <Comments postID={postData._id} comments={postData.comments} targetName={postData.owner?.username || "Post"} targetID={postData._id} />}
+            {isCommentSectionShown && <Comments postID={postData._id} comments={postData.comments} targetName={postData.owner?.username || "Post"} />}
         </>
     );
 };

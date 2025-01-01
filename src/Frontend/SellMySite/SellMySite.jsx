@@ -59,11 +59,31 @@ const SellMySite = () => {
         navigate(`/post/${username}/${publicPostID}`);
     };
 
+    const goToWebsite = (username, websiteID) => {
+        navigate(`/website/${username}/${websiteID}`);
+    };
+
     useEffect(() => {
         setDataState((prev) => ({ ...prev, isLoading: true }));
 
         const loadTrendingWebsites = async () => {
-            // TODO: Implement this function
+            try {
+                const backendResponse = await axios.get('http://localhost:5172/website/popular');
+                setDataState((prev) => ({
+                    ...prev,
+                    loadedWebsites: backendResponse.data,
+                    isLoading: false,
+                }));
+            }
+
+            catch (error) {
+                console.error(error);
+                setDataState((prev) => ({
+                    ...prev,
+                    consoleError: "An error occurred, please try again later.",
+                    isLoading: false,
+                }));
+            }
         };
 
         const loadTrendingPosts = async () => {
@@ -113,11 +133,11 @@ const SellMySite = () => {
                         ) : (
                             Array.isArray(dataState.loadedWebsites) &&
                             dataState.loadedWebsites.map((website, index) => (
-                                <div className={styles.website} key={index}>
-                                    <img src={website.thumbnailImage} alt={website.name} />
+                                <div onClick={() => goToWebsite(website.owner.username, website.publicWebsiteID)} className={styles.website} key={index}>
+                                    <img src={website.thumbnailImage || '/thumbnailPlaceholder.png'} alt={`${website.title}'s thumbnail`} />
 
                                     <div className={styles.websiteInfo}>
-                                        <p className={styles.websiteTitle}>{website.name}</p>
+                                        <p className={styles.websiteTitle}>{website.title}</p>
 
                                         <div className={styles.profileContainer}>
                                             <img className={styles.profilePicture} src={`/${website.owner.profilePicture}.png`} alt="Profile" />

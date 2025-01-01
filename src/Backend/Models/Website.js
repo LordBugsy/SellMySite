@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Counter from './Counter.js';
 
 const CommentSchema = new mongoose.Schema({
     commenter: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -28,6 +29,30 @@ const websiteSchema = new mongoose.Schema({
         }],
     },
     comments: [CommentSchema],
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    publicWebsiteID: { type: Number, unique: true },
 }, { timestamps: true });
+
+websiteSchema.pre('save', async function (next) {
+    if (this.isNew) {
+        try {
+            const counter = await Counter.findOneAndUpdate(
+                { name: 'website' },
+                { $inc: { value: 1 } },
+                { new: true, upsert: true }
+            );
+            this.publicWebsiteID = counter.value;
+            next();
+        } 
+        
+        catch (error) {
+            next(error);
+        }
+    } 
+    
+    else {
+        next();
+    }
+});
 
 export default mongoose.model('Website', websiteSchema);

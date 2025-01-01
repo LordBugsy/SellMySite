@@ -22,7 +22,9 @@
         gap: 20px;
         background-color: rgb(26, 42, 82);
         max-height: 80%;
+        min-height: 70%;
         border-radius: 10px;
+        width: 570px;
         position: relative;
 
         .commentsHeader {
@@ -71,6 +73,7 @@
             }
 
             .comment {
+                width: 100%;
                 color: white;
                 @include flex(column, center, flex-start);
 
@@ -168,6 +171,69 @@
     
                     &:hover {
                         color: white;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .commentsContainer {
+        .comments {
+            min-width: 95%;
+
+            .commentsHeader {
+                .title {
+                    font-size: 1.5rem;
+                }
+
+                .icon {
+                    font-size: 1.5rem;
+                    right: 20px;
+                }
+            }
+
+            .commentsContent {
+                width: 100%;
+                padding: 10px;
+
+                .comment {
+                    .commentHeader {
+                        .profilePicture {
+                            width: 40px;
+                            height: 40px;
+                        }
+
+                        .displayName {
+                            font-size: 1rem;
+                        }
+                    }
+
+                    .actions {
+                        .icon {
+                            font-size: 1.2rem;
+                            padding: 5px;
+                        }
+                    }
+                }
+            }
+
+            .textAreaContainer {
+                padding: 5px 0;
+                gap: 10px;
+
+                .textArea {
+                    font-size: 1rem;
+                }
+
+                .iconBackground {
+                    width: 2.5em;
+                    height: 2.5em;
+
+                    .icon {
+                        font-size: 1.5em;
+                        padding: 5px;
                     }
                 }
             }

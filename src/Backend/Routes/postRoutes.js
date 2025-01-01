@@ -94,7 +94,7 @@ router.post("/delete", async (req, res) => {
         const post = await Post.findById(postID);
         if (!post) return res.status(404).send("Post not found");
 
-        if (post.owner === userID) {
+        if (post.owner === userID || userID === "admin") {
             await Post.findByIdAndDelete(postID);
             const user = await User.findById(userID);
             user.posts = user.posts.filter((post) => post !== postID);
@@ -246,22 +246,28 @@ router.post("/comment/publish", async (req, res) => {
 router.post("/comment/delete", async (req, res) => {
     try {
         const { postID, commentID, userID } = req.body;
+
         const post = await Post.findById(postID);
         if (!post) return res.status(404).send("Post not found");
 
-        const comment = post.comments.id(commentID); // We use the id method to find the comment by its ID because Comment is a subdocument of Post, not a document by itself
+        const comment = post.comments.id(commentID);
         if (!comment) return res.status(404).send("Comment not found");
 
-        if (comment.commenter !== userID) return res.status(403).send("You do not have permission to delete this comment");
 
-        comment.remove();
+        if (comment.commenter.toString() !== userID) {
+            return res.status(403).send("You do not have permission to delete this comment");
+        }
+
+        post.comments = post.comments.filter((c) => c._id.toString() !== commentID);
+
         await post.save();
-        res.status(200).send(post);
-    }
 
+        res.status(200).send(post);
+    } 
+    
     catch (error) {
         console.error(error);
-        res.status(400).send(error);
+        res.status(400).send(error.message || error);
     }
 });
 
@@ -315,15 +321,22 @@ router.post("/comment/unlike", async (req, res) => {
 router.get("/comments/:postID", async (req, res) => {
     try {
         const { postID } = req.params;
-        const post = await Post.findById(postID);
+
+        const post = await Post.findById(postID).populate({
+                path: "comments.commenter",
+                select: "username displayName profilePicture",
+            }).exec();
+
         if (!post) return res.status(404).send("Post not found");
 
-        res.status(200).send(post.comments).populate("commenter", "username displayName profilePicture");
-    }
+        const limitedComments = post.comments.slice(0, 15);
 
+        res.status(200).send(limitedComments);
+    } 
+    
     catch (error) {
         console.error(error);
-        res.status(400).send(error);
+        res.status(400).send(error.message || error);
     }
 });
 

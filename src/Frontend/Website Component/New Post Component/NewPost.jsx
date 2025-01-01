@@ -69,7 +69,6 @@ const NewPost = () => {
                 owner: localUserId
             });
             navigate(`/post/${localUsername}/${backendResponse.data.publicPostID}`);
-
             closeContainer();
         }
 

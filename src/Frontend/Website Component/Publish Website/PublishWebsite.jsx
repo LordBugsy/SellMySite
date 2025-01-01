@@ -3,12 +3,13 @@ import styles from './PublishWebsite.module.scss';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setPublishWebsiteShown } from '../../Redux/store'; 
+import axios from 'axios';
 
 const PublishWebsite = () => {
     // Redux 
     const dispatch = useDispatch();
 
-    const { localUsername, profilePicture } = useSelector(state => state.user.user);
+    const { localUsername, profilePicture, localUserId } = useSelector(state => state.user.user);
     const { isPublishWebsiteShown } = useSelector(state => state.publishWebsite);
 
     // React
@@ -43,6 +44,25 @@ const PublishWebsite = () => {
         else previewRef.current.classList.replace(styles.slideIn, styles.slideOut);
     }
 
+    const publishWebsite = async () => {
+        if (!websiteURL) return;
+
+        try {
+            const backendResponse = await axios.post('http://localhost:5172/website/create', {
+                title: websiteName,
+                description: websiteDescription,
+                owner: localUserId
+            });
+
+            dispatch(setPublishWebsiteShown(false));
+            navigate(`/website/${localUsername}/${backendResponse.data.publicWebsiteID}`);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (containerRef.current && event.target === containerRef.current) closePublish(event);
@@ -60,7 +80,7 @@ const PublishWebsite = () => {
                     <h1 className={styles.title}>Publish a Website</h1>
                     <i onClick={togglePreview} className={`fas fa-eye ${styles.titleIcon}`}></i>
 
-                    <form className={styles.form}>
+                    <div className={styles.form}>
                         <p className={styles.info}>Website Name</p>
                         <div className={styles.formGroup}>
                             <i className={`fas fa-globe ${styles.icon}`}></i>
@@ -79,10 +99,10 @@ const PublishWebsite = () => {
                         </div>
 
                         <div className={styles.actions}>
-                            <button className={`button ${styles.publish}`}>Publish</button>
+                            <button onClick={publishWebsite} className={`button ${styles.publish}`}>Publish</button>
                             <button onClick={closePublish} className={`button ${styles.discard}`}>Discard</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
                 <div ref={previewRef} className={`${styles.publishPreview} ${styles.slideOut}`}>

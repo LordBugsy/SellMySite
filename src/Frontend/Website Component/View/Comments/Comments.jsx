@@ -1,7 +1,7 @@
 import styles from './Comments.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCommentSectionShown, setLoginSignupShown } from '../../../Redux/store';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
 const Comments = (props) => {
@@ -14,12 +14,18 @@ const Comments = (props) => {
     const containerRef = useRef();
     const messageAreaRef = useRef();
 
+    const [commentsList, setComments] = useState([]);
+
     const closeCommentSection = () => {
         if (containerRef.current) {
             containerRef.current.classList.replace('growIn', 'growOut');
             setTimeout(() => dispatch(setCommentSectionShown(false)), 500);
         }
     }
+
+    useEffect(() => {
+        loadComments();
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = event => {
@@ -74,6 +80,68 @@ const Comments = (props) => {
         };
     }, []);
 
+    const loadComments = async () => {
+        try {
+            const backendResponse = await axios.get(`http://localhost:5172/post/comments/${props.postID}`);
+            setComments(backendResponse.data);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    const toggleLikeComment = async (commentID) => {
+        if (!localUserId) {
+            dispatch(setLoginSignupShown(true));
+            closeCommentSection();
+            return;
+        }
+    
+        try {
+            const targetComment = commentsList.find((comment) => comment._id === commentID);
+            if (!targetComment) {
+                console.error("Comment not found in commentsList.");
+                return;
+            }
+    
+            const userHasLiked = targetComment.likes.some((like) => like.toString() === localUserId);
+            const endpoint = userHasLiked ? 'http://localhost:5172/post/comment/unlike' : 'http://localhost:5172/post/comment/like';
+    
+            setComments((prev) =>
+                prev.map((comment) =>
+                    comment._id === commentID ? {...comment, likes: userHasLiked ? comment.likes.filter((like) => like.toString() !== localUserId) : [...comment.likes, localUserId] } : comment
+                )
+            );
+    
+            const response = await axios.post(endpoint, {
+                postID: props.postID,
+                commentID,
+                userID: localUserId,
+            });
+        } 
+        
+        catch (error) {
+            console.error("Error toggling like:", error);
+        }
+    };
+
+    const deleteComment = async (commentID) => {
+        try {
+            const backendResponse = await axios.post('http://localhost:5172/post/comment/delete', {
+                postID: props.postID,
+                commentID,
+                userID: localUserId,
+            });
+            
+            setComments((prev) => prev.filter((comment) => comment._id !== commentID));
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     const sendMessage = async () => {
         const message = messageAreaRef.current.value.trim();
         if (message === '') return;
@@ -91,7 +159,8 @@ const Comments = (props) => {
                 content: message,
             });
 
-            console.log(backendResponse.data);
+            loadComments();
+            messageAreaRef.current.value = '';
         }
 
         catch (error) {
@@ -99,6 +168,7 @@ const Comments = (props) => {
         }
     }
 
+    
     return (
         <>
             {isCommentSectionShown && <div ref={containerRef} className={`${styles.commentsContainer} growIn`}>
@@ -109,16 +179,16 @@ const Comments = (props) => {
                     </div>
                     
                     <div className={styles.commentsContent}>
-                        {props.comments.length === 0 ? (
+                        {commentsList.length === 0 ? (
                         <p className={styles.noComments}>No comments yet, be the first one to comment!</p>
                     ) : (
-                        props.comments.map((comment, index) => (
+                        commentsList.map((comment, index) => (
                             <div className={styles.comment} key={index}>
                                 <div className={styles.commentHeader}>
-                                    <img src={comment.owner.profilePicture || `/${Math.floor(Math.random() * 9)}.png`} alt="profile picture" className={styles.profilePicture}/>
+                                    <img src={`/${comment.commenter.profilePicture}.png`} alt="profile picture" className={styles.profilePicture}/>
                                     <p className={styles.displayName}>
-                                        {comment.owner.displayName}{' '}
-                                        <span className={styles.username}>@{comment.owner.username}</span>
+                                        {comment.commenter.displayName}{' '}
+                                        <span className={styles.username}>@{comment.commenter.username}</span>
                                     </p>
                                 </div>
 
@@ -127,30 +197,33 @@ const Comments = (props) => {
                                 </div>
 
                                 <div className={styles.actions}>
-                                    <i className={`fas fa-heart ${styles.icon}`}></i>
-                                    <i className={`fas fa-comment ${styles.icon}`}></i>
-                                    <i className={`fas fa-share ${styles.icon}`}></i>
+                                    <i className={`${comment.likes.includes(localUserId) ? 'fas' : 'far'} fa-heart ${styles.icon}`} onClick={() => toggleLikeComment(comment._id)} />
+                                    {comment.commenter._id === localUserId && <i onClick={() => deleteComment(comment._id)} className={`fas fa-trash-alt ${styles.icon}`}></i>}
                                 </div>
                             </div>
                         ))
                     )}
                     </div>
 
-                    <div className={styles.commentActions}>
-                        {/* */}
-                    </div>
+                    {localUserId && (
+                        <>
+                            <div className={styles.commentActions}>
+                                {/*  */}
+                            </div>
 
-                    <div className={styles.textAreaContainer}>
-                        <textarea maxLength='320' name='textarea' ref={messageAreaRef} className={styles.textArea} placeholder={props.targetName === "Post" ? "Comment your thoughts on this post!" : `Comment your thoughts on ${props.targetName}'s post!`}></textarea>
-                        
-                        <div className={styles.iconBackground}>
-                            <i onClick={sendMessage} className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
-                        </div>
-                    </div>  
+                            <div className={styles.textAreaContainer}>
+                                <textarea maxLength='320' name='textarea' ref={messageAreaRef} className={styles.textArea} placeholder={props.targetName === "Post" ? "Comment your thoughts on this post!" : `Comment your thoughts on ${props.targetName}'s post!`}></textarea>
+                                
+                                <div className={styles.iconBackground}>
+                                    <i onClick={sendMessage} className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
-            </div>}
+            </div>} 
         </>
-    )
+    ) 
 };
 
 export default Comments;
