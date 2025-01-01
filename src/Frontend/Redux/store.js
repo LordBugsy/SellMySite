@@ -3,10 +3,10 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 // --- User slice
 const initialUserState = {
   user: {
-    localUserId: "1",
-    localUsername: "Joe",
-    displayName: "Joe",
-    profilePicture: Math.floor(Math.random() * 9) ,
+    localUserId: "",
+    localUsername: "",
+    displayName: "",
+    profilePicture: "",
     siteTokens: 0,
     role: ""
   },
@@ -22,7 +22,7 @@ const userSlice = createSlice({
       state.user.displayName = action.payload.displayName;
 
       state.user.profilePicture = action.payload.profilePicture;
-      state.user.balance = action.payload.balance;
+      state.user.siteTokens = action.payload.siteTokens;
       state.user.role = action.payload.role;
     },
 
@@ -32,12 +32,12 @@ const userSlice = createSlice({
       state.user.displayName = "";
 
       state.user.profilePicture = "";
-      state.user.balance = 0;
+      state.user.siteTokens = 0;
       state.user.role = "";
     },
 
-    updateBalance: (state, action) => {
-      state.user.balance = action.payload.balance;
+    updateSiteTokens: (state, action) => {
+      state.user.siteTokens = action.payload.siteTokens;
     },
   },
 });
@@ -179,7 +179,7 @@ const accountSettingsState = createSlice({
 
 
 // Extract actions to use in components
-export const { loginUser, logoutUser, updatebalance } = userSlice.actions;
+export const { loginUser, logoutUser, updateSiteTokens } = userSlice.actions;
 export const { setLoginSignupShown } = loginSignupState.actions;
 export const { setContactFormShown } = contactFormState.actions;
 export const { setReportFormShown } = reportFormState.actions;

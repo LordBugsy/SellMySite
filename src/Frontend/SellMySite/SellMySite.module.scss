@@ -36,11 +36,32 @@
         max-width: 2500px;
         @include flex(column);
 
+        .loadingContainer {
+            width: 100%;
+            @include flex();
+        }
+
+        .errorContainer {
+            width: 100%;
+            @include flex(column, center, center);
+            color: rgb(233, 58, 58);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
         .websites {
             width: 95%;
             @include flex(row, flex-start);
             overflow-x: auto;
             gap: 1em;
+
+            .noWebsites {
+                width: 100%;
+                @include flex(column, center, center);
+                color: white;
+                text-align: center;
+                font-size: 1.5rem;
+            }
 
             .website {
                 padding: 20px;
@@ -102,6 +123,14 @@
             @include flex(row, flex-start, flex-start);
             overflow-x: auto;
             gap: 1em;
+
+            .noPosts {
+                width: 100%;
+                @include flex(column, center, center);
+                color: white;
+                text-align: center;
+                font-size: 1.5rem;
+            }
 
             .post {
                 width: 100%;

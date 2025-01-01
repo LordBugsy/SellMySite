@@ -1,11 +1,13 @@
 import styles from './Comments.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCommentSectionShown } from '../../../Redux/store';
+import { setCommentSectionShown, setLoginSignupShown } from '../../../Redux/store';
 import { useEffect, useRef } from 'react';
+import axios from 'axios';
 
 const Comments = (props) => {
     // Redux
     const { isCommentSectionShown } = useSelector(state => state.comments);
+    const { localUserId } = useSelector(state => state.user.user);
     const dispatch = useDispatch();
 
     // React
@@ -70,7 +72,32 @@ const Comments = (props) => {
                 messageAreaRef.current.removeEventListener('keydown', handleKeyDown);
             }
         };
-    }, []); 
+    }, []);
+
+    const sendMessage = async () => {
+        const message = messageAreaRef.current.value.trim();
+        if (message === '') return;
+
+        if (localUserId === '') {
+            dispatch(setLoginSignupShown(true));
+            closeCommentSection();
+            return;
+        }
+
+        try {
+            const backendResponse = await axios.post('http://localhost:5172/post/comment/publish', {
+                postID: props.postID,
+                commenter: localUserId,
+                content: message,
+            });
+
+            console.log(backendResponse.data);
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <>
@@ -82,142 +109,31 @@ const Comments = (props) => {
                     </div>
                     
                     <div className={styles.commentsContent}>
+                        {props.comments.length === 0 ? (
+                        <p className={styles.noComments}>No comments yet, be the first one to comment!</p>
+                    ) : (
+                        props.comments.map((comment, index) => (
+                            <div className={styles.comment} key={index}>
+                                <div className={styles.commentHeader}>
+                                    <img src={comment.owner.profilePicture || `/${Math.floor(Math.random() * 9)}.png`} alt="profile picture" className={styles.profilePicture}/>
+                                    <p className={styles.displayName}>
+                                        {comment.owner.displayName}{' '}
+                                        <span className={styles.username}>@{comment.owner.username}</span>
+                                    </p>
+                                </div>
 
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
+                                <div className={styles.commentContent}>
+                                    <p className={styles.commentText}>{comment.content}</p>
+                                </div>
 
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
+                                <div className={styles.actions}>
+                                    <i className={`fas fa-heart ${styles.icon}`}></i>
+                                    <i className={`fas fa-comment ${styles.icon}`}></i>
+                                    <i className={`fas fa-share ${styles.icon}`}></i>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
-
-                        <div className={styles.comment}>
-                            <div className={styles.commentHeader}>
-                                <img src={`/${Math.floor(Math.random() * 9)}.png`} alt='profile picture' className={styles.profilePicture} />
-                                <p className={styles.displayName}>DisplayName <span className={styles.username}>@username</span></p>
-                            </div>
-                            
-                            <div className={styles.commentContent}>
-                                <p className={styles.commentText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates.</p>
-                            </div>
-
-                            <div className={styles.actions}>
-                                <i className={`fas fa-heart ${styles.icon}`}></i>
-                                <i className={`fas fa-comment ${styles.icon}`}></i>
-                                <i className={`fas fa-share ${styles.icon}`}></i>
-                            </div>
-                        </div>
+                        ))
+                    )}
                     </div>
 
                     <div className={styles.commentActions}>
@@ -225,10 +141,10 @@ const Comments = (props) => {
                     </div>
 
                     <div className={styles.textAreaContainer}>
-                        <textarea maxLength='320' name='textarea' ref={messageAreaRef} className={styles.textArea} placeholder={`Comment your thoughts on ${props.targetName}..`}></textarea>
+                        <textarea maxLength='320' name='textarea' ref={messageAreaRef} className={styles.textArea} placeholder={props.targetName === "Post" ? "Comment your thoughts on this post!" : `Comment your thoughts on ${props.targetName}'s post!`}></textarea>
                         
                         <div className={styles.iconBackground}>
-                            <i className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
+                            <i onClick={sendMessage} className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
                         </div>
                     </div>  
                 </div>

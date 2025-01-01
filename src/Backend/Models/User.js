@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema({
     },
     websitesPublished: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Website', required: true }],
     postsPublished: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true }],
+    likedWebsites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Website' }],
+    likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     privateChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],

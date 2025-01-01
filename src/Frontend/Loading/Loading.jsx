@@ -1,10 +1,8 @@
-import React from 'react';
 import styles from './Loading.module.scss'; 
 
-// I didn't make this Loading component, I got it from the internet. I don't remember where I got it but thanks to the person who made it (same goes for the SCSS)
-const Loading = () => {
+const Loading = (props) => {
     return (
-        <div className={styles.Loading}>
+        <div className={`${styles.Loading} ${props.componentClass ? '' : styles.fixed}`}>
             <div className={styles.spinner}></div>
         </div>
     );

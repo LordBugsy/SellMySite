@@ -27,6 +27,13 @@
         border-radius: 10px;
         position: relative;
 
+        .error {
+            color: rgb(232, 73, 73);
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+
         .close {
             position: absolute;
             top: 10px;

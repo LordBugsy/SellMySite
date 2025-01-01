@@ -2,12 +2,12 @@ import styles from './LoginSignup.module.scss';
 import { useRef, useState, useEffect } from 'react';
 import { setLoginSignupShown, loginUser } from '../Redux/store';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 const LoginSignup = (props) => {
     // Redux
     const isLoginSignupShown = useSelector(state => state.loginSignup.isLoginSignupShown);
     const dispatch = useDispatch();
-    
 
     // React
     const usernameRef = useRef();
@@ -17,24 +17,93 @@ const LoginSignup = (props) => {
 
     const [visiblePassword, setVisiblePassword] = useState(false);
     const [propRequest, setPropRequest] = useState(props.request);
+    const [errorDetected, setErrorDetected] = useState(false);
+    const [errorType, setErrorType] = useState('');
 
-    const login = () => {
-        // Login logic here
+    const login = async () => {
+        setErrorDetected(false);
+
+        if (usernameRef.current.value.length < 3) {
+            setErrorDetected(true);
+            setErrorType("Your username must be at least 3 characters long.");
+            return;
+        }
+
+        if (passwordRef.current.value.length < 5) {
+            setErrorDetected(true);
+            setErrorType("Your password must be at least 5 characters long.");
+            return;
+        }
+
+        try {
+            const backendResponse = await axios.post('http://localhost:5172/user/login', {
+                username: usernameRef.current.value,
+                password: passwordRef.current.value
+            });
+
+            dispatch(loginUser({
+                localUserId: backendResponse.data._id,
+                localUsername: backendResponse.data.username,
+                displayName: backendResponse.data.displayName,
+                profilePicture: backendResponse.data.profilePicture,
+                siteTokens: backendResponse.data.siteTokens,
+                role: backendResponse.data.role
+            }));
+
+            closeComponent();
+        }
+
+        catch (error) {
+            setErrorDetected(true);
+            setErrorType("Invalid username or password.");
+        }
     }
 
-    const signup = () => {
-        dispatch(loginUser({
-            localUsername: usernameRef.current.value,
-            localUserId: '1',
-            displayName: displayNameRef.current.value,
-            password: passwordRef.current.value,
+    const signup = async () => {
+        setErrorDetected(false);
 
-            profilePicture: `/${Math.floor(Math.random()*9)}.png`,
-            balance: 0,
-            role: 'user'
-        }));
+        if (usernameRef.current.value.length < 3) {
+            setErrorDetected(true);
+            setErrorType("Your username must be at least 3 characters long.");
+            return;
+        }
 
-        closeComponent();
+        if (displayNameRef.current.value.length < 3) {
+            setErrorDetected(true);
+            setErrorType("Your display name must be at least 3 characters long.");
+            return;
+        }
+
+        if (passwordRef.current.value.length < 5) {
+            setErrorDetected(true);
+            setErrorType("Your password must be at least 5 characters long.");
+            return;
+        }
+
+        try {
+            const backendResponse = await axios.post('http://localhost:5172/user/signup', {
+                username: usernameRef.current.value,
+                displayName: displayNameRef.current.value,
+                password: passwordRef.current.value
+            });
+
+            dispatch(loginUser({
+                localUserId: backendResponse.data._id,
+                localUsername: backendResponse.data.username,
+                displayName: backendResponse.data.displayName,
+                profilePicture: backendResponse.data.profilePicture,
+                siteTokens: backendResponse.data.siteTokens,
+                role: backendResponse.data.role
+            }));
+
+            closeComponent();
+        }
+
+        catch (error) {
+            setErrorDetected(true);
+            if (error.response.data.usernameTaken) setErrorType(`${error.response.data.usernameTaken}.`);
+            else setErrorType("An error occurred. Please try again later.");
+        }
     }
 
     const closeComponent = () => {
@@ -53,6 +122,16 @@ const LoginSignup = (props) => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        const keyPress = event => {
+            if (event.key === 'Escape') closeComponent();
+            else if (event.key === 'Enter') propRequest === 'login' ? login() : signup();
+        }
+
+        document.addEventListener('keydown', keyPress);
+        return () => document.removeEventListener('keydown', keyPress);
+    }, [propRequest]);
 
     return (
         <>
@@ -87,6 +166,10 @@ const LoginSignup = (props) => {
                         <button type='button' className={`${styles.submit} ${styles.button}`} onClick={propRequest === 'login' ? login : signup}>
                             {propRequest === 'login' ? 'Login' : 'Signup'}
                         </button>
+
+                        {errorDetected && <p className={styles.error}>
+                            {errorType}</p>
+                        }
                     </form>
 
                     <div className={styles.switchRequest}>

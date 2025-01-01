@@ -40,8 +40,8 @@
                 .userInfo {
                     @include flex(column, flex-start, flex-start);
                     gap: 0;
-
                     font-size: 1.25rem;
+
                     .username {
                         color: rgb(179, 179, 179);
                         margin: 0;
@@ -50,6 +50,10 @@
                     .displayName {
                         margin: 0;
                         font-weight: bold;
+                    }
+
+                    .date {
+                        margin: 0;
                     }
                 }
 
@@ -113,13 +117,6 @@
                         object-fit: cover;
                         border-radius: 10px;
                     }
-                }
-
-                .dateInformation {
-                    margin-top: -5px;
-
-                    @include flex(row, flex-end, flex-end);
-                    width: 100%;
                 }
             }
 

@@ -39,11 +39,11 @@ function App() {
             <SearchResults />
           } />
 
-          <Route path="/website/:username/:website" element={
+          <Route path="/website/:username/:websiteID" element={
             <ViewWebsite />
           } />
 
-          <Route path="/post/:username/:post" element={
+          <Route path="/post/:username/:publicPostID" element={
             <ViewPost />
           } />
 

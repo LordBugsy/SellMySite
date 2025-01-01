@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import styles from './Header.module.scss';
 import { useDispatch, useSelector } from "react-redux";
-import { setLoginSignupShown, setSearchQueryShown, setContactFormShown, setNotificationShown } from "../Redux/store";
+import { setLoginSignupShown, setSearchQueryShown, setContactFormShown, setNotificationShown, logoutUser } from "../Redux/store";
 import LoginSignup from "../LoginSignup/LoginSignup";
 import Contact from "../Contact Component/Contact.jsx";
 import Search from "../Search Component/Search.jsx";
@@ -47,6 +47,11 @@ const Header = () => {
 
     const navigateToComponent = (targetComp) => {
         navigate(targetComp);
+        toggleAsideState();
+    }
+
+    const logOut = () => {
+        dispatch(logoutUser());
         toggleAsideState();
     }
 
@@ -123,7 +128,7 @@ const Header = () => {
                         <p onClick={() => navigateToComponent('/redeem')} className={styles.redirect}>Redeem</p>
                         <p onClick={() => dispatch(setContactFormShown(true))} className={styles.redirect}>Contact</p>
                         <p onClick={() => navigateToComponent('/settings')} className={styles.redirect}>Settings</p>
-                        <p className={styles.redirect}>Log Out</p>
+                        <p onClick={logOut} className={styles.redirect}>Log Out</p>
                         { role === "admin" && <p className={styles.redirect}>Admin Panel</p> }
                     </div>
 
