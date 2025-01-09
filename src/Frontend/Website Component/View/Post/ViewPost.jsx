@@ -3,7 +3,7 @@ import styles from './ViewPost.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCommentSectionShown, setLoginSignupShown } from '../../../Redux/store';
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../../Loading/Loading';
 import axios from 'axios';
 
@@ -14,6 +14,7 @@ const ViewPost = () => {
     const dispatch = useDispatch();
 
     // React
+    const navigate = useNavigate();
     const { username, publicPostID } = useParams();
 
     const [isLoading, updateIsLoading] = useState(true);
@@ -53,26 +54,11 @@ const ViewPost = () => {
     }, []);
 
     useEffect(() => {
-        const loadOtherPosts = async () => {
-            updateIsLoading(true);
-
-            try {
-                const backendResponse = await axios.get(`http://localhost:5172/post/${username}/recent`);
-                updateOtherPosts(backendResponse.data);
-            }
-
-            catch (error) {
-                console.error(error);
-            }
-        };
-    }), [username];
-
-    useEffect(() => {
         const loadPost = async () => {
             updateIsLoading(true);
             try {
                 const backendResponse = await axios.get(`http://localhost:5172/post/${username}/${publicPostID}`);
-                if (backendResponse.data.likes.includes(localUserId)) updateLikeStatus(true);
+                if (backendResponse.data.likes.includes(localUserId) && localUserId) updateLikeStatus(true);
                 updatePostData(backendResponse.data);
             } 
             
@@ -85,6 +71,25 @@ const ViewPost = () => {
             }
         };
 
+        const loadOtherPosts = async () => {
+            updateIsLoading(true);
+
+            try {
+                const backendResponse = await axios.get(`http://localhost:5172/post/${username}/recent`);
+                updateOtherPosts(backendResponse.data.filter((post) => String(post.publicPostID) !== publicPostID));
+            }
+
+            catch (error) {
+                console.error(error);
+            }
+
+            finally {
+                updateIsLoading(false);
+            }
+        };
+
+        
+        loadOtherPosts();
         loadPost();
     }, [username, publicPostID]);
 
@@ -152,13 +157,12 @@ const ViewPost = () => {
                             {postData._id ? (
                                 <>
                                     <div className={styles.contentHeader}>
-                                        <img src={`/${postData.owner?.profilePicture}.png`} alt={`${postData.owner?.username || "unknown"}'s profile picture`} className={styles.profilePicture} />
+                                        <img onClick={() => navigate(`/profile/${postData.owner.username}`)} src={`/${postData.owner?.profilePicture}.png`} alt={`${postData.owner?.username || "Unknown"}'s profile picture`} className={styles.profilePicture} />
                                         <div className={styles.userInfo}>
-                                            <p className={styles.displayName}>{postData.owner?.displayName || "Unknown"}</p>
-                                            <p className={styles.username}>@{postData.owner?.username || "unknown"}</p>
+                                            <p onClick={() => navigate(`/profile/${postData.owner.username}`)} className={styles.displayName}>{postData.owner?.displayName || "Unknown"}</p>
+                                            <p onClick={() => navigate(`/profile/${postData.owner.username}`)} className={styles.username}>@{postData.owner?.username || "Unknown"}</p>
                                             <p className={styles.date}>
                                                 {new Date(postData.createdAt).toLocaleDateString()} 
-                                                {/* new Date(postData.createdAt).toLocaleTimeString() */}
                                             </p>
                                         </div>
 
@@ -175,15 +179,11 @@ const ViewPost = () => {
                                             {postData.content}
                                         </p>
 
-                                        {/* <div className={styles.imageContainer}>
-                                            <img 
-                                                src='' 
-                                                alt='Post image' 
-                                                className={styles.image} 
-                                            />
-                                        </div> */}
-
-                                        
+                                        {postData.attachment && (
+                                            <div className={styles.imageContainer}>
+                                                <img src={postData.attachment} alt='Post image' className={styles.image} />
+                                            </div>
+                                        )}                                        
                                     </div>
 
                                     <div className={styles.actions}>
@@ -202,33 +202,28 @@ const ViewPost = () => {
                     )}
                 </div>
 
-                {/* <div className={styles.otherPosts}>
-                    <h1 className='title'>Other posts</h1>
-                    <div className={styles.posts}>
-                        {otherPosts.map((post, index) => (
-                            <div className={styles.post} key={index}>
-                                <div className={styles.postHeader}>
-                                    <img src={`/${post.owner.profilePicture}.png`} alt={`${post.owner.username}'s profile picture`} className={styles.profilePicture} />
-                                    <div className={styles.userInfo}>
-                                        <p className={styles.displayName}>{post.owner.displayName}</p>
-                                        <p className={styles.username}>@{post.owner.username}</p>
+                {postData._id && otherPosts.length > 0 && (
+                    <div className={styles.otherPosts}>
+                        <h1 className='title'>Other posts by {postData.owner.username}</h1>
+                        <div className={styles.posts}>
+                            {otherPosts.map((post, index) => (
+                                <div onClick={() => navigate(`/post/${post.owner.username}/${post.publicPostID}`)} className={styles.post} key={index}>
+                                    <div className={styles.postHeader}>
+                                        <img src={`/${post.owner.profilePicture}.png`} alt={`${post.owner.username}'s profile picture`} className={styles.profilePicture} />
+                                        <div className={styles.userInfo}>
+                                            <p className={styles.displayName}>{post.owner.displayName}</p>
+                                            <p className={styles.username}>@{post.owner.username}</p>
+                                        </div>
+                                    </div>
+    
+                                    <div className={styles.postContent}>
+                                        <p className={styles.text}>{post.content}</p>
                                     </div>
                                 </div>
-
-                                <div className={styles.postContent}>
-                                    <p className={styles.text}>{post.content}</p>
-                                </div>
-
-                                <div className={styles.actions}>
-                                    <i className={`fas fa-heart ${styles.icon}`}></i>
-                                    <i className={`fas fa-comment ${styles.icon}`}></i>
-                                    <i className={`fas fa-share ${styles.icon}`}></i>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div> */}
-
+                )}
             </div>
             {isCommentSectionShown && <Comments postID={postData._id} comments={postData.comments} targetName={postData.owner?.username || "Post"} />}
         </>

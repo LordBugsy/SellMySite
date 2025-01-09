@@ -4,6 +4,7 @@ import User from '../Models/User.js';
 import Website from '../Models/Website.js';
 import Post from '../Models/Post.js';
 import mongoose from 'mongoose';
+import { Link } from 'react-router-dom';
 
 const router = express.Router();
 
@@ -45,9 +46,9 @@ const createBotUser = async () => {
         await botUser.save();
 
         const botWebsites = [
-            { title: 'SellMyBot', description: 'The bot that sells websites', owner: botUser._id },
-            { title: 'BuyMyBot', description: 'The bot that buys websites', owner: botUser._id },
-            { title: 'ChatMyBot', description: 'The bot that chats with you', owner: botUser._id },
+            { title: 'SellMyBot', description: 'The bot that sells websites', owner: botUser._id, link: 'https://github.com/LordBugsy' },
+            { title: 'BuyMyBot', description: 'The bot that buys websites', owner: botUser._id, link: 'https://github.com/LordBugsy' },
+            { title: 'ChatMyBot', description: 'The bot that chats with you', owner: botUser._id, link: 'https://github.com/LordBugsy' },
         ];
 
         for (let website of botWebsites) {
@@ -62,7 +63,7 @@ const createBotUser = async () => {
             { content: "Welcome to SellMySite! This website was made by LordBugsy using ReactJS, Redux, Express and MongoDB!", owner: botUser._id },
             { 
                 content: "I'm SellMyBot, the bot that sells websites! I can help you buy and sell websites, and I can also chat with you!", 
-                attachment: 'https://cdn.discordapp.com/attachments/1122126292029018155/1321567901156638854/image.png?ex=676db585&is=676c6405&hm=27d4ade694cf88ccd7debefdccfc5e440f774f463596feb8bdeed249f83cde76&', 
+                attachment: 'https://i.imgur.com/CcTMGhv.png', 
                 owner: botUser._id 
             },
         ];

@@ -177,6 +177,21 @@ const accountSettingsState = createSlice({
     }
 });
 
+// --- Edit Website Popup slice
+const initialEditWebsiteState = {
+    isEditWebsiteShown: true,
+};
+
+const editWebsiteState = createSlice({
+    name: 'editWebsite',
+    initialState: initialEditWebsiteState,
+    reducers : {
+        setEditWebsiteShown: (state, action) => {
+            state.isEditWebsiteShown = action.payload;
+        }
+    }
+});
+
 
 // Extract actions to use in components
 export const { loginUser, logoutUser, updateSiteTokens } = userSlice.actions;
@@ -189,6 +204,7 @@ export const { setPublishWebsiteShown } = publishWebsiteState.actions;
 export const { setPublishPostShown } = publishPostState.actions;
 export const { setCommentSectionShown } = commentsState.actions;
 export const { setAccountSettingsShown } = accountSettingsState.actions;
+export const { setEditWebsiteShown } = editWebsiteState.actions;
 
 
 // Create store using configureStore with combined reducers
@@ -204,6 +220,7 @@ const store = configureStore({
     publishPost: publishPostState.reducer, // Publish Post reducer
     comments: commentsState.reducer, // Comments reducer
     accountSettings: accountSettingsState.reducer, // Account Settings reducer
+    editWebsite: editWebsiteState.reducer, // Edit Website reducer
   },
 });
 

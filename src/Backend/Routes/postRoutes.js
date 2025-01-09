@@ -347,7 +347,7 @@ router.get('/:username/recent', async (req, res) => {
         const user = await User.findOne({ username });
         if (!user) return res.status(404).send("User not found");
 
-        const posts = await Post.find({ owner: user._id }).sort({ createdAt: -1 }).limit(10).populate("owner", "username profilePicture");
+        const posts = await Post.find({ owner: user._id }).sort({ createdAt: -1 }).limit(10).populate("owner", "username displayName profilePicture");
         res.status(200).send(posts);
     }
 

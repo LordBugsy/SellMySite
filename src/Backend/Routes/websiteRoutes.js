@@ -40,8 +40,8 @@ createIndexes();
 // Create a website
 router.post("/create", async (req, res) => {
     try {
-        const { title, description, owner } = req.body;
-        const newWebsite = new Website({ title, description, owner });
+        const { title, description, owner, link } = req.body;
+        const newWebsite = new Website({ title, link, description, owner });
         newWebsite.likes.push(owner);
         await newWebsite.save();
 
@@ -140,16 +140,18 @@ router.post("/unlike", async (req, res) => {
 });
 
 // Load a website
-router.get("/:username/:websiteID", async (req, res) => {
-    const { username, websiteID } = req.params;
+router.get("/:username/:publicWebsiteID", async (req, res) => {
+    const { username, publicWebsiteID } = req.params;
 
-    if (!username || !websiteID) {
+    if (!username || !publicWebsiteID) {
         return res.status(400).send("Invalid request");
     }
 
     else {
+        const websiteID = parseInt(publicWebsiteID);
+
         try {
-            const website = await Website.findById(websiteID).populate("owner", "username profilePicture");
+            const website = await Website.findOne({ publicWebsiteID: websiteID }).populate("owner", "username displayName profilePicture");
             res.status(200).send(website);
         }
 
