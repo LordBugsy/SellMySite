@@ -26,11 +26,13 @@ const createIndexes = async () => {
 createIndexes();
 
 // Create a report
-router.post('/report', async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
         const { reportedTarget, reason, targetID } = req.body;
         const newReport = new Report({ reportedTarget, reason, targetID });
         await newReport.save();
+
+        res.status(201).send(newReport);
     } 
     
     catch (error) {
@@ -40,7 +42,7 @@ router.post('/report', async (req, res) => {
 });
 
 // Get all pending reports
-router.get('/reports/pending', async (req, res) => {
+router.get('/pending', async (req, res) => {
     try {
         const reports = await Report.find({ status: 'pending' });
         res.status(200).send(reports);

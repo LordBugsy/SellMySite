@@ -1,7 +1,8 @@
 import styles from './Report.module.scss';
 import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setReportFormShown } from '../Redux/store';
+import { setReportFormShown } from '../../Redux/store';
+import axios from 'axios';
 
 const Report = (props) => {
     // Redux
@@ -10,7 +11,7 @@ const Report = (props) => {
     const dispatch = useDispatch();
 
     // React
-    const reportContainerRef = useRef();
+    const reportContainerRef = useRef(null);
     const messageRef = useRef();
 
     const closeComponent = () => {
@@ -19,6 +20,24 @@ const Report = (props) => {
         setTimeout(() => {
             dispatch(setReportFormShown(false));
         }, 300);
+    }
+
+    const submitReport = async () => {
+        const message = messageRef.current.value || "No reason provided";
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/report/create", {
+                reportedTarget: props.reportedTarget,
+                reason: message.trim(),
+                targetID: props.targetID
+            });
+
+            closeComponent();
+        }
+
+        catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {
@@ -33,22 +52,25 @@ const Report = (props) => {
     return (
         <>
             {isReportFormShown && <div ref={reportContainerRef} className={`${styles.reportContainer} growIn`}>
-                <form className={styles.reportForm}>
+                <div className={styles.reportForm}>
                     <i onClick={closeComponent} className={`fas fa-times ${styles.icon}`}></i>
                     <div className={styles.reportHeader}>
-                        <h1 className={styles.header}>Report <span className={styles.reportTarget}>{props.targetName}</span></h1>
-                        <p className={styles.info}>Let us know how <span className={styles.reportTarget}>{props.targetName}</span> is breaking the rules</p>
+                        <h1 className={styles.header}>Report <span className={styles.reportTarget}>{props.targetName || "Post"}</span></h1>
+                        <p className={styles.info}>
+                            {props.reportedTarget === "Post" && "Let us know why this post is breaking the rules"}
+                            {props.reportedTarget !== "Post" && `Let us know how <span className={styles.reportTarget}>{props.targetName}</span> is breaking the rules`}
+                        </p>
                     </div>
 
                     <p className={styles.formLabel}>Message</p>
                     <div className={styles.formGroup}>
-                        <textarea ref={messageRef} placeholder={`Let us know why ${props.targetName} is breaking the rules..`} className={styles.textArea} />
+                        <textarea ref={messageRef} placeholder={`${props.reportedTarget === "Post" ? "Let us know why this post is breaking the rules... " : `Let us know why ${props.targetName} is breaking the rules..`}`} className={styles.textArea} />
                     </div>
 
                     <div className={styles.controls}>
-                        <button className={`button ${styles.submit}`}>Submit</button>
+                        <button onClick={submitReport} className={`button ${styles.submit}`}>Submit</button>
                     </div>
-                </form>
+                </div>
             </div>}
         </>
     );

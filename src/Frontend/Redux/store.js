@@ -179,7 +179,7 @@ const accountSettingsState = createSlice({
 
 // --- Edit Website Popup slice
 const initialEditWebsiteState = {
-    isEditWebsiteShown: true,
+    isEditWebsiteShown: false,
 };
 
 const editWebsiteState = createSlice({
@@ -188,6 +188,36 @@ const editWebsiteState = createSlice({
     reducers : {
         setEditWebsiteShown: (state, action) => {
             state.isEditWebsiteShown = action.payload;
+        }
+    }
+});
+
+// --- Confirm Buy slice
+const initialConfirmBuyState = {
+    isConfirmBuyShown: false,
+};
+
+const confirmBuyState = createSlice({
+    name: 'confirmBuy',
+    initialState: initialConfirmBuyState,
+    reducers : {
+        setConfirmBuyShown: (state, action) => {
+            state.isConfirmBuyShown = action.payload;
+        }
+    }
+});
+
+// --- Confirm Delete slice
+const initialConfirmDeleteState = {
+    isConfirmDeleteShown: false,
+};
+
+const confirmDeleteState = createSlice({
+    name: 'confirmDelete',
+    initialState: initialConfirmDeleteState,
+    reducers : {
+        setConfirmDeleteShown: (state, action) => {
+            state.isConfirmDeleteShown = action.payload;
         }
     }
 });
@@ -205,6 +235,8 @@ export const { setPublishPostShown } = publishPostState.actions;
 export const { setCommentSectionShown } = commentsState.actions;
 export const { setAccountSettingsShown } = accountSettingsState.actions;
 export const { setEditWebsiteShown } = editWebsiteState.actions;
+export const { setConfirmBuyShown } = confirmBuyState.actions;
+export const { setConfirmDeleteShown } = confirmDeleteState.actions;
 
 
 // Create store using configureStore with combined reducers
@@ -221,6 +253,8 @@ const store = configureStore({
     comments: commentsState.reducer, // Comments reducer
     accountSettings: accountSettingsState.reducer, // Account Settings reducer
     editWebsite: editWebsiteState.reducer, // Edit Website reducer
+    confirmBuy: confirmBuyState.reducer, // Confirm Buy reducer
+    confirmDelete: confirmDeleteState.reducer, // Confirm Delete reducer
   },
 });
 

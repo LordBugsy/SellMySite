@@ -51,6 +51,7 @@ const PublishWebsite = () => {
             const backendResponse = await axios.post('http://localhost:5172/website/create', {
                 title: websiteName,
                 description: websiteDescription,
+                link: websiteURL,
                 owner: localUserId
             });
 

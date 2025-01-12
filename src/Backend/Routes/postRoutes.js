@@ -94,16 +94,19 @@ router.post("/delete", async (req, res) => {
         const post = await Post.findById(postID);
         if (!post) return res.status(404).send("Post not found");
 
-        if (post.owner === userID || userID === "admin") {
-            await Post.findByIdAndDelete(postID);
+        const madeBy = await User.findById(userID);
+
+        if (post.owner.toString() === userID || madeBy.role === "admin") {
             const user = await User.findById(userID);
-            user.posts = user.posts.filter((post) => post !== postID);
+            user.postsPublished = user.postsPublished.filter((post) => post !== postID);
             await user.save();
 
            for (const userElement of post.likes) {
-                userElement.likedPosts = userElement.likedPosts.filter((post) => post !== postID);
-                await userElement.save();
+                const user = await User.findById(userElement);
+                user.likedPosts = user.likedPosts.filter((post) => post !== postID);
+                await user.save();
             }
+            await Post.findByIdAndDelete(postID);
 
             res.status(200).send("Post deleted successfully");
         } 

@@ -35,6 +35,19 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 });
 
+(async () => {
+    try {
+        const existingCounter = await Counter.findOne({ name: "user" });
+        if (!existingCounter) {
+            await Counter.create({ name: "user", value: 0 });
+            console.log("User counter initialised with value 0");
+        }
+    } 
+    catch (error) {
+        console.error("Error initialising user counter:", error);
+    }
+})();
+
 // Create a counter for posts
 (async () => {
     try {
@@ -47,6 +60,67 @@ mongoose.connect(process.env.MONGO_URI, {
     
     catch (error) {
         console.error("Error initialising post counter:", error);
+    }
+})();
+
+// Create a counter for websites
+(async () => {
+    try {
+        const existingCounter = await Counter.findOne({ name: "website" });
+        if (!existingCounter) {
+            await Counter.create({ name: "website", value: 0 });
+            console.log("Website counter initialised with value 0");
+        }
+    } 
+    
+    catch (error) {
+        console.error("Error initialising website counter:", error);
+    }
+})();
+
+// ==== The following counters will only be used to monitor how many "x" have been created ==== //
+// Create a counter for users
+(async () => {
+    try {
+        const existingCounter = await Counter.findOne({ name: "user" });
+        if (!existingCounter) {
+            await Counter.create({ name: "user", value: 0 });
+            console.log("User counter initialised with value 0");
+        }
+    } 
+    
+    catch (error) {
+        console.error("Error initialising user counter:", error);
+    }
+})();
+
+// Create a counter for reports
+(async () => {
+    try {
+        const existingCounter = await Counter.findOne({ name: "report" });
+        if (!existingCounter) {
+            await Counter.create({ name: "report", value: 0 });
+            console.log("Report counter initialised with value 0");
+        }
+    } 
+    
+    catch (error) {
+        console.error("Error initialising report counter:", error);
+    }
+})();
+
+// Create a counter for the number of code generations
+(async () => {
+    try {
+        const existingCounter = await Counter.findOne({ name: "code" });
+        if (!existingCounter) {
+            await Counter.create({ name: "code", value: 0 });
+            console.log("Code counter initialised with value 0");
+        }
+    } 
+    
+    catch (error) {
+        console.error("Error initialising code counter:", error);
     }
 })();
 

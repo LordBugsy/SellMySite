@@ -239,6 +239,36 @@ router.get('/websites/:username', async (req, res) => {
     }
 });
 
+// Get the liked posts of a user by their id
+router.get('/likedposts/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json(user.likedPosts);
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Get the liked websites of a user by their id
+router.get('/likedwebsites/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json(user.likedWebsites);
+    }
+    
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
 // Get a user by ID
 router.get('/:id', async (req, res) => {
     try {

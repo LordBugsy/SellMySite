@@ -4,6 +4,7 @@ import Counter from './Counter.js';
 const CommentSchema = new mongoose.Schema({
     commenter: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     content: { type: String, required: true },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     publishDate: { type: Date, default: Date.now }
 });
 

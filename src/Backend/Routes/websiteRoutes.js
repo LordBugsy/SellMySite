@@ -74,6 +74,16 @@ router.post("/delete", async (req, res) => {
                 return res.status(403).send("Unauthorized");
             }
 
+            const owner = await User.findById(userID);
+            owner.websitesPublished = owner.websitesPublished.filter((publishedWebsite) => publishedWebsite.toString() !== websiteID);
+            await owner.save();
+
+            for (const user of website.likes) {
+                const currentUser = await User.findById(user);
+                currentUser.likedWebsites = currentUser.likedWebsites.filter((likedWebsite) => likedWebsite.toString() !== websiteID);
+                await currentUser.save();
+            }
+
             await Website.findByIdAndDelete(websiteID);
             res.status(200).send("Website deleted");
         } 
@@ -96,15 +106,17 @@ router.post("/like", async (req, res) => {
     else {
         try {
             const website = await Website.findById(websiteID);
-            if (website.likes.includes(userID)) {
-                return res.status(400).send("User already liked this website");
-            }
+            const user = await User.findById(userID);
+            if (!user.likedWebsites.some((likedWebsite) => likedWebsite.toString() === websiteID)) {
+                user.likedWebsites.push(websiteID);
+                await user.save();
 
-            website.likes.push(userID);
-            await website.save();
-            res.status(200).send(website);
-        } 
-        
+                website.likes.push(userID);
+                await website.save();
+                res.status(200).send(true);
+            }
+        }
+
         catch (error) {
             console.error(error);
             res.status(400).send(error);
@@ -123,11 +135,298 @@ router.post("/unlike", async (req, res) => {
     else {
         try {
             const website = await Website.findById(websiteID);
-            if (!website.likes.includes(userID)) {
-                return res.status(400).send("User has not liked this website");
-            }
+            const user = await User.findById(userID);
+            user.likedWebsites = user.likedWebsites.filter((likedWebsite) => likedWebsite.toString() !== websiteID);
+            await user.save();
 
             website.likes = website.likes.filter((like) => like.toString() !== userID);
+            await website.save();
+            res.status(200).send(false);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Load the 10 most popular websites
+router.get("/popular", async (req, res) => {
+    try {
+        const websites = await Website.find().sort({ likes: -1 }).limit(10).populate("owner", "username profilePicture");
+        res.status(200).send(websites);
+    } 
+    
+    catch (error) {
+        console.error(error);
+        res.status(400).send(error);
+    }
+});
+
+// Load comments of a website
+router.get("/comments/:websiteID", async (req, res) => {
+    const { websiteID } = req.params;
+
+    if (!websiteID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID).populate({
+                path: "comments.commenter", 
+                select: "username displayName profilePicture"
+            }).exec();
+
+            const limitedComments = website.comments.slice(0, 15);
+            res.status(200).send(limitedComments);
+        }
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Post a comment on a website
+router.post("/comment/publish", async (req, res) => {
+    const { websiteID, commenterID, content } = req.body;
+
+    if (!websiteID || !commenterID || !content) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            website.comments.push({ commenter: commenterID, content });
+            await website.save();
+            res.status(200).send(website);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Delete a comment on a website
+router.post("/comment/delete", async (req, res) => {
+    const { websiteID, commentID, userID } = req.body;
+
+    if (!websiteID || !commentID || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            const comment = website.comments.id(commentID);
+
+            if (comment.owner.toString() !== userID && userID !== "admin") {
+                return res.status(403).send("Unauthorized");
+            }
+
+            comment.remove();
+            await website.save();
+            res.status(200).send(website);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Like a comment on a website
+router.post("/comment/like", async (req, res) => {
+    const { websiteID, commentID, userID } = req.body;
+
+    if (!websiteID || !commentID || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            const comment = website.comments.id(commentID);
+
+            if (!comment.likes.some((like) => like.toString() === userID)) {
+                comment.likes.push(userID);
+                await website.save();
+                res.status(200).send(true);
+            }
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Unlike a comment on a website
+router.post("/comment/unlike", async (req, res) => {
+    const { websiteID, commentID, userID } = req.body;
+
+    if (!websiteID || !commentID || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            const comment = website.comments.id(commentID);
+            comment.likes = comment.likes.filter((like) => like.toString() !== userID);
+            await website.save();
+            res.status(200).send(false);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Buy a website
+router.post("/buy", async (req, res) => {
+    const { websiteID, buyerID } = req.body;
+
+    if (!websiteID || !buyerID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            const buyer = await User.findById(buyerID);
+
+            if (buyer.siteTokens >= website.price && website.price > 0) {
+                const seller = await User.findById(website.owner);
+                seller.siteTokens += website.price;
+                seller.websitesPublished = seller.websitesPublished.filter((publishedWebsite) => publishedWebsite.toString() !== websiteID);
+                seller.save();
+
+                buyer.siteTokens -= website.price;
+                buyer.websitesPublished.push(websiteID);
+                website.owner = buyerID;
+                await buyer.save();
+
+                website.price = -1; // i set the price to -1 to prevent another user from buying the website right away
+                await website.save();
+                res.status(200).send(website);
+            }
+        }
+
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Edit the title of a website
+router.post("/edit/title", async (req, res) => {
+    const { websiteID, newTitle, userID } = req.body;
+
+    if (!websiteID || !newTitle || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            if (website.owner.toString() !== userID && userID !== "admin") {
+                return res.status(403).send("Unauthorized");
+            }
+
+            website.title = newTitle;
+            await website.save();
+            res.status(200).send(website);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Edit the description of a website
+router.post("/edit/description", async (req, res) => {
+    const { websiteID, newDescription, userID } = req.body;
+
+    if (!websiteID || !newDescription || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            if (website.owner.toString() !== userID && userID !== "admin") {
+                return res.status(403).send("Unauthorized");
+            }
+
+            website.description = newDescription;
+            await website.save();
+            res.status(200).send(website);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Edit the link of a website
+router.post("/edit/link", async (req, res) => {
+    const { websiteID, newLink, userID } = req.body;
+
+    if (!websiteID || !newLink || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            if (website.owner.toString() !== userID && userID !== "admin") {
+                return res.status(403).send("Unauthorized");
+            }
+
+            website.link = newLink;
+            await website.save();
+            res.status(200).send(website);
+        } 
+        
+        catch (error) {
+            console.error(error);
+            res.status(400).send(error);
+        }
+    }
+});
+
+// Edit the price of a website
+router.post("/edit/price", async (req, res) => {
+    const { websiteID, newPrice, userID } = req.body;
+
+    if (!websiteID || !newPrice || !userID) {
+        return res.status(400).send("Invalid request");
+    }
+
+    else {
+        try {
+            const website = await Website.findById(websiteID);
+            if (website.owner.toString() !== userID && userID !== "admin") {
+                return res.status(403).send("Unauthorized");
+            }
+
+            website.price = newPrice;
             await website.save();
             res.status(200).send(website);
         } 
@@ -159,19 +458,6 @@ router.get("/:username/:publicWebsiteID", async (req, res) => {
             console.error(error);
             res.status(400).send(error);
         }
-    }
-});
-
-// Load the 10 most popular websites
-router.get("/popular", async (req, res) => {
-    try {
-        const websites = await Website.find().sort({ likes: -1 }).limit(10).populate("owner", "username profilePicture");
-        res.status(200).send(websites);
-    } 
-    
-    catch (error) {
-        console.error(error);
-        res.status(400).send(error);
     }
 });
 

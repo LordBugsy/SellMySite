@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Counter from './Counter.js';
 
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
@@ -21,5 +22,26 @@ const userSchema = new mongoose.Schema({
     privateChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     followersMilestones: [{ type: Number }],
 }, { timestamps: true });
+
+userSchema.pre('save', async function (next) {
+    if (this.isNew) {
+        try {
+            const counter = await Counter.findOneAndUpdate(
+                { name: 'user' },
+                { $inc: { value: 1 } },
+                { new: true, upsert: true }
+            );
+            next();
+        } 
+        
+        catch (error) {
+            next(error);
+        }
+    } 
+    
+    else {
+        next();
+    }
+});
 
 export default mongoose.model('User', userSchema);

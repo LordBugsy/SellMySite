@@ -81,14 +81,29 @@ const Comments = (props) => {
     }, []);
 
     const loadComments = async () => {
-        try {
-            const backendResponse = await axios.get(`http://localhost:5172/post/comments/${props.postID}`);
-            setComments(backendResponse.data);
+        if (props.postID) {
+            try {
+                const backendResponse = await axios.get(`http://localhost:5172/post/comments/${props.postID}`);
+                setComments(backendResponse.data);
+            }
+
+            catch (error) {
+                console.error(error);
+            }
         }
 
-        catch (error) {
-            console.error(error);
+        else if (props.websiteID) {
+            try {
+                const backendResponse = await axios.get(`http://localhost:5172/website/comments/${props.websiteID}`);
+                setComments(backendResponse.data);
+            }
+
+            catch (error) {
+                console.error(error);
+            }
         }
+
+        else console.error("Unable to load comments: No postID or websiteID provided.");
     }
 
     const toggleLikeComment = async (commentID) => {
@@ -97,48 +112,103 @@ const Comments = (props) => {
             closeCommentSection();
             return;
         }
-    
-        try {
-            const targetComment = commentsList.find((comment) => comment._id === commentID);
-            if (!targetComment) {
-                console.error("Comment not found in commentsList.");
-                return;
+
+        if (props.postID) {
+            try {
+                const targetComment = commentsList.find((comment) => comment._id === commentID);
+                if (!targetComment) {
+                    console.error("Comment not found in commentsList.");
+                    return;
+                }
+
+                const userHasLiked = targetComment.likes.some((like) => like.toString() === localUserId);
+                const endpoint = userHasLiked ? 'http://localhost:5172/post/comment/unlike' : 'http://localhost:5172/post/comment/like';
+
+                setComments((prev) =>
+                    prev.map((comment) =>
+                        comment._id === commentID ? {...comment, likes: userHasLiked ? comment.likes.filter((like) => like.toString() !== localUserId) : [...comment.likes, localUserId] } : comment
+                    )
+                );
+
+                const response = await axios.post(endpoint, {
+                    postID: props.postID,
+                    commentID,
+                    userID: localUserId,
+                });
+            } 
+            
+            catch (error) {
+                console.error("Error toggling like:", error);
             }
+        }
     
-            const userHasLiked = targetComment.likes.some((like) => like.toString() === localUserId);
-            const endpoint = userHasLiked ? 'http://localhost:5172/post/comment/unlike' : 'http://localhost:5172/post/comment/like';
-    
-            setComments((prev) =>
-                prev.map((comment) =>
-                    comment._id === commentID ? {...comment, likes: userHasLiked ? comment.likes.filter((like) => like.toString() !== localUserId) : [...comment.likes, localUserId] } : comment
-                )
-            );
-    
-            const response = await axios.post(endpoint, {
-                postID: props.postID,
-                commentID,
-                userID: localUserId,
-            });
-        } 
-        
-        catch (error) {
-            console.error("Error toggling like:", error);
+        else if (props.websiteID) {
+            try {
+                const targetComment = commentsList.find((comment) => comment._id === commentID);
+                if (!targetComment) {
+                    console.error("Comment not found in commentsList.");
+                    return;
+                }
+
+                const userHasLiked = targetComment.likes.some((like) => like.toString() === localUserId);
+                const endpoint = userHasLiked ? 'http://localhost:5172/website/comment/unlike' : 'http://localhost:5172/website/comment/like';
+
+                setComments((prev) =>
+                    prev.map((comment) =>
+                        comment._id === commentID ? {...comment, likes: userHasLiked ? comment.likes.filter((like) => like.toString() !== localUserId) : [...comment.likes, localUserId] } : comment
+                    )
+                );
+
+                const response = await axios.post(endpoint, {
+                    websiteID: props.websiteID,
+                    commentID,
+                    userID: localUserId,
+                });
+            } 
+            
+            catch (error) {
+                console.error("Error toggling like:", error);
+            }
         }
     };
 
     const deleteComment = async (commentID) => {
-        try {
-            const backendResponse = await axios.post('http://localhost:5172/post/comment/delete', {
-                postID: props.postID,
-                commentID,
-                userID: localUserId,
-            });
-            
-            setComments((prev) => prev.filter((comment) => comment._id !== commentID));
+        if (!localUserId) {
+            dispatch(setLoginSignupShown(true));
+            closeCommentSection();
+            return;
         }
 
-        catch (error) {
-            console.error(error);
+        if (props.postID) {
+            try {
+                const backendResponse = await axios.post('http://localhost:5172/post/comment/delete', {
+                    postID: props.postID,
+                    commentID,
+                    userID: localUserId,
+                });
+                
+                setComments((prev) => prev.filter((comment) => comment._id !== commentID));
+            }
+
+            catch (error) {
+                console.error(error);
+            }
+        }
+
+        else if (props.websiteID) {
+            try {
+                const backendResponse = await axios.post('http://localhost:5172/website/comment/delete', {
+                    websiteID: props.websiteID,
+                    commentID,
+                    userID: localUserId,
+                });
+                
+                setComments((prev) => prev.filter((comment) => comment._id !== commentID));
+            }
+
+            catch (error) {
+                console.error(error);
+            }
         }
     }
 
@@ -152,20 +222,39 @@ const Comments = (props) => {
             return;
         }
 
-        try {
-            const backendResponse = await axios.post('http://localhost:5172/post/comment/publish', {
-                postID: props.postID,
-                commenter: localUserId,
-                content: message,
-            });
-
-            loadComments();
-            messageAreaRef.current.value = '';
+        if (props.postID) {
+            try {
+                const backendResponse = await axios.post('http://localhost:5172/post/comment/publish', {
+                    postID: props.postID,
+                    commenter: localUserId,
+                    content: message,
+                });
+    
+                loadComments();
+                messageAreaRef.current.value = '';
+            }
+    
+            catch (error) {
+                console.error(error);
+            }
         }
 
-        catch (error) {
-            console.error(error);
-        }
+        else if (props.websiteID) {
+            try {
+                const backendResponse = await axios.post('http://localhost:5172/website/comment/publish', {
+                    websiteID: props.websiteID,
+                    commenterID: localUserId,
+                    content: message,
+                });
+    
+                loadComments();
+                messageAreaRef.current.value = '';
+            }
+    
+            catch (error) {
+                console.error(error);
+            }
+        }        
     }
 
     

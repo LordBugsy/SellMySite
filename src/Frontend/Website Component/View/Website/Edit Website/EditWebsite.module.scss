@@ -7,6 +7,7 @@
 
 .editContainer {
     @include flex(column);
+    opacity: 0;
     width: 100%;
     height: 100%;
     position: fixed;
@@ -16,13 +17,24 @@
     backdrop-filter: blur(5px);
     z-index: 100;
 
+    .displayed {
+        display: block;
+    }
+
+    .hidden {
+        display: none;
+    }
+
     .editWebsite {
         position: relative;
         @include flex();
         margin-top: -1rem;
         background-color: rgb(20, 60, 113);
         padding: 1.25em;
+        padding-left: 0;
         border-radius: 10px;
+        width: 750px;
+        height: 500px;
         box-shadow: 0 0 10px rgb(20, 60, 113);
 
         >.icon {
@@ -38,6 +50,185 @@
                 filter: brightness(0.8);
             }
         }
-    }
 
+        .tabs {
+            @include flex(column, flex-start, flex-start);
+            background-color: rgb(30, 72, 128);
+            height: 100%;
+            padding: 1.2rem;
+            border-radius: 10px;
+
+            .tab {
+                color: rgb(219, 219, 219);
+                font-size: 2em;
+                font-weight: bold;
+                border-radius: 10px;
+                width: 100%;
+                padding: 1.2rem;
+                cursor: pointer;
+                transition: background-color 0.1s ease-in-out;
+
+                &:hover {
+                    color: white;
+                }
+
+                &.active {
+                    background-color: rgb(20, 60, 113);
+                    color: white;
+                }
+            }
+        }
+
+        .tabContent {
+            flex: 1;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            @include flex(column, flex-start);
+
+            .tabEdit {
+                opacity: 0;
+                @include flex(column);
+                width: 90%;
+
+                .icon {
+                    color: white;
+                }
+                
+                .inputContainer {
+                    @include flex();
+                    width: 100%;
+                    background-color: rgb(34, 83, 147);
+                    border-radius: 10px;
+                    padding: 0.5rem;
+                    margin-top: -1.5em;
+
+                    .input {
+                        width: 100%;
+                        height: 2.5rem;
+                        border: none;
+                        padding: 0 1rem;
+                        background-color: transparent;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 1.5em;
+                        outline: none;
+
+                        &::placeholder {
+                            color: rgb(200, 200, 200);
+                        }
+                    }
+                }
+
+                .textAreaContainer {
+                    @include flex(row, center, center);
+                    width: 100%;
+                    background-color: rgb(34, 83, 147);
+                    border-radius: 10px;
+                    padding: 0.5rem;
+                    margin-top: -1.5em;
+
+                    .textArea {
+                        width: 100%;
+                        height: 10rem;
+                        border: none;
+                        padding: 1rem;
+                        background-color: transparent;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 1.5em;
+                        outline: none;
+                        resize: none;
+
+                        &::placeholder {
+                            color: rgb(200, 200, 200);
+                        }
+                    }
+                }
+
+                .buttonContainer {
+                    @include flex();
+                    width: 100%;
+                    margin-top: 2em;
+
+                    .save, .sell {
+                        background-color: rgb(58, 202, 58);
+                        font-weight: 700;
+                    }
+
+                    .delete {
+                        background-color: rgb(202, 58, 58);
+                        font-weight: 700;
+                    }
+                }
+
+                .information {
+                    color: white;
+                    font-size: 1.5em;
+                    margin-top: 1em;
+                    text-align: center;
+                    margin-bottom: 0;
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 770px) {
+    .editContainer {
+        .displayed {
+            display: none;
+        }
+
+        .hidden {
+            display: block;
+        }
+
+        .editWebsite {
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+
+            >.icon {
+                top: 2em;
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                width: 100%;
+                height: 75px;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: flex-start;
+                width: 100%;
+                margin-left: 15px;
+                margin-top: -15px;
+                background-color: none;
+                padding: 0;
+                border-radius: 0;
+                overflow-y: hidden;
+
+                .tab {
+                    font-size: 1em;
+                    border-radius: 0;
+                    transition: none;
+
+                    &.active {
+                        height: 100%;
+                        background-color: rgb(58, 202, 58);
+                    }
+                }
+            }
+
+            .tabContent {
+                width: 90%;
+                margin-left: 20px;
+            }
+
+            .buttonContainer {
+                margin-bottom: 1em;
+            }
+        }
+    }
 }
