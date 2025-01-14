@@ -47,7 +47,8 @@ const LoginSignup = (props) => {
                 displayName: backendResponse.data.displayName,
                 profilePicture: backendResponse.data.profilePicture,
                 siteTokens: backendResponse.data.siteTokens,
-                role: backendResponse.data.role
+                role: backendResponse.data.role,
+                hasReadTheAnnouncement: backendResponse.data.hasReadTheAnnouncement
             }));
 
             closeComponent();

@@ -58,7 +58,7 @@ const Report = (props) => {
                         <h1 className={styles.header}>Report <span className={styles.reportTarget}>{props.targetName || "Post"}</span></h1>
                         <p className={styles.info}>
                             {props.reportedTarget === "Post" && "Let us know why this post is breaking the rules"}
-                            {props.reportedTarget !== "Post" && `Let us know how <span className={styles.reportTarget}>{props.targetName}</span> is breaking the rules`}
+                            {props.reportedTarget !== "Post" && `Let us know why ${props.targetName} is breaking the rules`}
                         </p>
                     </div>
 

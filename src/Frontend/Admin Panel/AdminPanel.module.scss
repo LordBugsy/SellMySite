@@ -1,0 +1,211 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+.adminPanelContainer {
+    @include flex();
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 101;
+
+    .widthTooLow {
+        text-align: center;
+        display: none;
+        width: 70%;
+        padding: 30px;
+        color: white;
+        background-color: rgb(20, 60, 113);
+        border-radius: 10px;
+
+        .close {
+            background-color: rgb(238, 72, 72);
+        }
+    }
+
+    .adminPanel {
+        @include flex(column, flex-start);
+        position: relative;
+        width: 95%;
+        height: 90%;
+        background-color: rgb(20, 60, 113);
+        border-radius: 10px;
+        padding: 1.25em;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+
+        >.icon {
+            position: absolute;
+            color: rgb(245, 65, 65);
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 2em;
+            transition: color 0.3s;
+
+            &:hover {
+                color: rgb(181, 51, 51);
+            }
+        }
+
+        .header {
+            width: 95%;
+            @include flex(row, space-between, center);
+            font-size: 1.2em;
+            color: white;
+
+            .username {
+                font-weight: bold;
+            }
+        }
+
+        .options {
+            @include flex(row, flex-start, flex-start);
+            width: 100%;
+            height: 100%;
+            padding: 1.2rem;
+            border-radius: 10px;
+            gap: 1.2rem;
+
+            .tabs {
+                @include flex(column, flex-start, flex-start);
+                background-color: rgb(30, 72, 128);
+                height: 95%;
+                padding: 1.2rem;
+                border-radius: 10px;
+
+                .tab {
+                    color: rgb(219, 219, 219);
+                    margin: 0;
+                    font-size: 2em;
+                    font-weight: bold;
+                    border-radius: 10px;
+                    width: 100%;
+                    padding: 1.2rem;
+                    cursor: pointer;
+                    transition: background-color 0.1s ease-in-out;
+    
+                    &:hover {
+                        color: white;
+                    }
+    
+                    &.selected {
+                        background-color: rgb(20, 60, 113);
+                        color: white;
+                    }
+                }
+            }
+
+            .contentContainer {
+                flex: 1;
+                width: 100%;
+                height: 100%;
+                @include flex(column, flex-start);
+                
+                
+                .content {
+                    width: 100%;
+                    color: white;
+                    
+                    .title {
+                        font-size: 1.25em;
+                        color: white;
+
+                        .reportsLength {
+                            color: rgb(54, 210, 54);
+                        }
+                    }
+
+                    .selectedTab {
+                        width: 100%;
+                        @include flex(column, flex-start);
+                        color: white;
+
+                        // Reports
+                        /* .reports {
+
+                        } */
+
+                        .noReports {
+                            color: white;
+                            font-weight: bold;
+                            font-size: 2em;
+                        }
+
+                        // Add Codes
+
+
+                        // Announcement
+                        .announcement {
+                            width: 95%;
+                            @include flex(column, flex-start);
+                            padding: 20px;
+
+                            .input {
+                                width: 500px;
+                                max-width: 95%;
+                                background-color: rgb(30, 72, 128);
+                                color: white;
+                                font-weight: bold;
+                                border-radius: 10px;
+                                padding: 1.2rem;
+                                font-size: 1.2em;
+                                border: none;
+                                outline: none;
+                                margin-bottom: 1.2rem;
+
+                                &::placeholder {
+                                    color: rgb(171, 171, 171);
+                                }
+                            }
+
+                            .textArea {
+                                width: 95%;
+                                height: 300px;
+                                background-color: rgb(30, 72, 128);
+                                color: white;
+                                font-weight: bold;
+                                border-radius: 10px;
+                                padding: 1.2rem;
+                                font-size: 1.2em;
+                                resize: none;
+                                border: none;
+                                outline: none;
+                                margin-bottom: 1.2rem;
+
+                                &::placeholder {
+                                    color: rgb(171, 171, 171);
+                                }
+                            }
+
+                            .submit {
+                                background-color: rgb(54, 210, 54);
+                            }
+                        }
+                    }
+                }
+            }
+        } 
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .adminPanelContainer {
+        .adminPanel {
+            display: none;
+        }
+
+        .widthTooLow {
+            display: block;
+        }
+    }
+}

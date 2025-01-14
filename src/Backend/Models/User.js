@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     privateChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     followersMilestones: [{ type: Number }],
+    hasReadTheAnnouncement: { type: Boolean, default: false },
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

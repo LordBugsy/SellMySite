@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import styles from './Header.module.scss';
 import { useDispatch, useSelector } from "react-redux";
-import { setLoginSignupShown, setSearchQueryShown, setContactFormShown, setNotificationShown, logoutUser } from "../Redux/store";
+import { setLoginSignupShown, setSearchQueryShown, setContactFormShown, setNotificationShown, logoutUser, setAdminPanelShown } from "../Redux/store";
 import LoginSignup from "../LoginSignup/LoginSignup";
 import Contact from "../Contact Component/Contact.jsx";
 import Search from "../Search Component/Search.jsx";
 import Notifications from "../Notifications Component/Notifications.jsx";
+import AdminPanel from "../Admin Panel/AdminPanel.jsx";
+import Announcement from "../Public Announcement/Announcement.jsx";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -16,8 +18,10 @@ const Header = () => {
     const isContactFormShown = useSelector(state => state.contactForm.isContactFormShown);
     const isSearchQueryShown = useSelector(state => state.search.isSearchQueryShown);
     const isNotificationShown = useSelector(state => state.notification.isNotificationShown);
+    const isAdminPanelShown = useSelector(state => state.adminPanel.isAdminPanelShown);
+    const {isAnnouncementShown} = useSelector(state => state.announcements);
 
-    const { localUserId, localUsername, profilePicture, role, siteTokens } = useSelector(state => state.user.user);
+    const { localUserId, localUsername, profilePicture, role, siteTokens, hasReadTheAnnouncement } = useSelector(state => state.user.user);
 
     // React
     const navigate = useNavigate();
@@ -129,20 +133,21 @@ const Header = () => {
                         <p onClick={() => dispatch(setContactFormShown(true))} className={styles.redirect}>Contact</p>
                         <p onClick={() => navigateToComponent('/settings')} className={styles.redirect}>Settings</p>
                         <p onClick={logOut} className={styles.redirect}>Log Out</p>
-                        { role === "admin" && <p className={styles.redirect}>Admin Panel</p> }
+                        { localUserId && role === "admin" && <p onClick={() => dispatch(setAdminPanelShown(true))} className={styles.redirect}>Admin Panel</p> }
                     </div>
 
                     <div className={styles.asideFooter}>
                         <p className={styles.redirect}>Terms of Service</p>
                         <p className={styles.redirect}>Privacy Policy</p>
                     </div>
-
                 </div>
             </aside>
 
             {isContactFormShown && <Contact />}
             {isSearchQueryShown && <Search />}
             {isNotificationShown && <Notifications />}
+            {isAdminPanelShown && <AdminPanel />}
+            {(!hasReadTheAnnouncement || isAnnouncementShown) && <Announcement />}
             
         </>
     )

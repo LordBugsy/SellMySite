@@ -24,6 +24,9 @@ const userSlice = createSlice({
       state.user.profilePicture = action.payload.profilePicture;
       state.user.siteTokens = action.payload.siteTokens;
       state.user.role = action.payload.role;
+      state.user.isVerified = action.payload.isVerified;
+
+      state.user.hasReadTheAnnouncement = action.payload.hasReadTheAnnouncement;
     },
 
     logoutUser: (state) => {
@@ -34,10 +37,17 @@ const userSlice = createSlice({
       state.user.profilePicture = "";
       state.user.siteTokens = 0;
       state.user.role = "";
+      state.user.isVerified = false;
+
+      state.user.hasReadTheAnnouncement = false;
     },
 
     updateSiteTokens: (state, action) => {
       state.user.siteTokens = action.payload.siteTokens;
+    },
+
+    setHasReadTheAnnouncement: (state, action) => {
+        state.user.hasReadTheAnnouncement = action.payload;
     },
   },
 });
@@ -222,9 +232,38 @@ const confirmDeleteState = createSlice({
     }
 });
 
+// --- Admin Panel slice
+const initialAdminPanelState = {
+    isAdminPanelShown: false,
+};
+
+const adminPanelState = createSlice({
+    name: 'adminPanel',
+    initialState: initialAdminPanelState,
+    reducers : {
+        setAdminPanelShown: (state, action) => {
+            state.isAdminPanelShown = action.payload;
+        }
+    }
+});
+
+// --- Announcements slice
+const initialAnnouncementsState = {
+    isAnnouncementShown: false,
+};
+
+const announcementsState = createSlice({
+    name: 'announcements',
+    initialState: initialAnnouncementsState,
+    reducers : {
+        setAnnouncementShown: (state, action) => {
+            state.isAnnouncementShown = action.payload;
+        }
+    }
+});
 
 // Extract actions to use in components
-export const { loginUser, logoutUser, updateSiteTokens } = userSlice.actions;
+export const { loginUser, logoutUser, updateSiteTokens, setHasReadTheAnnouncement } = userSlice.actions;
 export const { setLoginSignupShown } = loginSignupState.actions;
 export const { setContactFormShown } = contactFormState.actions;
 export const { setReportFormShown } = reportFormState.actions;
@@ -237,7 +276,8 @@ export const { setAccountSettingsShown } = accountSettingsState.actions;
 export const { setEditWebsiteShown } = editWebsiteState.actions;
 export const { setConfirmBuyShown } = confirmBuyState.actions;
 export const { setConfirmDeleteShown } = confirmDeleteState.actions;
-
+export const { setAdminPanelShown } = adminPanelState.actions;
+export const { setAnnouncementShown } = announcementsState.actions;
 
 // Create store using configureStore with combined reducers
 const store = configureStore({
@@ -255,6 +295,8 @@ const store = configureStore({
     editWebsite: editWebsiteState.reducer, // Edit Website reducer
     confirmBuy: confirmBuyState.reducer, // Confirm Buy reducer
     confirmDelete: confirmDeleteState.reducer, // Confirm Delete reducer
+    adminPanel: adminPanelState.reducer, // Admin Panel reducer
+    announcements: announcementsState.reducer, // Announcements reducer
   },
 });
 

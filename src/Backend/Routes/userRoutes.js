@@ -117,6 +117,7 @@ router.post('/signup', async (req, res) => {
             siteTokens: newUser.siteTokens,
             role: newUser.role,
             profilePicture: newUser.profilePicture,
+            hasReadTheAnnouncement: newUser.hasReadTheAnnouncement
         });
     }
     
@@ -140,7 +141,8 @@ router.post('/login', async (req, res) => {
                 displayName: user.displayName,
                 siteTokens: user.siteTokens,
                 role: user.role,
-                profilePicture: user.profilePicture
+                profilePicture: user.profilePicture,
+                hasReadTheAnnouncement: user.hasReadTheAnnouncement
             });
         }
 

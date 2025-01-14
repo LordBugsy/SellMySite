@@ -7,6 +7,7 @@ const reportSchema = new mongoose.Schema({
     targetID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'reportedTarget' }, // The ID of the reported target (user, post, or website)
     status: { type: String, enum: ['pending', 'resolved'], default: 'pending' }, // The status of the report
     resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // The ID of the user who resolved the report
+    publicReportID: { type: Number }
 }, { timestamps: true });
 
 reportSchema.pre('save', async function (next) {
@@ -17,6 +18,7 @@ reportSchema.pre('save', async function (next) {
                 { $inc: { value: 1 } },
                 { new: true, upsert: true }
             );
+            this.publicReportID = counter.value;
             next();
         } 
         

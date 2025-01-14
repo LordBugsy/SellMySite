@@ -10,6 +10,7 @@ import websiteRoutes from './Routes/websiteRoutes.js';
 import postRoutes from './Routes/postRoutes.js';
 import chatLogsRoutes from './Routes/chatLogsRoutes.js';
 import reportRoutes from './Routes/reportRoutes.js';
+import announcementRoutes from './Routes/announcementRoutes.js';
 import Counter from "./Models/Counter.js";
 
 // Simulate __dirname in ES6 modules
@@ -131,6 +132,7 @@ app.use('/website', websiteRoutes);
 app.use('/post', postRoutes);
 app.use('/chatlogs', chatLogsRoutes);
 app.use('/report', reportRoutes);
+app.use('/announcement', announcementRoutes);
 
 app.use(express.static(path.join(__dirname, 'build')));
 
