@@ -77,6 +77,27 @@
             }
         }
 
+        .invalidCode {
+            color: rgb(213, 80, 80);
+            font-weight: bold;
+            font-size: 1.25em;
+            text-align: center;
+            margin-bottom: 0;
+
+            .codeFormat {
+                color: rgb(45, 207, 45);
+                font-weight: bold;
+            }
+        }
+
+        .backendData {
+            color: white;
+            font-weight: bold;
+            font-size: 1.25em;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
         .redeem { 
             background-color: rgb(37, 177, 37);
             font-weight: bold;

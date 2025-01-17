@@ -1,7 +1,7 @@
 import Comments from '../Comments/Comments';
 import styles from './ViewWebsite.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCommentSectionShown, setLoginSignupShown, setEditWebsiteShown, setConfirmBuyShown, setConfirmDeleteShown, setReportFormShown } from '../../../Redux/store';
+import { setCommentSectionShown, setLoginSignupShown, setEditWebsiteShown, setConfirmBuyShown, setConfirmDeleteShown, setReportFormShown, setAdminReportFormShown } from '../../../Redux/store';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -10,15 +10,17 @@ import EditWebsite from './Edit Website/EditWebsite';
 import ConfirmBuy from './Confirm/Buy/ConfirmBuy';
 import Delete from './Confirm/Delete/Delete';
 import Report from '../../Report Component/Report';
+import ReportInfo from '../../../Admin Panel/Report Info/ReportInfo';
 
 const ViewWebsite = () => {
     // Redux
-    const { localUserId } = useSelector(state => state.user.user);
+    const { localUserId, role } = useSelector(state => state.user.user);
     const { isEditWebsiteShown } = useSelector(state => state.editWebsite);
     const { isCommentSectionShown } = useSelector(state => state.comments);
     const { isConfirmBuyShown } = useSelector(state => state.confirmBuy);
     const { isConfirmDeleteShown } = useSelector(state => state.confirmDelete);
     const { isReportFormShown } = useSelector(state => state.reportForm);
+    const { isAdminReportFormShown } = useSelector(state => state.adminReportForm);
 
     const dispatch = useDispatch();
 
@@ -109,12 +111,23 @@ const ViewWebsite = () => {
         dispatch(setConfirmDeleteShown(true));
     }
 
+    const openAdminAction = () => {
+        // This should never happen, but just in case
+        if (role !== "admin" && !localUserId) {
+            dispatch(setLoginSignupShown(true));
+            return;
+        }
+
+        dispatch(setAdminReportFormShown(true));
+    }
+
     useEffect(() => {
         if (isCommentSectionShown) dispatch(setCommentSectionShown(false));
         if (isEditWebsiteShown) dispatch(setEditWebsiteShown(false));
         if (isConfirmBuyShown) dispatch(setConfirmBuyShown(false));
         if (isConfirmDeleteShown) dispatch(setConfirmDeleteShown(false));
         if (isReportFormShown) dispatch(setReportFormShown(false));
+        if (isAdminReportFormShown) dispatch(setAdminReportFormShown(false));
     }, []);
 
     useEffect(() => {
@@ -192,6 +205,7 @@ const ViewWebsite = () => {
                                     {localUserId && localUserId !== websiteData.owner._id && websiteData.price > 0 && <i onClick={openBuyWebsite} className={`fas fa-shopping-cart ${styles.icon}`}></i>}
                                     {localUserId && localUserId === websiteData.owner._id && <i onClick={editWebsite} className={`fas fa-edit ${styles.icon}`}></i>}
                                     {/* why would someone report himself/herself? */ localUserId !== websiteData.owner._id && <i onClick={() => dispatch(setReportFormShown(true))} className={`fas fa-flag ${styles.icon}`}></i>}
+                                    {localUserId && role === "admin" && <i onClick={openAdminAction} className={`fas fa-hammer ${styles.icon}`}></i>}
                                 </div>
                             </div>
                         </>
@@ -203,7 +217,8 @@ const ViewWebsite = () => {
             {isEditWebsiteShown && <EditWebsite targetName={websiteData.title} targetID={websiteData._id} />}
             {isConfirmBuyShown && <ConfirmBuy websiteID={websiteData._id} websiteTitle={websiteData.title} websitePrice={websiteData.price} />}
             {isConfirmDeleteShown && <Delete type="website" websiteID={websiteData._id} websiteTitle={websiteData.title} />}
-            { isReportFormShown && <Report reportedTarget="Website" targetID={websiteData._id} targetName={websiteData.title} />}
+            {isReportFormShown && <Report reportedTarget="Website" targetID={websiteData._id} targetName={websiteData.title} owner={websiteData.owner.username} publicID={websiteData.publicWebsiteID} />}
+            {isAdminReportFormShown && <ReportInfo testProp={websiteData} />}
         </>
     )
 }

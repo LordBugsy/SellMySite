@@ -19,7 +19,7 @@ const websiteSchema = new mongoose.Schema({
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     onSale: { type: Boolean, default: false },
     price: { type: Number, default: -1 },
-    link: { type: String, default: null, required: true },
+    link: { type: String, required: true },
     auction: {
         isAuction: { type: Boolean, default: false },
         startingPrice: { type: Number, default: -1 },

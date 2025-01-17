@@ -11,7 +11,7 @@ const CommentSchema = new mongoose.Schema({
 const postSchema = new mongoose.Schema({
     publicPostID: { type: Number, unique: true }, 
     content: { type: String, required: true },
-    attachment: { type: String, default: undefined },
+    attachment: { type: String },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

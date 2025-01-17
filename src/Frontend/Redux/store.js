@@ -97,6 +97,21 @@ const reportFormState = createSlice({
     }
 });
 
+// --- Admin Report Form slice
+const initialAdminReportFormState = {
+    isAdminReportFormShown: false,
+};
+
+const adminReportFormState = createSlice({
+    name: 'adminReportInfo',
+    initialState: initialAdminReportFormState,
+    reducers : {
+        setAdminReportFormShown: (state, action) => {
+            state.isAdminReportFormShown = action.payload;
+        }
+    }
+});
+
 // --- Search slice
 const initialSearchState = {
     isSearchQueryShown: false,
@@ -266,6 +281,7 @@ const announcementsState = createSlice({
 export const { loginUser, logoutUser, updateSiteTokens, setHasReadTheAnnouncement } = userSlice.actions;
 export const { setLoginSignupShown } = loginSignupState.actions;
 export const { setContactFormShown } = contactFormState.actions;
+export const { setAdminReportFormShown } = adminReportFormState.actions;
 export const { setReportFormShown } = reportFormState.actions;
 export const { setSearchQueryShown } = searchState.actions;
 export const { setNotificationShown } = notificationState.actions;
@@ -285,6 +301,7 @@ const store = configureStore({
     user: userSlice.reducer, // User reducer
     loginSignup: loginSignupState.reducer, // Login / Signup reducer
     contactForm: contactFormState.reducer, // Contact Form reducer
+    adminReportForm: adminReportFormState.reducer, // Admin Report Form reducer
     reportForm: reportFormState.reducer, // Report Form reducer
     search: searchState.reducer, // Search reducer
     notification: notificationState.reducer, // Notification reducer

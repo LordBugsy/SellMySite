@@ -1,11 +1,15 @@
 import MyAccount from './My Account/MyAccount';
 import TermsOfService from './ToS PrvcyPlcy/TermsOfService.jsx';
 import PrivacyPolicy from './ToS PrvcyPlcy/PrivacyPolicy';
-
+import { useDispatch } from 'react-redux';
+import { setAnnouncementShown } from '../Redux/store';
 import styles from './Settings.module.scss';
 import { useState } from 'react';
 
 const Settings = () => {
+    // Redux
+    const dispatch = useDispatch();
+
     // React
     const [settingsTab, setSettingsTab] = useState('My Account'); // The tabs will be 'My Account', 'Delete Account' and 'Terms of Service' for now
     const [areTabsVisible, setTabsVisibility] = useState(false); // Show the settings tabs (mobile only)
@@ -22,6 +26,7 @@ const Settings = () => {
                     <p onClick={() => loadTab("My Account")} className={`${styles.settingsTab} ${settingsTab === "My Account" ? styles.selected : ''}`}>My Account</p>
                     <p onClick={() => loadTab("Terms of Service")} className={`${styles.settingsTab} ${settingsTab === "Terms of Service" ? styles.selected : ''}`}>Terms of Service</p>
                     <p onClick={() => loadTab("Privacy Policy")} className={`${styles.settingsTab} ${settingsTab === "Privacy Policy" ? styles.selected : ''}`}>Privacy Policy</p>
+                    <p onClick={() => dispatch(setAnnouncementShown(true))} className={styles.settingsTab}>Read last Announcement</p>
                 </div>
             </div>
 
@@ -31,7 +36,6 @@ const Settings = () => {
                 {settingsTab === "My Account" && <MyAccount />}
                 {settingsTab === "Terms of Service"  && <TermsOfService />}
                 {settingsTab === "Privacy Policy" && <PrivacyPolicy />}
-
             </div>
         </div>
     );

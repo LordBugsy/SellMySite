@@ -9,6 +9,7 @@ const Announcement = () => {
     // Redux
     const dispatch = useDispatch();
     const { hasReadTheAnnouncement, localUserId } = useSelector(state => state.user.user);
+    const { isAnnouncementShown } = useSelector(state => state.announcements);
     
     // React
     const [announcementData, updateAnnouncementData] = useState([]);
@@ -16,8 +17,17 @@ const Announcement = () => {
     const announcementRef = useRef(null);
 
     const agreeToAnnouncement = () => {
-        dispatch(setHasReadTheAnnouncement(true));
+        if (!localUserId) {
+            announcementRef.current.classList.replace('fadeIn', 'fadeOut');
+            setTimeout(() => {
+                dispatch(setHasReadTheAnnouncement(true));
+                dispatch(setAnnouncementShown(false));
+            }, 500);
 
+            return;
+        }
+
+        dispatch(setHasReadTheAnnouncement(true));
         try {
             axios.post("http://localhost:5172/announcement/agree", {
                 userID: localUserId
@@ -34,7 +44,7 @@ const Announcement = () => {
         }        
     }
 
-    useEffect(() => {
+    useEffect(() => {        
         const fetchAnnouncement = async () => {
             try {
                 const backendResponse = await axios.get("http://localhost:5172/announcement/latest");
@@ -57,14 +67,16 @@ const Announcement = () => {
 
     return (
         <>
-            {!hasReadTheAnnouncement && localUserId && (
+            {(!hasReadTheAnnouncement || isAnnouncementShown) && (
                 <div ref={announcementRef} className={`${styles.announcementContainer} fadeIn`}>
                     <div className={styles.announcement}>
-                        <ReactMarkdown>{announcementData.content}</ReactMarkdown>
-                    </div>
-                    
-                    <div className={styles.buttonContainer}>
-                        <button onClick={agreeToAnnouncement} className={`button ${styles.button}`}>Got it!</button>
+                        <ReactMarkdown>
+                            {announcementData.content}
+                        </ReactMarkdown>
+
+                        <div className={styles.buttonContainer}>
+                            <button onClick={agreeToAnnouncement} className={`button ${styles.read}`}>Got it!</button>
+                        </div>
                     </div>
                 </div>
             )}

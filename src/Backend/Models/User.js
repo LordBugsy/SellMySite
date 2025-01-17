@@ -9,10 +9,8 @@ const userSchema = new mongoose.Schema({
     isVerified: { type: Boolean, default: false },
     siteTokens: { type: Number, default: 0 },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
-    profilePicture: {
-        type: String,
-        default: null, // the value will be changed during the creation of the user's profile
-    },
+    profilePicture: { type: String, default: null },
+    bannerColour: { type: String, default: null},
     websitesPublished: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Website', required: true }],
     postsPublished: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true }],
     likedWebsites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Website' }],
@@ -22,6 +20,10 @@ const userSchema = new mongoose.Schema({
     privateChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     followersMilestones: [{ type: Number }],
     hasReadTheAnnouncement: { type: Boolean, default: false },
+    codeRedeemed: [{ type: String, default: [] }],
+    accountStatus: { type: String, enum: ['active', 'banned'], default: 'active' },
+    bannedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    banReason: { type: String },
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

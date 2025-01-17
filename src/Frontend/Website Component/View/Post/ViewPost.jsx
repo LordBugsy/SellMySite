@@ -1,20 +1,22 @@
 import Comments from '../Comments/Comments';
 import styles from './ViewPost.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCommentSectionShown, setLoginSignupShown, setConfirmDeleteShown, setReportFormShown } from '../../../Redux/store';
+import { setCommentSectionShown, setLoginSignupShown, setConfirmDeleteShown, setReportFormShown, setAdminReportFormShown } from '../../../Redux/store';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../../Loading/Loading';
 import axios from 'axios';
 import Delete from '../Website/Confirm/Delete/Delete';
 import Report from '../../Report Component/Report';
+import ReportInfo from '../../../Admin Panel/Report Info/ReportInfo';
 
 const ViewPost = () => {
     // Redux
-    const { localUserId } = useSelector(state => state.user.user);
+    const { localUserId, role } = useSelector(state => state.user.user);
     const { isCommentSectionShown } = useSelector(state => state.comments);
     const { isConfirmDeleteShown } = useSelector(state => state.confirmDelete);
     const { isReportFormShown } = useSelector(state => state.reportForm);
+    const { isAdminReportFormShown } = useSelector(state => state.adminReportForm);
     const dispatch = useDispatch();
 
     // React
@@ -64,10 +66,20 @@ const ViewPost = () => {
         dispatch(setReportFormShown(true));
     }
 
+    const openAdminAction = () => {
+        if (role !== "admin" || !localUserId) {
+            dispatch(setLoginSignupShown(true));
+            return;
+        }
+
+        dispatch(setAdminReportFormShown(true));
+    }
+
     useEffect(() => {
         if (isCommentSectionShown) dispatch(setCommentSectionShown(false));
         if (isConfirmDeleteShown) dispatch(setConfirmDeleteShown(false));
         if (isReportFormShown) dispatch(setReportFormShown(false));
+        if (isAdminReportFormShown) dispatch(setAdminReportFormShown(false));
     }, []);
 
     useEffect(() => {
@@ -210,6 +222,7 @@ const ViewPost = () => {
                                         <i className={`fas fa-comment ${styles.icon}`} onClick={openComments}></i>
                                         {/* why would someone report himself/herself? */ localUserId !== postData.owner._id && <i onClick={openReport} className={`fas fa-flag ${styles.icon}`}></i>}
                                         {localUserId && localUserId === postData.owner._id && <i className={`fas fa-trash-alt ${styles.icon}`} onClick={openConfirmDelete}></i>}
+                                        {localUserId && role === "admin" && <i onClick={openAdminAction} className={`fas fa-hammer ${styles.icon}`}></i>}
                                     </div>
 
                                 </>
@@ -245,7 +258,8 @@ const ViewPost = () => {
             </div>
             {isCommentSectionShown && <Comments postID={postData._id} comments={postData.comments} targetName={postData.owner?.username || "Post"} />}
             {isConfirmDeleteShown && <Delete type='post' postID={postData._id} />}
-            {isReportFormShown && <Report reportedTarget="Post" targetID={postData._id} />}
+            {isReportFormShown && <Report reportedTarget="Post" targetID={postData._id} owner={postData.owner.username} publicID={postData.publicPostID} />}
+            {isAdminReportFormShown && <ReportInfo testProp={postData} />}
         </>
     );
 };

@@ -1,6 +1,7 @@
 import Report from '../Models/Report.js';
 import express from 'express';
 import mongoose from 'mongoose';
+import User from '../Models/User.js';
 
 const router = express.Router();
 
@@ -28,8 +29,8 @@ createIndexes();
 // Create a report
 router.post('/create', async (req, res) => {
     try {
-        const { reportedTarget, reason, targetID } = req.body;
-        const newReport = new Report({ reportedTarget, reason, targetID });
+        const { reportedTarget, reason, targetID, owner, publicID } = req.body;
+        const newReport = new Report({ reportedTarget, reason, targetID, owner, publicID });
         await newReport.save();
 
         res.status(201).send(newReport);
@@ -44,7 +45,7 @@ router.post('/create', async (req, res) => {
 // Get all pending reports
 router.get('/pending', async (req, res) => {
     try {
-        const reports = await Report.find({ status: 'pending' });
+        const reports = await Report.find({ status: 'pending' }).sort({ createdAt: -1 });
         res.status(200).send(reports);
     } 
     
@@ -55,15 +56,22 @@ router.get('/pending', async (req, res) => {
 });
 
 // Resolve a report
-router.post('/report/:id', async (req, res) => {
+router.post('/resolve', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { resolvedBy } = req.body;
+        const { id, resolvedBy } = req.body;
+        if (!id || !resolvedBy) return res.status(400).send('Missing fields');
+
         const report = await Report.findById(id);
         if (!report) return res.status(404).send('Report not found');
 
+        const checkAdmin = await User.findById(resolvedBy);
+        if (checkAdmin.role !== 'admin') return res.status(401).send('Unauthorized');
+
         report.status = 'resolved';
         report.resolvedBy = resolvedBy;
+        await report.save();
+
+        res.status(200).send(report);
     } 
     
     catch (error) {

@@ -12,6 +12,9 @@ import chatLogsRoutes from './Routes/chatLogsRoutes.js';
 import reportRoutes from './Routes/reportRoutes.js';
 import announcementRoutes from './Routes/announcementRoutes.js';
 import Counter from "./Models/Counter.js";
+import Post from "./Models/Post.js";
+import User from "./Models/User.js";
+import Website from "./Models/Website.js";
 
 // Simulate __dirname in ES6 modules
 const __filename = fileURLToPath(import.meta.url);
@@ -135,6 +138,41 @@ app.use('/report', reportRoutes);
 app.use('/announcement', announcementRoutes);
 
 app.use(express.static(path.join(__dirname, 'build')));
+
+app.get("/search/:query", async (req, res) => {
+    const query = req.params.query;
+    if (!query) return res.status(400).send("No query provided");
+
+    try {
+        const users = await User.find({ username: { $regex: query, $options: 'i' } });
+        const userIds = users.map(user => user._id);
+
+        const posts = await Post.find({
+            $or: [
+                { content: { $regex: query, $options: 'i' } },
+                { owner: { $in: userIds } }
+            ]
+        }).populate("owner", "username displayName profilePicture");
+
+        const websites = await Website.find({
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } },
+                { link: { $regex: query, $options: 'i' } },
+                { owner: { $in: userIds } }
+            ]
+        }).populate("owner", "username profilePicture");
+
+        if (posts.length === 0 && websites.length === 0) return res.status(200).json({ noResultsMessage: "No results found" });
+
+        res.status(200).send({ posts, websites });
+    } 
+    
+    catch (error) {
+        console.error("Error during search:", error);
+        res.status(500).send({ error: "An internal error occurred during the search operation" });
+    }
+});
 
 app.get('*', (req, res) => {
     console.error(`You've reached a route that doesn't exist. You entered: ${req.originalUrl} via ${req.method} method.`);

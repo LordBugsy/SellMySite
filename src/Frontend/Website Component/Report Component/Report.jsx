@@ -29,7 +29,9 @@ const Report = (props) => {
             const backendResponse = await axios.post("http://localhost:5172/report/create", {
                 reportedTarget: props.reportedTarget,
                 reason: message.trim(),
-                targetID: props.targetID
+                targetID: props.targetID,
+                owner: props.owner,
+                publicID: props.publicID
             });
 
             closeComponent();

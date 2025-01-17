@@ -22,6 +22,7 @@ const LoginSignup = (props) => {
 
     const login = async () => {
         setErrorDetected(false);
+        setErrorType('');
 
         if (usernameRef.current.value.length < 3) {
             setErrorDetected(true);
@@ -29,7 +30,7 @@ const LoginSignup = (props) => {
             return;
         }
 
-        if (passwordRef.current.value.length < 5) {
+        else if (passwordRef.current.value.length < 5) {
             setErrorDetected(true);
             setErrorType("Your password must be at least 5 characters long.");
             return;
@@ -40,6 +41,12 @@ const LoginSignup = (props) => {
                 username: usernameRef.current.value,
                 password: passwordRef.current.value
             });
+
+            if (backendResponse.data.banMessage) {
+                setErrorDetected(true);
+                setErrorType(backendResponse.data.banMessage);
+                return;
+            }
 
             dispatch(loginUser({
                 localUserId: backendResponse.data._id,
@@ -69,13 +76,13 @@ const LoginSignup = (props) => {
             return;
         }
 
-        if (displayNameRef.current.value.length < 3) {
+        else if (displayNameRef.current.value.length < 3) {
             setErrorDetected(true);
             setErrorType("Your display name must be at least 3 characters long.");
             return;
         }
 
-        if (passwordRef.current.value.length < 5) {
+        else if (passwordRef.current.value.length < 5) {
             setErrorDetected(true);
             setErrorType("Your password must be at least 5 characters long.");
             return;

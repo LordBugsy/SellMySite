@@ -91,13 +91,14 @@ router.post("/create", async (req, res) => {
 router.post("/delete", async (req, res) => {
     try {
         const { postID, userID } = req.body;
+        
         const post = await Post.findById(postID);
         if (!post) return res.status(404).send("Post not found");
 
         const madeBy = await User.findById(userID);
 
         if (post.owner.toString() === userID || madeBy.role === "admin") {
-            const user = await User.findById(userID);
+            const user = await User.findById(post.owner);
             user.postsPublished = user.postsPublished.filter((post) => post !== postID);
             await user.save();
 

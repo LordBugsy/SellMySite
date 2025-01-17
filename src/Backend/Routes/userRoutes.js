@@ -4,7 +4,6 @@ import User from '../Models/User.js';
 import Website from '../Models/Website.js';
 import Post from '../Models/Post.js';
 import mongoose from 'mongoose';
-import { Link } from 'react-router-dom';
 
 const router = express.Router();
 
@@ -42,6 +41,7 @@ const createBotUser = async () => {
             password: await bcrypt.hash(randomString, 10),
             role: 'admin',
             profilePicture: 8,
+            bannerColour: "8b"
         });
         await botUser.save();
 
@@ -96,6 +96,7 @@ router.post('/signup', async (req, res) => {
             profilePictureColour += i.charCodeAt(0);
         }
         profilePictureColour %= 8; // 8.png will only be used by the bot
+        let bannerColour = `${profilePictureColour}b`;
 
         // if username already exists
         const user = await User.findOne({ username });
@@ -106,8 +107,8 @@ router.post('/signup', async (req, res) => {
             displayName,
             password: hashedPassword,
             profilePicture: profilePictureColour,
+            bannerColour
         });
-
 
         await newUser.save();
         res.status(201).json({
@@ -134,6 +135,9 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ username });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
+        // That's not an error, so the status is set to 200
+        if (user.accountStatus && user.accountStatus === 'banned') return res.status(200).json({ banMessage: 'This account has been banned' });
+
         if (await bcrypt.compare(password, user.password)) {
             res.status(200).json({
                 _id: user._id,
@@ -157,13 +161,7 @@ router.post('/login', async (req, res) => {
 // Delete a user
 router.post('/delete', async (req, res) => {
     try {
-        const { userID, username, password } = req.body;
-
-        // if done by an admin
-        const admin = await User.findById(userID);
-        if (admin.role === 'admin') {
-            // todo
-        }
+        const { userID, password } = req.body;
 
         const user = await User.findById(userID);
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -174,6 +172,31 @@ router.post('/delete', async (req, res) => {
         }
 
         else res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Ban a user
+router.post('/ban', async (req, res) => {
+    try {
+        const { userID, adminID, password, reason } = req.body;
+        if (!userID || !adminID || !password || !reason) return res.status(400).json({ message: 'Missing fields' });
+
+        const checkAdmin = await User.findById(adminID);
+        if (!checkAdmin || checkAdmin.role !== 'admin') return res.status(401).json({ message: 'Unauthorized Access' });
+        if (!bcrypt.compare(password, checkAdmin.password)) return res.status(401).json({ message: 'Invalid credentials' });
+
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        user.accountStatus = 'banned';
+        user.banReason = reason;
+        await user.save();
+
+        res.status(200).json({ message: 'User banned' });
     }
 
     catch (error) {
@@ -196,6 +219,7 @@ router.get('/username/:username', async (req, res) => {
                 siteTokens: user.siteTokens,
                 isVerified: user.isVerified,
                 profilePicture: user.profilePicture,
+                bannerColour: user.bannerColour,
                 websitesPublished: user.websitesPublished,
                 postsPublished: user.postsPublished,
                 followers: user.followers,

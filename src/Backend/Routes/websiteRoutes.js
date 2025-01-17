@@ -63,18 +63,16 @@ router.post("/create", async (req, res) => {
 router.post("/delete", async (req, res) => {
     const { userID, websiteID } = req.body;
 
-    if (!websiteID || !userID) {
-        return res.status(400).send("Invalid request");
-    }
+    if (!websiteID || !userID)  return res.status(400).send("Invalid request");
 
     else {
         try {
             const website = await Website.findById(websiteID);
-            if (website.owner.toString() !== userID && userID !== "admin") {
-                return res.status(403).send("Unauthorized");
-            }
+            const madeBy = await User.findById(userID);
 
-            const owner = await User.findById(userID);
+            if (website.owner.toString() !== userID && madeBy.role !== "admin") return res.status(403).send("Unauthorized");
+
+            const owner = await User.findById(website.owner);
             owner.websitesPublished = owner.websitesPublished.filter((publishedWebsite) => publishedWebsite.toString() !== websiteID);
             await owner.save();
 

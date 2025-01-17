@@ -18,6 +18,29 @@
         font-weight: bold;
     }
 
+    .sectionPicker {
+        @include flex();
+        gap: 1rem;
+        padding: 0 20px;
+        border-radius: 10px;
+
+        .sectionTitle {
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+
+            &:hover {
+                color: rgb(90, 213, 90);
+                text-shadow: 0 3px 1px rgb(55, 173, 55);
+            }
+
+            &.selected {
+                color: rgb(218, 240, 74);
+                text-shadow: 0 3px 1px rgb(173, 173, 55);
+            }
+        }
+    }
+
     .searchResults {
         @include flex(row, center, center);
         padding: 20px;
@@ -26,11 +49,108 @@
         max-width: 2500px;
         color: white;
 
+        .noResults {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
         .results {
             width: 100%;
             @include flex(row, flex-start, center);
             flex-wrap: wrap;
             gap: 1rem;
+
+            .post {
+                @include flex(column);
+                gap: 1rem;
+                background-color: rgb(45, 54, 140);
+                width: 400px;
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid transparent;
+                cursor: pointer;
+                transition: background-color 0.3s, border 0.3s;
+
+                &:hover {
+                    background-color: rgb(15, 57, 112);
+                    border: 2px solid white;
+                }
+
+                .postInformations {
+                    width: 100%;
+                    flex: 1;
+                    @include flex(column, flex-start, center);
+
+                    .attachmentContainer {
+                        width: 100%;
+                        @include flex(row, flex-start);
+
+                        .attachment {
+                            overflow: hidden;
+                            max-width: 95%;
+                            max-height: 180px;
+                            border-radius: 10px;
+    
+                            .image {
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 10px;
+                                object-fit: cover;
+                                transition: transform 0.3s;
+    
+                                &:hover {
+                                    transform: scale(1.1);
+                                }
+                            }
+                        }    
+                    }
+                    
+                    .ownerInformation {
+                        width: 100%;
+                        @include flex(row, flex-start, center);
+                        gap: 1rem;
+
+                        .profilePicture {
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                            cursor: pointer;
+                            transition: filter 0.3s;
+
+                            &:hover {
+                                filter: brightness(0.8);
+                            }
+                        }
+
+                        .ownerDetails {
+                            @include flex(column, center, flex-start);
+                            gap: 0;
+
+                            >p {
+                                margin: 0;
+                            }
+
+                            .ownerUsername {
+                                font-size: 1rem;
+                                font-weight: bold;
+                                color: rgb(188, 188, 188);
+                            }
+                        }
+                    }
+
+                    .postDateContainer {
+                        width: 100%;
+                        @include flex(row, flex-start, flex-start);
+
+                        .postDate {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
 
             .website {
                 @include flex(column);

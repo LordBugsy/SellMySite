@@ -1,22 +1,47 @@
 import styles from './Redeem.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import Loading from '../Loading/Loading';
 
 const Redeem = () => {
+    // Redux
+    const { localUserId } = useSelector(state => state.user.user);
+
+    // React
     const inputRef = useRef();
     const navigate = useNavigate();
     
     const [invalidCode, updateInvalidCode] = useState(false);
+    const [backendData, updateBackendResponse] = useState("");
+    const [isLoading, updateIsLoading] = useState(false);
 
-    const redeemCode = () => {
+    const redeemCode = async () => {
+        updateIsLoading(true);
+        updateBackendResponse("");
         if (!/^[A-Z]{3}[0-9]{2}-[A-Z]{3}[0-9]{3}-[A-Z]{3}$/.test(inputRef.current.value)) {
             updateInvalidCode(true);
-            console.log("Invalid code");
+            updateIsLoading(false);
             return;
         }
 
-        // Redeem code logic here
-        console.log("do something here");
+        let message = "";
+        updateInvalidCode(false);
+        try {
+            const backendResponse = await axios.get(`http://localhost:5172/code/redeem/${encodeURIComponent(inputRef.current.value)}?userID=${localUserId}`);
+            message = backendResponse.data.message;
+        }
+
+        catch (error) {
+            console.error(error);
+            message = "An error occurred while redeeming your code. Please try again later.";
+        }
+
+        finally {
+            updateBackendResponse(message);
+            updateIsLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -24,6 +49,15 @@ const Redeem = () => {
             inputRef.current.focus();
         }
     }, []);
+
+    useEffect(() => {
+        const handleEnterKey = event => {
+            if (event.key === "Enter") redeemCode();
+        }
+
+        document.addEventListener('keydown', handleEnterKey);
+        return () => document.removeEventListener('keydown', handleEnterKey);
+    }, [inputRef.current]);
 
     return (
         <div className={`${styles.redeemContainer} fadeIn`}>
@@ -44,8 +78,12 @@ const Redeem = () => {
                     <i className={`fas fa-gift ${styles.icon}`}></i>
                     <input spellCheck="false" ref={inputRef} className={styles.input} type="text" placeholder="ABC12-DEF345-XYZ" />
                 </div>
+                
 
                 <button onClick={redeemCode} className={`button ${styles.redeem}`}>Redeem</button>
+                {isLoading && <Loading componentClass />}
+                {invalidCode && <p className={styles.invalidCode}>Your code must follow the format <span className={styles.codeFormat}>ABC12-DEF345-XYZ</span>.</p>}
+                {backendData && <p className={styles.backendData}>{backendData}</p>}
             </div>
 
             <p className={styles.redeemInfo}>

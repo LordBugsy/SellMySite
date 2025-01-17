@@ -111,7 +111,6 @@
                 height: 100%;
                 @include flex(column, flex-start);
                 
-                
                 .content {
                     width: 100%;
                     color: white;
@@ -131,9 +130,60 @@
                         color: white;
 
                         // Reports
-                        /* .reports {
+                        .reports {
+                            @include flex();
+                            width: 100%;
+                            gap: 1.2rem;
+                            flex-wrap: wrap;
 
-                        } */
+                            .report {
+                                max-width: 500px;
+                                background-color: rgb(30, 72, 128);
+                                border-radius: 10px;
+                                padding: 1.2rem;
+                                color: white;
+                                
+                                .reportHeader {
+                                    p {
+                                        margin: 0;
+                                        font-weight: bold;
+                                        font-size: 1.2em;
+                                    }
+                                }
+
+                                .reportInformation {
+                                    p {
+                                        margin: 0;
+                                        font-size: 1.1em;
+                                    }
+                                }
+
+                                .reportReason {
+                                    font-weight: bold;
+                                    font-size: 1.1em;
+                                    margin-top: 1rem;
+                                }
+
+                                .reportActions {
+                                    width: 100%;
+                                    @include flex(row, flex-start center);
+                                    gap: 1.2rem;
+
+                                    >.icon {
+                                        font-size: 1.5em;
+                                        cursor: pointer;
+                                        background-color: rgb(20, 60, 113);
+                                        border-radius: 10px;
+                                        padding: 1rem;
+                                        transition: background-color 0.3s;
+
+                                        &:hover {
+                                            background-color: rgb(15, 49, 93);
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                         .noReports {
                             color: white;
@@ -142,8 +192,46 @@
                         }
 
                         // Add Codes
+                        .textInputContainer {
+                            @include flex(column, flex-start, center);
+                            padding: 20px;
 
+                            .inputGroup {
+                                width: 100%;
+                                @include flex(column, flex-start, flex-start);
+                            }
 
+                            .title {
+                                margin-bottom: 5px;
+                            }
+
+                            .input {
+                                width: 500px;
+                                max-width: 95%;
+                                background-color: rgb(30, 72, 128);
+                                color: white;
+                                font-weight: bold;
+                                border-radius: 10px;
+                                padding: 1.2rem;
+                                font-size: 1.2em;
+                                border: none;
+                                outline: none;
+                                margin-bottom: 1rem;
+
+                                &::placeholder {
+                                    color: rgb(171, 171, 171);
+                                }
+                            }
+
+                            .codeFormat {
+                                color: rgb(45, 207, 45);
+                            }
+
+                            .submit {
+                                background-color: rgb(54, 210, 54);
+                            }
+                        }
+                        
                         // Announcement
                         .announcement {
                             width: 95%;
