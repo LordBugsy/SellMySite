@@ -12,6 +12,8 @@ const Contact = () => {
 
     // React
     const contactContainerRef = useRef();
+    const formRef = useRef();
+
     const nameRef = useRef();
     const emailRef = useRef();
     const messageRef = useRef();
@@ -22,6 +24,14 @@ const Contact = () => {
         setTimeout(() => {
             dispatch(setContactFormShown(false));
         }, 300);
+    }
+
+    const submitForm = (event) => {
+        // Nothing will happen because we must integrate a way to use mails in the backend
+        if (formRef.current) {
+            event.preventDefault();
+            closeComponent();
+        }
     }
 
     useEffect(() => {
@@ -36,7 +46,7 @@ const Contact = () => {
     return (
         <>
             {isContactFormShown && <section ref={contactContainerRef} className={`${styles.contactContainer} growIn`}>
-                <form className={styles.contactForm}>
+                <form ref={formRef} className={styles.contactForm}>
                     <h1 className={styles.contactHeader}>Contact Us</h1>
                     <i onClick={closeComponent} className={`fas fa-times ${styles.icon}`}></i>
 
@@ -56,7 +66,7 @@ const Contact = () => {
                     </div>
 
                     <div className={styles.controls}>
-                        <button className={`button ${styles.submit}`}>Submit</button>
+                        <button onClick={submitForm} className={`button ${styles.submit}`}>Submit</button>
                     </div>
                 </form>
             </section>}
