@@ -1,0 +1,154 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+.reportInfoContainer {
+    opacity: 0;
+    @include flex();
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+
+    .reportInfo {
+        position: relative;
+        width: 80%;
+        max-width: 800px;
+        min-width: 400px;
+        background-color: rgb(44, 88, 133);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+        >.icon {
+            position: absolute;
+            font-size: 3em;
+            color: rgb(254, 71, 71);
+            cursor: pointer;
+            transition: color 0.3s;
+
+            &.right {
+                top: 20px;
+                right: 20px;
+            }
+
+            &.left {
+                top: 20px;
+                left: 30px;
+                color: white;
+            }
+
+            &:hover {
+                color: rgb(226, 37, 37);
+            }
+        }
+
+        
+
+        .defendantActions {
+            @include flex(column);
+            width: 100%;
+            color: white;
+            text-align: center;
+
+            .information {
+                font-size: 1.5em;
+                margin-top: 0;
+                color: rgb(75, 224, 75);
+                font-weight: 700;
+            }
+
+            .afterInformation {
+                @extend .information;
+                margin-top: 50px;
+            }
+
+            .banButton {
+                background-color: rgb(66, 66, 242);
+                font-size: 1.75rem;
+                margin-top: 20px;
+            }
+
+            .buttonsContainer {
+                @include flex();
+                gap: 20px;
+
+                .delete {
+                    background-color: rgb(242, 66, 66);
+                    font-size: 1.75rem;
+                }
+
+                .dismiss {
+                    background-color: rgb(66, 242, 66);
+                    font-size: 1.75rem;
+                }
+
+                .ban {
+                    background-color: rgb(66, 66, 242);
+                    font-size: 1.75rem;
+                }
+            }
+
+            .textArea {
+                width: 75%;
+                height: 200px;
+                margin-top: 20px;
+                padding: 10px;
+                font-size: 1.5em;
+                background-color: rgb(51, 44, 105);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                outline: none;
+                resize: none;
+
+                &::placeholder {
+                    color: rgb(175, 175, 175);
+                }
+
+                +.buttonsContainer {
+                    margin-top: 20px;
+
+                    .ban {
+                        @extend .delete;
+                    }
+                }
+            }
+
+            .input {
+                width: 75%;
+                height: 50px;
+                margin-top: 20px;
+                padding: 10px;
+                font-size: 1.5em;
+                background-color: rgb(51, 44, 105);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                outline: none;
+                margin-bottom: 20px;
+
+                &::placeholder {
+                    color: rgb(175, 175, 175);
+                }
+            }
+
+            .mainInformation {
+                width: 90%;
+                font-weight: 700;
+                font-size: 1.5em;
+                margin-top: 20px;
+
+                +.textArea {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}

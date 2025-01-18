@@ -193,7 +193,7 @@ router.post("/like", async (req, res) => {
         } 
         
         else {
-            return res.status(403).send("You have already liked this post");
+            return res.status(200).send("You have already liked this post");
         }
     } 
     

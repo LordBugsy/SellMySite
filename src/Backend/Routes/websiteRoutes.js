@@ -111,8 +111,9 @@ router.post("/like", async (req, res) => {
 
                 website.likes.push(userID);
                 await website.save();
-                res.status(200).send(true);
             }
+
+            res.status(200).send(true);
         }
 
         catch (error) {

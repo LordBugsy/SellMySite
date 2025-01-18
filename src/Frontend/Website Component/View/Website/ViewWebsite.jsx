@@ -52,7 +52,7 @@ const ViewWebsite = () => {
     }
 
     const goToLink = (link) => {
-        link ? navigate(link) : window.open('https://github.com/LordBugsy', '_blank'); 
+        link ? window.open(`${link}`, '_blank') : window.open('https://github.com/LordBugsy', '_blank'); // This is a placeholder link, it should (normally) never be reached
     }
 
     const likeWebsite = async () => {
@@ -174,10 +174,10 @@ const ViewWebsite = () => {
                     {isLoading ? <Loading /> : (
                         <>
                             <div className={styles.websiteInformations}>
-                                <img onClick={() => goToLink(websiteData.link)} src='/thumbnailPlaceholder.png' alt='thumbnail' className={styles.image} />
+                                <img src='/thumbnailPlaceholder.png' alt='thumbnail' className={styles.image} />
                                 <div className={styles.informations}>
                                     <p className={styles.title}>{websiteData.title}{' '} 
-                                        <span className={styles.githubRepo}><i className={`${styles.icon} fab fa-github`}></i></span>
+                                        <span onClick={() => goToLink(websiteData.link)} className={styles.link}><i className={`${styles.icon} fas fa-external-link-alt`}></i></span>
                                     </p>
                                     <p className={styles.description}>
                                         {websiteData.description}
@@ -205,7 +205,7 @@ const ViewWebsite = () => {
                                     {localUserId && localUserId !== websiteData.owner._id && websiteData.price > 0 && <i onClick={openBuyWebsite} className={`fas fa-shopping-cart ${styles.icon}`}></i>}
                                     {localUserId && localUserId === websiteData.owner._id && <i onClick={editWebsite} className={`fas fa-edit ${styles.icon}`}></i>}
                                     {/* why would someone report himself/herself? */ localUserId !== websiteData.owner._id && <i onClick={() => dispatch(setReportFormShown(true))} className={`fas fa-flag ${styles.icon}`}></i>}
-                                    {localUserId && role === "admin" && <i onClick={openAdminAction} className={`fas fa-hammer ${styles.icon}`}></i>}
+                                    {localUserId && role === "admin" && <i onClick={openAdminAction} className={`fas fa-hammer ${styles.icon} ${styles.glow}`}></i>}
                                 </div>
                             </div>
                         </>
@@ -218,7 +218,7 @@ const ViewWebsite = () => {
             {isConfirmBuyShown && <ConfirmBuy websiteID={websiteData._id} websiteTitle={websiteData.title} websitePrice={websiteData.price} />}
             {isConfirmDeleteShown && <Delete type="website" websiteID={websiteData._id} websiteTitle={websiteData.title} />}
             {isReportFormShown && <Report reportedTarget="Website" targetID={websiteData._id} targetName={websiteData.title} owner={websiteData.owner.username} publicID={websiteData.publicWebsiteID} />}
-            {isAdminReportFormShown && <ReportInfo testProp={websiteData} />}
+            {isAdminReportFormShown && <ReportInfo websiteProp={websiteData} defendant="Website" websiteTitle={websiteData.title} />}
         </>
     )
 }

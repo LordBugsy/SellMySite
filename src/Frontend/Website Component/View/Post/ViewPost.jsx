@@ -222,7 +222,7 @@ const ViewPost = () => {
                                         <i className={`fas fa-comment ${styles.icon}`} onClick={openComments}></i>
                                         {/* why would someone report himself/herself? */ localUserId !== postData.owner._id && <i onClick={openReport} className={`fas fa-flag ${styles.icon}`}></i>}
                                         {localUserId && localUserId === postData.owner._id && <i className={`fas fa-trash-alt ${styles.icon}`} onClick={openConfirmDelete}></i>}
-                                        {localUserId && role === "admin" && <i onClick={openAdminAction} className={`fas fa-hammer ${styles.icon}`}></i>}
+                                        {localUserId && role === "admin" && <i onClick={openAdminAction} className={`fas fa-hammer ${styles.icon} ${styles.glow}`}></i>}
                                     </div>
 
                                 </>
@@ -259,7 +259,7 @@ const ViewPost = () => {
             {isCommentSectionShown && <Comments postID={postData._id} comments={postData.comments} targetName={postData.owner?.username || "Post"} />}
             {isConfirmDeleteShown && <Delete type='post' postID={postData._id} />}
             {isReportFormShown && <Report reportedTarget="Post" targetID={postData._id} owner={postData.owner.username} publicID={postData.publicPostID} />}
-            {isAdminReportFormShown && <ReportInfo testProp={postData} />}
+            {isAdminReportFormShown && <ReportInfo postProp={postData} defendant="Post" />}
         </>
     );
 };

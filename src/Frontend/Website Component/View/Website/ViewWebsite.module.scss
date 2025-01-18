@@ -126,6 +126,10 @@
                     border-radius: 10px;
                     background-color: rgb(40, 68, 105);
 
+                    &.glow {
+                        background-color: rgb(37, 53, 74);
+                    }
+
                     &:hover {
                         background-color: rgb(50, 78, 115);
                     }
