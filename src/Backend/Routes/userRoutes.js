@@ -158,6 +158,96 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Change a user's password
+router.post('/password', async (req, res) => {
+    try {
+        const { userID, oldPassword, newPassword } = req.body;
+        if (!userID || !oldPassword || !newPassword) return res.status(400).json({ message: 'Missing fields' });
+
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        if (await bcrypt.compare(oldPassword, user.password)) {
+            user.password = await bcrypt.hash(newPassword, 10);
+            await user.save();
+
+            res.status(200).json({ message: 'Password successfully changed!' });
+        }
+        
+        else res.status(200).json({ message: 'Invalid credentials' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Change a user's display name
+router.post('/displayname', async (req, res) => {
+    try {
+        const { userID, displayName } = req.body;
+        if (!userID || !displayName) return res.status(400).json({ message: 'Missing fields' });
+
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        user.displayName = displayName;
+        await user.save();
+
+        res.status(200).json({ message: 'Display name successfully changed!' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Change a user's description
+router.post('/description', async (req, res) => {
+    try {
+        const { userID, description } = req.body;
+        if (!userID || !description) return res.status(400).json({ message: 'Missing fields' });
+
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        user.description = description;
+        await user.save();
+
+        res.status(200).json({ message: 'Description successfully changed!' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Change a user's username
+router.post('/username', async (req, res) => {
+    try {
+        const { userID, newUsername, siteTokens } = req.body;
+        if (!userID || !newUsername || !siteTokens) return res.status(400).json({ message: 'Missing fields' });
+
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const existingUser = await User.findOne({ username: newUsername });
+        if (existingUser) return res.status(400).json({ message: 'Username already exists' });
+
+        if (user.siteTokens < siteTokens) return res.status(400).json({ message: 'Insufficient site tokens' });
+
+        user.username = newUsername;
+        user.siteTokens -= siteTokens;
+        await user.save();
+
+        res.status(200).json({ message: 'Username successfully changed!' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
 // Delete a user
 router.post('/delete', async (req, res) => {
     try {
@@ -167,6 +257,37 @@ router.post('/delete', async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         if (await bcrypt.compare(password, user.password)) {
+            // Delete all posts and websites of the user
+            await Post.deleteMany({ owner: userID });
+            await Website.deleteMany({ owner: userID });
+
+            // For each user that follows the user, remove the user from their following list
+            for (const followerID of user.followers) {
+                const follower = await User.findById(followerID);
+                follower.following = follower.following.filter(id => id.toString() !== userID);
+                await follower.save();
+            }
+
+            // For each user that the user follows, remove the user from their followers list
+            for (const followingID of user.following) {
+                const following = await User.findById(followingID);
+                following.followers = following.followers.filter(id => id.toString() !== userID);
+                await following.save();
+            }
+
+            // For each post or website the user liked, remove the user from the likes list
+            const posts = await Post.find({ likes: userID });
+            for (const post of posts) {
+                post.likes = post.likes.filter(id => id.toString() !== userID);
+                await post.save();
+            }
+
+            const websites = await Website.find({ likes: userID });
+            for (const website of websites) {
+                website.likes = website.likes.filter(id => id.toString() !== userID);
+                await website.save();
+            }
+
             await User.findByIdAndDelete(userID);
             res.status(200).json({ message: 'User deleted' });
         }
@@ -265,7 +386,8 @@ router.post('/unfollow', async (req, res) => {
 router.get('/username/:username', async (req, res) => {
     try {
         const { username } = req.params;
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).populate('followers', 'username displayName profilePicture').populate('following', 'username displayName profilePicture');
+
         if (!user) return res.status(404).json({ message: 'User not found' });
         else {
             res.status(200).json({
@@ -273,14 +395,15 @@ router.get('/username/:username', async (req, res) => {
                 username: user.username,
                 displayName: user.displayName,
                 description: user.description,
-                siteTokens: user.siteTokens,
                 isVerified: user.isVerified,
+                role: user.role === 'admin' ? user.role : undefined,
                 profilePicture: user.profilePicture,
                 bannerColour: user.bannerColour,
                 websitesPublished: user.websitesPublished,
                 postsPublished: user.postsPublished,
                 followers: user.followers,
                 following: user.following,
+                accountStatus: user.accountStatus,
             });
         }
     }

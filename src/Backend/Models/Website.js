@@ -39,7 +39,7 @@ websiteSchema.pre('save', async function (next) {
     if (this.isNew) {
         try {
             const counter = await Counter.findOneAndUpdate(
-                { name: 'website' },
+                { name: "website" },
                 { $inc: { value: 1 } },
                 { new: true, upsert: true }
             );

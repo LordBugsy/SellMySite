@@ -30,7 +30,7 @@ userSchema.pre('save', async function (next) {
     if (this.isNew) {
         try {
             const counter = await Counter.findOneAndUpdate(
-                { name: 'user' },
+                { name: "user" },
                 { $inc: { value: 1 } },
                 { new: true, upsert: true }
             );

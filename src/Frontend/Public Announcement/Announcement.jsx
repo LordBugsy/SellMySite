@@ -52,6 +52,7 @@ const Announcement = () => {
 
                 if (announcementData.length === 0) {
                     dispatch(setAnnouncementShown(false));
+                    dispatch(setHasReadTheAnnouncement(true));
                     return;
                 }
 

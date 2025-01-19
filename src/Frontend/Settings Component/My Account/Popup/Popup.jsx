@@ -11,6 +11,7 @@ const Popup = (props) => {
 
     // React
     const [errorDetected, updateErrorState] = useState(false);
+    const [backendMessage, updateBackendMessage] = useState('');
 
     const containerRef = useRef(null);
     const inputRef = useRef(null);
@@ -25,6 +26,29 @@ const Popup = (props) => {
             setTimeout(() => {
                 dispatch(setAccountSettingsShown(false));
             }, 500);
+        }
+    }
+
+    const changePassword = async () => {
+        updateBackendMessage("");
+        updateErrorState(false);
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/user/password", {
+                userID: localUserId,
+                currentPassword: currentPassword.current.value,
+                newPassword: newPassword.current.value
+            });
+
+            console.log(backendResponse.data);
+            updateBackendMessage(backendResponse.data.message);
+
+        }
+
+        catch (error) {
+            console.error(error);
+            updateErrorState(true);
+            updateBackendMessage("An error occurred. Please try again later.");
         }
     }
 
@@ -149,6 +173,8 @@ const Popup = (props) => {
                                     <button onClick={closePopup} className={`${styles.button} ${styles.delete}`}>Cancel</button>
                                     <button onClick={() => console.log("testing")} className={`${styles.button} ${styles.save}`}>Save</button>
                                 </div>
+                                {!errorDetected && backendMessage && <p className={styles.success}>{backendMessage}</p>}
+                                {errorDetected && backendMessage && <p className={styles.error}>{backendMessage}</p>}
                                 {errorDetected && <p className={styles.error}>The current password is incorrect.</p>}
                             </>
                         )}

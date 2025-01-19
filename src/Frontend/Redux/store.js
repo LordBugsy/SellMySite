@@ -277,6 +277,21 @@ const announcementsState = createSlice({
     }
 });
 
+// --- Display Followers / Following slice
+const initialFollowersFollowingState = {
+    isFollowersFollowingShown: false,
+};
+
+const followersFollowingState = createSlice({
+    name: 'followersFollowing',
+    initialState: initialFollowersFollowingState,
+    reducers : {
+        setFollowersFollowingShown: (state, action) => {
+            state.isFollowersFollowingShown = action.payload;
+        }
+    }
+});
+
 // Extract actions to use in components
 export const { loginUser, logoutUser, updateSiteTokens, setHasReadTheAnnouncement } = userSlice.actions;
 export const { setLoginSignupShown } = loginSignupState.actions;
@@ -294,6 +309,7 @@ export const { setConfirmBuyShown } = confirmBuyState.actions;
 export const { setConfirmDeleteShown } = confirmDeleteState.actions;
 export const { setAdminPanelShown } = adminPanelState.actions;
 export const { setAnnouncementShown } = announcementsState.actions;
+export const { setFollowersFollowingShown } = followersFollowingState.actions;
 
 // Create store using configureStore with combined reducers
 const store = configureStore({
@@ -314,6 +330,7 @@ const store = configureStore({
     confirmDelete: confirmDeleteState.reducer, // Confirm Delete reducer
     adminPanel: adminPanelState.reducer, // Admin Panel reducer
     announcements: announcementsState.reducer, // Announcements reducer
+    followersFollowing: followersFollowingState.reducer, // Followers / Following reducer
   },
 });
 

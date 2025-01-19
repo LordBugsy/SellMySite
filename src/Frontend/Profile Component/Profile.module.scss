@@ -63,7 +63,7 @@ $primaryColour: rgb(20, 33, 107);
             }
 
             .profileInfo {
-                margin-top: 0;
+                margin-top: 0rem;
                 width: 100%;
                 border-radius: 0 0 10px 10px;
                 @include flex(column);
@@ -78,6 +78,13 @@ $primaryColour: rgb(20, 33, 107);
                     .follow {
                         font-size: 1.5rem;
                         font-weight: bold;
+                        background-color: rgb(48, 197, 48);
+                    }
+
+                    .unfollow {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        background-color: rgb(197, 48, 48);
                     }
 
                     .icon {
@@ -94,6 +101,10 @@ $primaryColour: rgb(20, 33, 107);
                     margin-top: 2rem;
                     width: 95%;
                     @include flex(column, flex-start, flex-start);
+
+                    &.margin {
+                        margin-top: 5rem;
+                    }
 
                     .displayName {
                         margin-bottom: -30px;
@@ -185,11 +196,42 @@ $primaryColour: rgb(20, 33, 107);
     }
 
     .profileContent {
-        @include flex(column, flex-start, flex-start);
+        @include flex(column, center, flex-start);
         width: 100%;
         background-color: $primaryColour;
         border-radius: 10px 10px 0 0;
         height: 80px;
+
+        .profileFilter {
+            @include flex(row, center, center);
+            gap: 10px;
+            width: 100%;
+            overflow-y: hidden;
+
+            p {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: white;
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: color 0.3s ease-in-out;
+
+                &.selected {
+                    background-color: rgb(46, 61, 147);
+                }
+
+                &:hover {
+                    color: rgb(48, 197, 48);
+                }
+            }
+        }
+
+        .profileDiv {
+            flex: 1;
+        }
     }
 }
 
@@ -197,7 +239,7 @@ $primaryColour: rgb(20, 33, 107);
     .profileInfo {
         .actions {
             justify-content: flex-start !important;
-            margin-top: 8rem !important;
+            margin-top: 7rem !important;
             margin-bottom: -2rem;
         }
 
