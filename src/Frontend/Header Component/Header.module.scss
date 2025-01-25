@@ -59,6 +59,10 @@ $asideColour: rgb(41, 44, 83);
                     font-weight: bold;
                     transition: color 0.3s ease;
 
+                    &.unread {
+                        color: rgb(238, 255, 5);
+                    }
+
                     &:hover {
                         color: rgb(51, 181, 62);
                     }

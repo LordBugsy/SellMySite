@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import styles from './Header.module.scss';
 import { useDispatch, useSelector } from "react-redux";
-import { setLoginSignupShown, setSearchQueryShown, setContactFormShown, setNotificationShown, logoutUser, setAdminPanelShown } from "../Redux/store";
+import { setLoginSignupShown, setSearchQueryShown, setContactFormShown, setNotificationShown, logoutUser, setAdminPanelShown, setEditProfilePictureShown } from "../Redux/store";
 import LoginSignup from "../LoginSignup/LoginSignup";
 import Contact from "../Contact Component/Contact.jsx";
 import Search from "../Search Component/Search.jsx";
@@ -9,6 +9,8 @@ import Notifications from "../Notifications Component/Notifications.jsx";
 import AdminPanel from "../Admin Panel/AdminPanel.jsx";
 import Announcement from "../Public Announcement/Announcement.jsx";
 import { useNavigate } from "react-router-dom";
+import ProfilePicture from "../Settings Component/My Account/Profile Picture/ProfilePicture.jsx";
+import axios from "axios";
 
 const Header = () => {
     // Redux
@@ -19,8 +21,8 @@ const Header = () => {
     const isSearchQueryShown = useSelector(state => state.search.isSearchQueryShown);
     const isNotificationShown = useSelector(state => state.notification.isNotificationShown);
     const isAdminPanelShown = useSelector(state => state.adminPanel.isAdminPanelShown);
-    const {isAnnouncementShown} = useSelector(state => state.announcements);
-
+    const { isAnnouncementShown } = useSelector(state => state.announcements);
+    const { isEditProfilePictureShown } = useSelector(state => state.editProfilePicture);
     const { localUserId, localUsername, profilePicture, role, siteTokens, hasReadTheAnnouncement } = useSelector(state => state.user.user);
 
     // React
@@ -29,6 +31,7 @@ const Header = () => {
     const headerRef = useRef();
 
     const [isAsideShown, updateAsideState] = useState(false);
+    const [notifications, updateNotifications] = useState([]);
 
     const toggleAsideState = () => {
         updateAsideState(!isAsideShown);
@@ -59,6 +62,21 @@ const Header = () => {
         toggleAsideState();
     }
 
+    useEffect(() => {
+        const loadNotifications = async () => {
+            if (!localUserId) return;
+            try {
+                const backendResponse = await axios.get(`http://localhost:5172/user/milestones/${localUserId}`);
+                updateNotifications(prev => [...prev, ...backendResponse.data]);
+            }
+
+            catch (error) {
+                console.error(error);
+            }
+        }
+        loadNotifications();
+    }, [localUserId]);
+
     return (
         <>
             {/* Header */}
@@ -79,7 +97,7 @@ const Header = () => {
 
                         <div className={styles.rightNavLinks}>
                             {localUserId && <div onClick={() => dispatch(setNotificationShown(!isNotificationShown))} className={styles.tooltip}>
-                                <i className={`${styles.icon} fa-solid fa-bell`}></i>
+                                <i className={`${styles.icon} ${notifications.length === 0 ? '' : styles.unread} fa-solid fa-bell`}></i>
                                 <span className={styles.tooltipText}>Notifications</span>
                             </div>}
 
@@ -123,7 +141,7 @@ const Header = () => {
                 <div className={styles.asideContent}>
                     <div className={styles.profilePicture}>
                         <img src={`/${profilePicture}.png`} className={styles.profilePicture} alt='Profile Picture' />
-                        <i className={`${styles.icon} fa-solid fa-pencil-alt`}></i>
+                        <i onClick={() => dispatch(setEditProfilePictureShown(true))} className={`${styles.icon} fa-solid fa-pencil-alt`}></i>
                         <i onClick={() => navigateToComponent('/shop')} className={`${styles.tokens} fa-solid fa-coins`}> {siteTokens}</i>
                     </div>
 
@@ -145,9 +163,10 @@ const Header = () => {
 
             {isContactFormShown && <Contact />}
             {isSearchQueryShown && <Search />}
-            {isNotificationShown && <Notifications />}
+            {isNotificationShown && <Notifications data={notifications} />}
             {isAdminPanelShown && <AdminPanel />}
             {(!hasReadTheAnnouncement || isAnnouncementShown) && <Announcement />}
+            {isEditProfilePictureShown && <ProfilePicture />}
             
         </>
     )

@@ -14,9 +14,11 @@ const NewPost = () => {
 
     // React
     const [postError, updatePostError] = useState("");
+    const [attachmentOn, updateAttachment] = useState(false);
 
     const messageAreaRef = useRef(null);
     const containerRef = useRef();
+    const attachmentLinkRef = useRef(null);
 
     const navigate = useNavigate();
 
@@ -62,10 +64,12 @@ const NewPost = () => {
     }, []);
 
     const postContent = async () => {
+        const imgurRegex = /^https:\/\/i\.imgur\.com\/[a-zA-Z0-9]{7}\.(?:jpg|jpeg|png|gif|webp)$/;
+
         try {
             const backendResponse = await axios.post('http://localhost:5172/post/create', {
                 content: messageAreaRef.current.value.trim(),
-                attachment: undefined, // No attachment for now
+                attachment: imgurRegex.test(attachmentLinkRef.current?.value) && attachmentOn ? attachmentLinkRef.current.value : undefined,
                 owner: localUserId
             });
             navigate(`/post/${localUsername}/${backendResponse.data.publicPostID}`);
@@ -76,6 +80,10 @@ const NewPost = () => {
             console.error(error);
             updatePostError("An error occurred, please try again later. If the problem persists, please contact support.");
         }
+    }
+
+    const addAttachment = () => {
+        updateAttachment(bool => !bool);
     }
 
     return (
@@ -91,10 +99,22 @@ const NewPost = () => {
                     <div className={styles.textAreaContainer}>
                         <textarea maxLength='320' name='textarea' ref={messageAreaRef} className={styles.textArea} placeholder={`What's on your mind?`}></textarea>
                         
-                        <div onClick={postContent} className={styles.iconBackground}>
-                            <i className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
+                        <div className={styles.iconContainer}>
+                            <div onClick={addAttachment} className={styles.iconBackground}>
+                                <i className={`fas fa-paperclip ${styles.icon} ${styles.attachment}`}></i>
+                            </div>
+
+                            <div onClick={postContent} className={styles.iconBackground}>
+                                <i className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
+                            </div>
                         </div>
                     </div>  
+
+                    {attachmentOn && (
+                        <div className={styles.attachmentLinkContainer}>
+                            <input type='text' ref={attachmentLinkRef} className={styles.input} placeholder="Enter an imgur image's link.." />
+                        </div>
+                    )}
 
                     { postError !== "" && <p className={styles.error}>{postError}</p> }
 

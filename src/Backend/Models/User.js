@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     privateChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
-    followersMilestones: [{ type: Number }],
+    followersMilestones: [{ 
+        milestone: { type: Number, required: true },
+        status: { type: String, enum: ['unread', 'read'], default: 'unread' },
+        date: { type: Date, default: Date.now }
+    }],
     hasReadTheAnnouncement: { type: Boolean, default: false },
     codeRedeemed: [{ type: String, default: [] }],
     accountStatus: { type: String, enum: ['active', 'banned'], default: 'active' },

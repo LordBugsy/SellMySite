@@ -2,6 +2,7 @@ import styles from './Popup.module.scss';
 import { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAccountSettingsShown } from '../../../Redux/store';
+import axios from 'axios';
 
 const Popup = (props) => {
     // Redux
@@ -36,13 +37,12 @@ const Popup = (props) => {
         try {
             const backendResponse = await axios.post("http://localhost:5172/user/password", {
                 userID: localUserId,
-                currentPassword: currentPassword.current.value,
+                oldPassword: currentPassword.current.value,
                 newPassword: newPassword.current.value
             });
 
             console.log(backendResponse.data);
             updateBackendMessage(backendResponse.data.message);
-
         }
 
         catch (error) {
@@ -101,31 +101,15 @@ const Popup = (props) => {
                                 <div className={styles.inputContainer}>
                                     <p className={styles.label}> New {props.changingFor} for <span className={styles.username}>{localUsername}</span>:</p>
                                     {props.changingFor !== "Description" && (
-                                        <input 
-                                            ref={inputRef} 
-                                            name='input' 
-                                            type='text' 
-                                            maxLength='18' 
-                                            className={`${styles.input}`} 
-                                            placeholder={`Enter your new ${props.changingFor}`} 
-                                        />
+                                        <input ref={inputRef} name='input' type='text' maxLength='18'  className={`${styles.input}`} placeholder={`Enter your new ${props.changingFor}`} />
                                     )}
 
                                     {props.changingFor === "Description" && (
-                                        <textarea 
-                                            ref={inputRef} 
-                                            name='textArea' 
-                                            maxLength='360' 
-                                            className={`${styles.textArea}`} 
-                                            placeholder={`Enter your new ${props.changingFor}`}
-                                        />
+                                        <textarea ref={inputRef} name='textArea' maxLength='360' className={`${styles.textArea}`} placeholder={`Enter your new ${props.changingFor}`} />
                                     )}
                                 </div>
     
-                                <button 
-                                    disabled={props.changingFor === "Username" && props.data.credits < 100} 
-                                    className={`${styles.button} ${props.changingFor === "Username" && props.data.credits < 100 ? styles.disabled : styles.save}`}
-                                >
+                                <button disabled={props.changingFor === "Username" && props.data.credits < 100} className={`${styles.button} ${props.changingFor === "Username" && props.data.credits < 100 ? styles.disabled : styles.save}`}>
                                     {props.changingFor === "Username" ? (
                                         props.data.credits >= 100 ? (
                                             <>
@@ -171,7 +155,7 @@ const Popup = (props) => {
                                 <p className={styles.warning}>An administrator will never ask to change your password. Keep your account safe and never share your password.</p>
                                 <div className={styles.controls}>
                                     <button onClick={closePopup} className={`${styles.button} ${styles.delete}`}>Cancel</button>
-                                    <button onClick={() => console.log("testing")} className={`${styles.button} ${styles.save}`}>Save</button>
+                                    <button onClick={changePassword} className={`${styles.button} ${styles.save}`}>Save</button>
                                 </div>
                                 {!errorDetected && backendMessage && <p className={styles.success}>{backendMessage}</p>}
                                 {errorDetected && backendMessage && <p className={styles.error}>{backendMessage}</p>}

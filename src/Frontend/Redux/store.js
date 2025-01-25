@@ -49,6 +49,10 @@ const userSlice = createSlice({
     setHasReadTheAnnouncement: (state, action) => {
         state.user.hasReadTheAnnouncement = action.payload;
     },
+
+    updateProfilePicture: (state, action) => {
+        state.user.profilePicture = action.payload;
+    },
   },
 });
 
@@ -292,8 +296,23 @@ const followersFollowingState = createSlice({
     }
 });
 
+// --- Edit Profile Picture slice
+const initialEditProfilePictureState = {
+    isEditProfilePictureShown: false,
+};
+
+const editProfilePictureState = createSlice({
+    name: 'editProfilePicture',
+    initialState: initialEditProfilePictureState,
+    reducers : {
+        setEditProfilePictureShown: (state, action) => {
+            state.isEditProfilePictureShown = action.payload;
+        }
+    }
+});
+
 // Extract actions to use in components
-export const { loginUser, logoutUser, updateSiteTokens, setHasReadTheAnnouncement } = userSlice.actions;
+export const { loginUser, logoutUser, updateSiteTokens, setHasReadTheAnnouncement, updateProfilePicture } = userSlice.actions;
 export const { setLoginSignupShown } = loginSignupState.actions;
 export const { setContactFormShown } = contactFormState.actions;
 export const { setAdminReportFormShown } = adminReportFormState.actions;
@@ -310,6 +329,7 @@ export const { setConfirmDeleteShown } = confirmDeleteState.actions;
 export const { setAdminPanelShown } = adminPanelState.actions;
 export const { setAnnouncementShown } = announcementsState.actions;
 export const { setFollowersFollowingShown } = followersFollowingState.actions;
+export const { setEditProfilePictureShown } = editProfilePictureState.actions;
 
 // Create store using configureStore with combined reducers
 const store = configureStore({
@@ -331,6 +351,7 @@ const store = configureStore({
     adminPanel: adminPanelState.reducer, // Admin Panel reducer
     announcements: announcementsState.reducer, // Announcements reducer
     followersFollowing: followersFollowingState.reducer, // Followers / Following reducer
+    editProfilePicture: editProfilePictureState.reducer, // Edit Profile Picture reducer
   },
 });
 

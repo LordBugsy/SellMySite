@@ -248,6 +248,28 @@ router.post('/username', async (req, res) => {
     }
 });
 
+// Change a user's profile picture
+router.post('/profilepicture', async (req, res) => {
+    try {
+        const { userID, profilePictureID } = req.body;
+        if (!userID || !profilePictureID) return res.status(400).json({ message: 'Missing fields' });
+
+        // changing the profile picture will also change the banner
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        user.profilePicture = profilePictureID;
+        user.bannerColour = `${profilePictureID}b`;
+        await user.save();
+
+        res.status(200).json({ successMessage: 'Profile picture successfully changed!' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
 // Delete a user
 router.post('/delete', async (req, res) => {
     try {
@@ -341,14 +363,23 @@ router.post('/follow', async (req, res) => {
             await user.save();
 
             targetUser.followers.push(userID);
+
+            const followMilestones = [100, 500, 1000, 5000, 10000, 50000, 100000];
+            const currentFollowers = targetUser.followers.length;
+
+            if (followMilestones.includes(currentFollowers) && !targetUser.followersMilestones.some(milestone => milestone.milestone === currentFollowers)) {
+                targetUser.followersMilestones.push({ milestone: currentFollowers });
+            }
             await targetUser.save();
 
             res.status(200).json({ followSuccess: 'User followed' });
+        } 
+        
+        else {
+            res.status(200).json({ followError: 'User already followed' });
         }
-
-        else res.status(200).json({ followError: 'User already followed' });
-    }
-
+    } 
+    
     catch (error) {
         res.status(500).json({ message: 'Something went wrong' });
     }
@@ -375,6 +406,21 @@ router.post('/unfollow', async (req, res) => {
         }
 
         else res.status(200).json({ unfollowError: 'User not followed' });
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Load a user's followers milestones
+router.get('/milestones/:userID', async (req, res) => {
+    try {
+        const { userID } = req.params;
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json(user.followersMilestones);
     }
 
     catch (error) {
