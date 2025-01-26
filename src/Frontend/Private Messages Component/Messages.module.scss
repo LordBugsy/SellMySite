@@ -38,6 +38,10 @@
     height: calc(95vh - 7em); // Ensures it fills the viewport height minus margin-top
     gap: 0.5em;
 
+    .group {
+        background-color: rgb(26, 172, 26);
+    }
+
     .messageRecipient {
         @include flex(column); 
         width: 450px;

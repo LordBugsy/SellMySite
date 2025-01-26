@@ -98,6 +98,8 @@ const Messages = () => {
                     </div>
                 </div>
 
+                <button className={`${styles.group} button`}>Create Group</button>
+
                 <div className={styles.messageList}>
                     {displayChats.length === 0 ? (
                         <div className={styles.noResultsContainer}>
