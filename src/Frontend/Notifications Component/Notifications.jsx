@@ -6,18 +6,6 @@ const Notifications = (props) => {
     const isNotificationShown = useSelector(state => state.notification.isNotificationShown);
 
     // React
-    // we will have to limit notifications by 8
-    const placeholderNotifications = [
-        { profilePicture: Math.floor(Math.random() * 8), user: "JoeDoe", type: "Comment", target: "Website 1" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JaneDoe", type: "Like", target: "Website 2" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JohnDoe", type: "Comment", target: "Website 3" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JillDoe", type: "Like", target: "Website 4" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JackDoe", type: "Comment", target: "Website 5" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JimDoe", type: "Like", target: "Website 6" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JennyDoe", type: "Comment", target: "Website 7" },
-        { profilePicture: Math.floor(Math.random() * 8), user: "JadeDoe", type: "Like", target: "Website 8" },
-    ];
-
     const formatDate = date => {
         const newDateFormat = new Date(date);
 
@@ -47,7 +35,7 @@ const Notifications = (props) => {
                             <div key={index} className={styles.notification}>
                                 <i className={`${styles.icon} fa-solid fa-award`} />
                                 <p className={styles.message}>
-                                    You hit <span className={styles.username}>{notification.milestone}</span> followers on {formatDate(notification.date)}! Congratulations!
+                                    You hit <span className={styles.followerCount}>{notification.milestone}</span> followers on {formatDate(notification.date)}! Congratulations!
                                 </p>
                             </div>
                         );

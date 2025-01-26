@@ -278,46 +278,66 @@ router.post('/delete', async (req, res) => {
         const user = await User.findById(userID);
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        if (await bcrypt.compare(password, user.password)) {
-            // Delete all posts and websites of the user
-            await Post.deleteMany({ owner: userID });
-            await Website.deleteMany({ owner: userID });
+        // Validate password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) return res.status(401).json({ message: 'Invalid credentials' });
 
-            // For each user that follows the user, remove the user from their following list
-            for (const followerID of user.followers) {
-                const follower = await User.findById(followerID);
-                follower.following = follower.following.filter(id => id.toString() !== userID);
-                await follower.save();
-            }
+        const userIDStr = userID.toString();
 
-            // For each user that the user follows, remove the user from their followers list
-            for (const followingID of user.following) {
-                const following = await User.findById(followingID);
-                following.followers = following.followers.filter(id => id.toString() !== userID);
-                await following.save();
-            }
+        // Fetch all posts and websites created by the user
+        const userPosts = await Post.find({ owner: userIDStr }, '_id');
+        const userWebsites = await Website.find({ owner: userIDStr }, '_id');
 
-            // For each post or website the user liked, remove the user from the likes list
-            const posts = await Post.find({ likes: userID });
-            for (const post of posts) {
-                post.likes = post.likes.filter(id => id.toString() !== userID);
-                await post.save();
-            }
+        const userPostIds = userPosts.map(post => post._id.toString());
+        const userWebsiteIds = userWebsites.map(website => website._id.toString());
 
-            const websites = await Website.find({ likes: userID });
-            for (const website of websites) {
-                website.likes = website.likes.filter(id => id.toString() !== userID);
-                await website.save();
-            }
-
-            await User.findByIdAndDelete(userID);
-            res.status(200).json({ message: 'User deleted' });
+        // Remove the user's creations from other users' likedPosts and likedWebsites arrays
+        if (userPostIds.length > 0) {
+            await User.updateMany(
+                { likedPosts: { $in: userPostIds } },
+                { $pull: { likedPosts: { $in: userPostIds } } }
+            );
         }
 
-        else res.status(401).json({ message: 'Invalid credentials' });
-    }
+        if (userWebsiteIds.length > 0) {
+            await User.updateMany(
+                { likedWebsites: { $in: userWebsiteIds } },
+                { $pull: { likedWebsites: { $in: userWebsiteIds } } }
+            );
+        }
 
+        // Remove the user from other users' following and followers lists
+        await User.updateMany(
+            { following: userIDStr },
+            { $pull: { following: userIDStr } }
+        );
+        await User.updateMany(
+            { followers: userIDStr },
+            { $pull: { followers: userIDStr } }
+        );
+
+        // Remove likes from posts and websites
+        await Post.updateMany(
+            { likes: userIDStr },
+            { $pull: { likes: userIDStr } }
+        );
+        await Website.updateMany(
+            { likes: userIDStr },
+            { $pull: { likes: userIDStr } }
+        );
+
+        // Delete user's posts and websites
+        await Post.deleteMany({ owner: userIDStr });
+        await Website.deleteMany({ owner: userIDStr });
+
+        // Finally, delete the user
+        await User.findByIdAndDelete(userIDStr);
+
+        res.status(200).json({ message: 'User deleted successfully' });
+    } 
+    
     catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 });
@@ -421,6 +441,28 @@ router.get('/milestones/:userID', async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         res.status(200).json(user.followersMilestones);
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+// Set a user's notifications to "read"
+router.post('/milestones/read', async (req, res) => {
+    try {
+        const { userID } = req.body;
+        if (!userID) return res.status(400).json({ message: 'Missing fields' });
+
+        const user = await User.findById(userID);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        if (user.followersMilestones.length > 0) {
+            user.followersMilestones.forEach(milestone => milestone.status = 'read');
+            await user.save();
+        }
+
+        res.status(200).json({ message: 'Milestones marked as read' });
     }
 
     catch (error) {

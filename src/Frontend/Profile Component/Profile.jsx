@@ -32,7 +32,6 @@ const Profile = () => {
             }
 
             catch (error) {
-                console.error(error);
                 updateUnknownUser(true);
             }
         }
@@ -42,7 +41,7 @@ const Profile = () => {
 
     useEffect(() => {
         if (isFollowersFollowingShown) dispatch(setFollowersFollowingShown(false));
-    }, [])
+    }, [username])
 
     const setDisplayType = (type) => {
         updateDisplayType(type);
@@ -135,17 +134,28 @@ const Profile = () => {
                 </div>
             </div>
 
-            <div className={styles.profileContent}>
-                <div className={styles.profileFilter}>
-                    <p onClick={() => updateFilterStyle('All')} className={`${styles.filter} ${filterStyle === 'All' ? styles.selected : ''}`}>All</p>
-                    <p onClick={() => updateFilterStyle('Websites')} className={`${styles.filter} ${filterStyle === 'Websites' ? styles.selected : ''}`}>Websites</p>
-                    <p onClick={() => updateFilterStyle('Posts')} className={`${styles.filter} ${filterStyle === 'Posts' ? styles.selected : ''}`}>Posts</p>
-                </div>
+            {!unknownUser ? (
+                <div className={styles.profileContent}>
+                    <div className={styles.profileFilter}>
+                        <p onClick={() => updateFilterStyle('All')} className={`${styles.filter} ${filterStyle === 'All' ? styles.selected : ''}`}>All</p>
+                        <p onClick={() => updateFilterStyle('Websites')} className={`${styles.filter} ${filterStyle === 'Websites' ? styles.selected : ''}`}>Websites</p>
+                        <p onClick={() => updateFilterStyle('Posts')} className={`${styles.filter} ${filterStyle === 'Posts' ? styles.selected : ''}`}>Posts</p>
+                    </div>
 
-                <div className={styles.profileDiv}>
+                    <div className={styles.profileDiv}>
 
+                    </div>
                 </div>
-            </div>
+                ) : (
+                    <div className={styles.error}>
+                        <p className={styles.errorMessage}>
+                            Seems like you either have a time machine, or you're trying to access a user that doesn't exist.
+                        </p>
+                        <p className={styles.errorMessage}>
+                            If you're a time traveler, please let me know how you did it. If you're not, please try again.
+                        </p>
+                    </div>
+                )}
 
             {isFollowersFollowingShown && <Display displayType={displayType} username={username} displayData={displayType === "followers" ? profileData.followers : profileData.following} />}
 

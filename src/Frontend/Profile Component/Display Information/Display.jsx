@@ -46,10 +46,10 @@ const Display = (props) => {
                         ) :
                             props.displayData.map((data, index) => (
                             <div onClick={() => navigate(`/profile/${data.username}`)} key={index} className={styles.displayItem}>
-                                <img src={`/${data.profilePicture}.png`} alt='Profile' />
+                                <img className={styles.profilePicture} src={`/${data.profilePicture}.png`} alt='Profile' />
                                 <div className={styles.accountInfo}>
                                     <p className={styles.displayName}>{data.displayName}</p>
-                                    <p className={styles.username}>{data.username}</p>
+                                    <p className={styles.username}>@{data.username}</p>
                                 </div>
                             </div>
                         ))}

@@ -195,6 +195,20 @@ $primaryColour: rgb(20, 33, 107);
         }
     }
 
+    .error {
+        @include flex(column, center, center);
+        width: 90%;
+        margin-top: 2em;
+
+        .errorMessage {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            color: white;
+            text-align: center
+        }
+    }
+
     .profileContent {
         @include flex(column, center, flex-start);
         width: 100%;
@@ -254,4 +268,13 @@ $primaryColour: rgb(20, 33, 107);
             }
         }
     }    
+
+    .error {
+        gap: 1.2em;
+        margin-bottom: 2em;
+
+        .errorMessage {
+            font-size: 1.5rem !important;
+        }
+    }
 }

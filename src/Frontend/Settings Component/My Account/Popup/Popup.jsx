@@ -1,12 +1,12 @@
 import styles from './Popup.module.scss';
 import { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAccountSettingsShown } from '../../../Redux/store';
+import { setAccountSettingsShown, logoutUser } from '../../../Redux/store';
 import axios from 'axios';
 
 const Popup = (props) => {
     // Redux
-    const { localUsername, localUserId } = useSelector(state => state.user.user);
+    const { localUsername, localUserId, siteTokens } = useSelector(state => state.user.user);
     const { isAccountSettingsShown } = useSelector(state => state.accountSettings);
     const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const Popup = (props) => {
 
     const containerRef = useRef(null);
     const inputRef = useRef(null);
-
+    const confirmPasswordRef = useRef(null);
     const currentPassword = useRef(null);
     const newPassword = useRef(null);
 
@@ -27,6 +27,95 @@ const Popup = (props) => {
             setTimeout(() => {
                 dispatch(setAccountSettingsShown(false));
             }, 500);
+        }
+    }
+
+    const changeUsername = async () => {
+        updateBackendMessage("");
+        updateErrorState(false);
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/user/username", {
+                userID: localUserId,
+                newUsername: inputRef.current.value,
+                siteTokens
+            });
+
+            console.log(backendResponse.data);
+            updateBackendMessage(backendResponse.data.message);
+        }
+
+        catch (error) {
+            console.error(error);
+            updateErrorState(true);
+            updateBackendMessage("An error occurred. Please try again later.");
+        }
+    }
+
+    const changeDisplayName = async () => {
+        updateBackendMessage("");
+        updateErrorState(false);
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/user/displayname", {
+                userID: localUserId,
+                displayName: inputRef.current.value
+            });
+
+            console.log(backendResponse.data);
+            updateBackendMessage(backendResponse.data.message);
+        }
+
+        catch (error) {
+            console.error(error);
+            updateErrorState(true);
+            updateBackendMessage("An error occurred. Please try again later.");
+        }
+    }
+
+    const changeDescription = async () => {
+        updateBackendMessage("");
+        updateErrorState(false);
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/user/description", {
+                userID: localUserId,
+                description: inputRef.current.value
+            });
+
+            console.log(backendResponse.data);
+            updateBackendMessage(backendResponse.data.message);
+        }
+
+        catch (error) {
+            console.error(error);
+            updateErrorState(true);
+            updateBackendMessage("An error occurred. Please try again later.");
+        }
+    }
+
+    const changeFor = (targetChange) => { // bruh idek how to name this function
+        if (targetChange === "Username") changeUsername();
+        if (targetChange === "Display Name") changeDisplayName();
+        if (targetChange === "Description") changeDescription();
+    }
+
+    const deleteAccount = async () => {
+        updateBackendMessage("");
+        updateErrorState(false);
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/user/delete", {
+                userID: localUserId,
+                password: confirmPasswordRef.current.value
+            });
+
+            dispatch(logoutUser());
+        }
+
+        catch (error) {
+            updateErrorState(true);
+            updateBackendMessage(error.response.data.message);
         }
     }
 
@@ -109,9 +198,9 @@ const Popup = (props) => {
                                     )}
                                 </div>
     
-                                <button disabled={props.changingFor === "Username" && props.data.credits < 100} className={`${styles.button} ${props.changingFor === "Username" && props.data.credits < 100 ? styles.disabled : styles.save}`}>
+                                <button onClick={() => changeFor(props.changingFor)} disabled={props.changingFor === "Username" && props.data < 100} className={`${styles.button} ${props.changingFor === "Username" && props.data < 100 ? styles.disabled : styles.save}`}>
                                     {props.changingFor === "Username" ? (
-                                        props.data.credits >= 100 ? (
+                                        props.data >= 100 ? (
                                             <>
                                                 Save <i className={`fa-solid fa-coins ${styles.icon}`}></i>
                                             </>
@@ -124,7 +213,10 @@ const Popup = (props) => {
                                         "Save"
                                     )}
                                 </button>
-                                {errorDetected && <p className={styles.error}>Username is already taken.</p>}
+
+                                {errorDetected && props.changingFor === "Username" && <p className={styles.error}>Username is already taken.</p>}
+                                {errorDetected && props.changingFor !== "Username" && <p className={styles.error}>{backendMessage}</p>}
+                                {!errorDetected && backendMessage && <p className={styles.success}>{backendMessage}</p>}
                             </>
                         )}
 
@@ -133,9 +225,14 @@ const Popup = (props) => {
                                 <i onClick={closePopup} className={`fa-solid fa-times ${styles.close}`}></i>
                                 <h1 className='componentTitle'>Delete Account</h1>
                                 <p className={styles.warning}>Are you sure you want to delete your account? This action cannot be undone.</p>
-                                <div className={styles.controls}>
-                                    <button onClick={() => console.log("Testing")} className={`${styles.button} ${styles.delete}`}>Delete</button>
+                                <div className={styles.inputContainer}>
+                                    <p className={styles.label}>Enter your password to confirm:</p>
+                                    <input ref={confirmPasswordRef} name='input' type='password' className={`${styles.input}`} placeholder='Enter your password' />
                                 </div>
+                                <div className={styles.controls}>
+                                    <button onClick={deleteAccount} className={`${styles.button} ${styles.delete}`}>Delete</button>
+                                </div>
+                                {errorDetected && <p className={styles.error}>{backendMessage}</p>}
                             </>
                         )}
 
