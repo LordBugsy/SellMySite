@@ -1,0 +1,136 @@
+@mixin flex($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+.createGroupContainer, .participantsContainer {
+    @include flex();
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    opacity: 0;
+
+    .createGroup, .participants {
+        @include flex(column);
+        min-width: 50%;
+        height: 80%;
+        background-color: rgb(71, 62, 112);
+        border-radius: 10px;
+    }
+
+	.createGroup {
+
+		.createHeader {
+			@include flex(column);
+			width: 100%;
+
+			.information {
+				margin-top: -1em;
+				color: white;
+				text-align: center;
+			}
+		}
+
+		.createContent {
+			flex: 1;
+			@include flex(column, flex-start);
+			gap: 1em;
+			
+			.selectedUsers {
+				@include flex(row, flex-start);
+				width: 90%;
+
+				.selectedUsersTitle {
+					color: white;
+					font-size: 1.5em;
+					font-weight: 700;
+
+					.invalidAmount {
+						color: rgb(255, 70, 70);
+						font-weight: bold;
+					}
+
+					.correctAmount {
+						color: rgb(59, 231, 59);
+						font-weight: bold;
+					}
+				}
+			}
+
+			.mutualChats {
+				@include flex(row, flex-start);
+				gap: 1em;
+				width: 90%;
+				max-height: 75%;
+				overflow-y: auto;
+				overflow-x: hidden;
+				flex-wrap: wrap;
+
+				.mutualChat {
+					@include flex();
+					gap: 1em;
+					background-color: rgb(110, 99, 158);
+					padding: 0.5em 1em;
+					border-radius: 10px;
+					border: 2px solid transparent;
+					cursor: pointer;
+					transition: border 0.3s;
+
+					&.selected {
+						border: 2px solid rgb(104, 215, 104);
+					}
+
+					&:hover {
+						border: 2px solid white;
+
+						&.selected {
+							border: 2px solid rgb(104, 215, 104);
+						}
+					}
+
+					.profilePicture {
+						width: 50px;
+						height: 50px;
+						border-radius: 50%;
+						background-color: white;
+					}
+
+					.userInfo {
+						@include flex(column, flex-start, flex-start);
+
+						.username {
+							color: rgb(164, 164, 164);
+							margin: 0;
+							font-weight: bold;
+						}
+
+						.displayName {
+							color: white;
+							margin: 0;
+							font-weight: bold;
+						}
+					}
+				}				
+			}
+
+			.buttonContainer {
+				@include flex();
+				gap: 1em;
+
+				.cancel {
+					background-color: rgb(246, 96, 96);
+				}
+
+				.create {
+					background-color: rgb(72, 211, 72);
+				}
+			}
+		}
+	}
+}

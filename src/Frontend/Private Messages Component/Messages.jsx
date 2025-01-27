@@ -1,10 +1,15 @@
 import styles from './Messages.module.scss';
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import Create from './Group Chat/Create';
+import { updateGroupCreateOptionState, updateGroupParticipantsOptionState } from '../Redux/store';
 
 const Messages = () => {
     // Redux
+    const dispatch = useDispatch();
+
     const { localUserId, localUsername } = useSelector((state) => state.user.user);
+    const { isGroupCreateOptionShown }  = useSelector((state) => state.groupChatOption);
 
     // React
     const [isRecipientVisible, setIsRecipientVisible] = useState(true); // Show the recipient list (mobile only)
@@ -98,7 +103,7 @@ const Messages = () => {
                     </div>
                 </div>
 
-                <button className={`${styles.group} button`}>Create Group</button>
+                <button onClick={() => dispatch(updateGroupCreateOptionState(true))} className={`${styles.group} button`}>Create Group</button>
 
                 <div className={styles.messageList}>
                     {displayChats.length === 0 ? (
@@ -134,6 +139,9 @@ const Messages = () => {
                 {/* <ChatLogs id={privateChats[lastChatIndex]?._id} 
                         username={privateChats[lastChatIndex]?.groupChat[0].username === localUsername ? privateChats[lastChatIndex]?.groupChat[1].username : privateChats[lastChatIndex]?.groupChat[0].username } />  */}
             </div>
+
+            {isGroupCreateOptionShown && <Create />}
+
         </div>
     );
 };

@@ -313,15 +313,20 @@ const editProfilePictureState = createSlice({
 
 // --- Group Chat Option settings slice
 const initialGroupChatOptionState = {
-    isGroupChatOptionShown: false,
+    isGroupCreateOptionShown: false,
+    isGroupParticipantsOptionShown: false,
 };
 
 const groupChatOptionState = createSlice({
     name: 'groupChatOption',
     initialState: initialGroupChatOptionState,
     reducers : {
-        setGroupChatOptionShown: (state, action) => {
-            state.isGroupChatOptionShown = action.payload;
+        updateGroupCreateOptionState: (state, action) => {
+            state.isGroupCreateOptionShown = action.payload;
+        },
+
+        updateGroupParticipantsOptionState: (state, action) => {
+            state.isGroupParticipantsOptionShown = action.payload;
         }
     }
 });
@@ -345,7 +350,7 @@ export const { setAdminPanelShown } = adminPanelState.actions;
 export const { setAnnouncementShown } = announcementsState.actions;
 export const { setFollowersFollowingShown } = followersFollowingState.actions;
 export const { setEditProfilePictureShown } = editProfilePictureState.actions;
-export const { setGroupChatOptionShown } = groupChatOptionState.actions;
+export const { updateGroupCreateOptionState, updateGroupParticipantsOptionState } = groupChatOptionState.actions;
 
 // Create store using configureStore with combined reducers
 const store = configureStore({
