@@ -380,16 +380,20 @@ router.post('/follow', async (req, res) => {
 
         if (!user.following.includes(targetID)) {
             user.following.push(targetID);
-            await user.save();
-
             targetUser.followers.push(userID);
 
             const followMilestones = [100, 500, 1000, 5000, 10000, 50000, 100000];
             const currentFollowers = targetUser.followers.length;
-
             if (followMilestones.includes(currentFollowers) && !targetUser.followersMilestones.some(milestone => milestone.milestone === currentFollowers)) {
                 targetUser.followersMilestones.push({ milestone: currentFollowers });
             }
+
+            if (user.followers.includes(targetID) && targetUser.followers.includes(userID)) {
+                if (!user.mutualFollowers.includes(targetID)) user.mutualFollowers.push(targetID);
+                if (!targetUser.mutualFollowers.includes(userID)) targetUser.mutualFollowers.push(userID);
+            }
+
+            await user.save();
             await targetUser.save();
 
             res.status(200).json({ followSuccess: 'User followed' });
@@ -417,17 +421,24 @@ router.post('/unfollow', async (req, res) => {
 
         if (user.following.includes(targetID)) {
             user.following = user.following.filter(id => id.toString() !== targetID);
-            await user.save();
-
             targetUser.followers = targetUser.followers.filter(id => id.toString() !== userID);
+
+            if (user.mutualFollowers.includes(targetID)) {
+                user.mutualFollowers = user.mutualFollowers.filter(id => id.toString() !== targetID);
+                targetUser.mutualFollowers = targetUser.mutualFollowers.filter(id => id.toString() !== userID);
+            }
+
+            await user.save();
             await targetUser.save();
 
             res.status(200).json({ unfollowSuccess: 'User unfollowed' });
+        } 
+        
+        else {
+            res.status(200).json({ unfollowError: 'User not followed' });
         }
-
-        else res.status(200).json({ unfollowError: 'User not followed' });
-    }
-
+    } 
+    
     catch (error) {
         res.status(500).json({ message: 'Something went wrong' });
     }
@@ -485,6 +496,8 @@ router.get('/username/:username', async (req, res) => {
                 description: user.description,
                 isVerified: user.isVerified,
                 role: user.role === 'admin' ? user.role : undefined,
+                mutualFollowers: user.mutualFollowers,
+                privateChatsWith: user.privateChatsWith,
                 profilePicture: user.profilePicture,
                 bannerColour: user.bannerColour,
                 websitesPublished: user.websitesPublished,

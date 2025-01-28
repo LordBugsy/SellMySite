@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import styles from './Profile.module.scss';
 import axios from 'axios';
@@ -9,10 +9,11 @@ import { setFollowersFollowingShown } from '../Redux/store';
 const Profile = () => {
     // Redux
     const dispatch = useDispatch();
-    const { localUserId } = useSelector(state => state.user.user);
+    const { localUserId, role } = useSelector(state => state.user.user);
     const { isFollowersFollowingShown } = useSelector(state => state.followersFollowing);
 
     // React
+    const navigate = useNavigate();
     const username = encodeURIComponent(useParams().username);
 
     const [followStatus, updateFollowStatus] = useState(false);
@@ -28,7 +29,7 @@ const Profile = () => {
                 const backendResponse = await axios.get(`http://localhost:5172/user/username/${username}`);
                 updateProfileData(backendResponse.data);
 
-                if (backendResponse.data.followers.includes(localUserId)) updateFollowStatus(true); // In the future, this will be done server-side because it can take a lot of time to load
+                if (backendResponse.data.followers.includes(localUserId) || backendResponse.data.mutualFollowers?.includes(localUserId)) updateFollowStatus(true); // In the future, this will be done server-side because it can take a lot of time to load
             }
 
             catch (error) {
@@ -37,7 +38,7 @@ const Profile = () => {
         }
 
         loadProfile();
-    }, [username, followStatus]);
+    }, [username, followStatus, localUserId]);
 
     useEffect(() => {
         if (isFollowersFollowingShown) dispatch(setFollowersFollowingShown(false));
@@ -83,6 +84,26 @@ const Profile = () => {
         }
     }
 
+    const createChatLog = async () => {
+        if (profileData.privateChatsWith?.includes(localUserId)) {
+            navigate('/messages');
+            return;
+        }
+
+        try {
+            const backendResponse = await axios.post("http://localhost:5172/chatlogs/create", {
+                participants: [localUserId, profileData._id],
+                type: "direct"
+            });
+
+            navigate('/messages');
+        }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div className={`${styles.profileContainer} fadeIn`}>
             <div className={styles.profileHeader}>
@@ -100,7 +121,7 @@ const Profile = () => {
 
                         {localUserId && localUserId !== profileData._id && (
                         <div className={styles.actions}>
-                            <i className={`fas fa-envelope ${styles.icon}`}></i>
+                            {((localUserId && profileData.mutualFollowers && profileData.mutualFollowers.includes(localUserId)) || role === "admin") && <i onClick={createChatLog} className={`fas fa-envelope ${styles.icon}`}></i>}
                             <button onClick={followCondition} className={`button ${followStatus ? styles.unfollow : styles.follow}`}>
                                 {followStatus ? 'Unfollow' : 'Follow'}
                             </button>                   

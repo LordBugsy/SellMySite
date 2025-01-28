@@ -17,7 +17,9 @@ const userSchema = new mongoose.Schema({
     likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
-    privateChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }],
+    mutualFollowers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    joinedChats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChatLogs', default: [] }],
+    privateChatsWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
     followersMilestones: [{ 
         milestone: { type: Number, required: true },
         status: { type: String, enum: ['unread', 'read'], default: 'unread' },

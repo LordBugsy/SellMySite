@@ -2,6 +2,7 @@ import styles from './Messages.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Create from './Group Chat/Create';
+import axios from 'axios';
 import { updateGroupCreateOptionState, updateGroupParticipantsOptionState } from '../Redux/store';
 
 const Messages = () => {
@@ -16,6 +17,22 @@ const Messages = () => {
     const [lastChatIndex, setLastChatIndex] = useState(0); // The last chat that was selected
     const [searchQuery, setSearchQuery] = useState(""); // Search input state
     const [filteredChats, setFilteredChats] = useState([]); // State for filtered chats
+    const [privateChats, updatePrivateChats] = useState([]); // State for private chats
+
+    useEffect(() => {
+        const loadChats = async () => {
+            try {
+                const backendResponse = await axios.get(`http://localhost:5172/chatlogs/${localUserId}`);
+                updatePrivateChats(backendResponse.data.joinedChats);
+                
+            }
+
+            catch (error) {
+                console.error(error);
+            }
+        }
+        loadChats();
+    }, []);
 
     const chatsList = [{
         _id: "1",
@@ -82,7 +99,7 @@ const Messages = () => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
 
-        const filtered = chatsList.filter((chat) =>
+        const filtered = privateChats.filter((chat) =>
             chat.groupChat.some((user) => user.username.toLowerCase().includes(query)
             )
         );
@@ -105,7 +122,7 @@ const Messages = () => {
 
                 <button onClick={() => dispatch(updateGroupCreateOptionState(true))} className={`${styles.group} button`}>Create Group</button>
 
-                <div className={styles.messageList}>
+                <div onClick={() => console.log(privateChats[0].participants)} className={styles.messageList}>
                     {displayChats.length === 0 ? (
                         <div className={styles.noResultsContainer}>
                             <p className={styles.noResults}>No results for "<span>{searchQuery}</span>"</p>
