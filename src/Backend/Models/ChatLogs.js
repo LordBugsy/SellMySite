@@ -10,6 +10,7 @@ const chatLogSchema = new mongoose.Schema({
     messages: [{
         sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         text: { type: String, required: true },
+        attachment: { type: String, default: undefined },
     }],
 }, { timestamps: true });
 

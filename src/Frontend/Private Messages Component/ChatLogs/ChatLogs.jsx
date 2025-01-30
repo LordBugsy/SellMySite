@@ -11,9 +11,8 @@ const ChatLogs = (props) => {
     const loadMessages = async () => {
         if (!props.id) return;
 
-
         try {
-            const response = await axios.get(`http://localhost:5172/api/chatlogs/groupChat/${props.id}`);
+            const response = await axios.get(`http://localhost:5172/chatlogs/messages/${props.id}`);
             updateChatLogs(response.data.messages);
         } 
         
@@ -39,25 +38,29 @@ const ChatLogs = (props) => {
     return (
         <div className={styles.chatLogsContainer}>
             <div className={styles.chatLogs}>
-
-                {loading ? <Loading /> : chatLogs.map((chat, index) => {
-                    const showProfilePicture = index === 0 || chat.sender._id !== chatLogs[index - 1].sender._id;
+                {loading ? <Loading /> : chatLogs.length === 0 ? (
+                    <p className={styles.noMessages}>
+                        No messages yet. Send a message to start the conversation!
+                    </p>) : (
+                        chatLogs.map((chat, index) => {
+                        const showProfilePicture = index === 0 || chat.sender._id !== chatLogs[index - 1].sender._id;
 
                     return (
                         <div key={index} className={styles.chatMessageLogs}>
                             {showProfilePicture && (
                                 <div className={styles.chatHeader}>
-                                    <img src={chat.sender.profileColour !== undefined ? `/${chat.sender.profileColour}.png` : '/error.png'} alt={`${chat.sender.username}'s profile picture`} />
+                                    <img src={chat.sender.profilePicture !== undefined ? `/${chat.sender.profilePicture}.png` : "/error.png"} alt={`${chat.sender.username}'s profile picture`} />
                                     <h2 className={styles.username}>{chat.sender.username}</h2>
                                 </div>
                             )}
                             <p className={styles.chat}>{chat.text}</p>
                         </div>
                     );
-                })}
+                    })
+                )}
                 <div ref={messagesEndRef} />
             </div>
-            
+
             <div className={styles.chatMessage}>
                 <SendMessage id={props.id} username={props.username} onMessageSent={loadMessages} />
             </div>

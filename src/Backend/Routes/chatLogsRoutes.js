@@ -64,13 +64,13 @@ router.post('/create', async (req, res) => {
 // Send a message to a chat
 router.post('/send', async (req, res) => {
     try {
-        const { chatID, sender, text } = req.body;
+        const { chatID, sender, text, attachment } = req.body;
         if (!chatID || !sender || !text) return res.status(400).json({ message: 'Missing required fields' });
 
         const chat = await ChatLogs.findById(chatID);
         if (!chat) return res.status(404).json({ message: 'Chat not found' });
 
-        chat.messages.push({ sender, text });
+        chat.messages.push({ sender, text, attachment });
         await chat.save();
         res.status(201).json({ success: 'Message sent successfully' });
     } 
@@ -146,15 +146,14 @@ router.get('/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
-        const user = await User.findById(userId)
-            .select('username displayName profilePicture joinedChats') 
-            .populate({
-                path: 'joinedChats',
-                populate: {
-                    path: 'participants',
-                    select: 'username displayName profilePicture',
-                },
-            });
+        const user = await User.findById(userId).populate('privateChatsWith', 'username displayName profilePicture')
+        .populate({
+            path: 'joinedChats',
+            populate: {
+              path: 'participants',
+              select: 'username displayName profilePicture',
+            },
+          })
 
         if (!user) return res.status(404).json({ message: 'User not found' });
 

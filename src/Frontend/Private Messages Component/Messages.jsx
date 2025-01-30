@@ -2,6 +2,7 @@ import styles from './Messages.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import Create from './Group Chat/Create';
+import ChatLogs from './ChatLogs/ChatLogs';
 import axios from 'axios';
 import { updateGroupCreateOptionState, updateGroupParticipantsOptionState } from '../Redux/store';
 
@@ -18,13 +19,14 @@ const Messages = () => {
     const [searchQuery, setSearchQuery] = useState(""); // Search input state
     const [filteredChats, setFilteredChats] = useState([]); // State for filtered chats
     const [privateChats, updatePrivateChats] = useState([]); // State for private chats
+    const [mutualFollowers, setMutualFollowers] = useState([]);
 
     useEffect(() => {
         const loadChats = async () => {
             try {
                 const backendResponse = await axios.get(`http://localhost:5172/chatlogs/${localUserId}`);
+                setMutualFollowers(backendResponse.data.privateChatsWith);
                 updatePrivateChats(backendResponse.data.joinedChats);
-                
             }
 
             catch (error) {
@@ -33,58 +35,6 @@ const Messages = () => {
         }
         loadChats();
     }, []);
-
-    const chatsList = [{
-        _id: "1",
-        groupChat: [{
-            username: "Miles Morales",
-            profileColour: 1,
-        }, {
-            username: "user2",
-            profileColour: 2,
-        }],
-        state: "unread"
-    }, {
-        _id: "2",
-        groupChat: [{
-            username: "Kilometres Morales",
-            profileColour: 3,
-        }, {
-            username: "user4",
-            profileColour: 4,
-        }],
-        state: "read"
-    }, {
-        _id: "3",
-        groupChat: [{
-            username: "Miles Kilometres",
-            profileColour: 5
-        }, {
-            username: "user6",
-            profileColour: 6
-        }],
-        state: "read"
-    }, {
-        _id: "4",
-        groupChat: [{
-            username: "Miles Kilometres",
-            profileColour: 7
-        }, {
-            username: "user8",
-            profileColour: 8
-        }],
-        state: "read"
-    }, {
-        _id: "5",
-        groupChat: [{
-            username: "SellMySite Bot",
-            profileColour: 2
-        }, {
-            username: "user10",
-            profileColour: 8
-        }],
-        state: "read"
-    }];
 
     const toggleList = () => {
         setIsRecipientVisible(!isRecipientVisible);
@@ -98,15 +48,16 @@ const Messages = () => {
     const filterChats = (event) => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
-
+      
         const filtered = privateChats.filter((chat) =>
-            chat.groupChat.some((user) => user.username.toLowerCase().includes(query)
-            )
+          chat.participants?.some(
+            (user) => user.username.toLowerCase().includes(query)
+          )
         );
         setFilteredChats(filtered);
     };
 
-    const displayChats = searchQuery ? filteredChats : chatsList;
+    const displayChats = searchQuery ? filteredChats : privateChats;
 
     return (
         <div className={`${styles.messagesContainer} fadeIn`}>
@@ -122,27 +73,28 @@ const Messages = () => {
 
                 <button onClick={() => dispatch(updateGroupCreateOptionState(true))} className={`${styles.group} button`}>Create Group</button>
 
-                <div onClick={() => console.log(privateChats[0].participants)} className={styles.messageList}>
+                <div className={styles.messageList}>
                     {displayChats.length === 0 ? (
                         <div className={styles.noResultsContainer}>
-                            <p className={styles.noResults}>No results for "<span>{searchQuery}</span>"</p>
+                            {searchQuery.length === 0 ? (
+                                <p className={styles.noResults}>You have no messages.</p>
+                            ) : (
+                                <p className={styles.noResults}>No results for "<span>{searchQuery}</span>"</p>
+                            )}
                         </div>
                     ) : (
                     displayChats.map((chat, index) => {
-                        let profileColour = '/0.png'; // Default profile colour
-
-                        if (chat.groupChat) {
-                            if (chat.groupChat[0].username === localUsername) profileColour = `/${chat.groupChat[1].profileColour}.png`;
-                            else profileColour = `/${chat.groupChat[0].profileColour}.png`;
+                        let chatData;
+                        if (chat.type === "direct") {
+                            chatData = chat.participants[0].username === localUsername ? chat.participants[1] : chat.participants[0];
                         }
 
                         return (
                             <div key={index} onClick={() => selectPrivateChat(index)} className={`${styles.message} ${lastChatIndex === index ? styles.selected : ''}`}>
-                                <img src={profileColour} alt="Avatar" className={styles.avatar}/>
+                                <img src={`/${chatData.profilePicture}.png`} alt="Avatar" className={styles.avatar}/>
                                 <div className={styles.messagePreview}>
-                                    <p className={`${styles.username} ${chat.state === 'unread' ? styles.unread : styles.read}`}>
-                                        {chat.groupChat && chat.groupChat[0].username === localUsername ? chat.groupChat[1].username : chat.groupChat[0].username}
-                                    </p>
+                                    <p className={styles.displayName}>{chatData.displayName}</p>
+                                    <p className={styles.username}>@{chatData.username}</p>
                                 </div>
                             </div>
                         )})
@@ -153,11 +105,15 @@ const Messages = () => {
 
             <div className={styles.rightSide}>
                 <i onClick={toggleList} className={`fa-solid fa-arrow-left ${styles.icon}`}></i>
-                {/* <ChatLogs id={privateChats[lastChatIndex]?._id} 
-                        username={privateChats[lastChatIndex]?.groupChat[0].username === localUsername ? privateChats[lastChatIndex]?.groupChat[1].username : privateChats[lastChatIndex]?.groupChat[0].username } />  */}
+                <ChatLogs 
+                    id={privateChats[lastChatIndex]?._id} 
+                    username={privateChats[lastChatIndex]?.type === "direct" ? 
+                        privateChats[lastChatIndex]?.participants[0].username === localUsername ? privateChats[lastChatIndex]?.participants[1].username : privateChats[lastChatIndex]?.participants[0].username 
+                                : "Group Chat"} // This whole line is a mess, but depending on whether or not the last chat is a direct message or a group chat, it will display the correct "username"
+                />
             </div>
 
-            {isGroupCreateOptionShown && <Create />}
+            {isGroupCreateOptionShown && <Create mutualFollowersData={mutualFollowers} />}
 
         </div>
     );

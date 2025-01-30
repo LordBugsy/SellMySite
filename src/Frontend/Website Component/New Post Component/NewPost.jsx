@@ -69,7 +69,7 @@ const NewPost = () => {
         try {
             const backendResponse = await axios.post('http://localhost:5172/post/create', {
                 content: messageAreaRef.current.value.trim(),
-                attachment: imgurRegex.test(attachmentLinkRef.current?.value) && attachmentOn ? attachmentLinkRef.current.value : undefined,
+                attachment: imgurRegex.test(attachmentLinkRef.current?.value.trim()) && attachmentOn ? attachmentLinkRef.current.value.trim() : undefined,
                 owner: localUserId
             });
             navigate(`/post/${localUsername}/${backendResponse.data.publicPostID}`);

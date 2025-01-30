@@ -41,7 +41,6 @@ const Popup = (props) => {
                 siteTokens
             });
 
-            console.log(backendResponse.data);
             updateBackendMessage(backendResponse.data.message);
         }
 
@@ -62,7 +61,6 @@ const Popup = (props) => {
                 displayName: inputRef.current.value
             });
 
-            console.log(backendResponse.data);
             updateBackendMessage(backendResponse.data.message);
         }
 
@@ -83,7 +81,6 @@ const Popup = (props) => {
                 description: inputRef.current.value
             });
 
-            console.log(backendResponse.data);
             updateBackendMessage(backendResponse.data.message);
         }
 
@@ -130,7 +127,6 @@ const Popup = (props) => {
                 newPassword: newPassword.current.value
             });
 
-            console.log(backendResponse.data);
             updateBackendMessage(backendResponse.data.message);
         }
 

@@ -159,7 +159,13 @@
                     overflow: hidden;
 
                     .username {
+                        color: rgb(209, 209, 209);
+                    }
+
+                    .displayName {
                         color: white;
+                        font-weight: bold;
+                        font-size: 1.2em;
                     }
 
                     p {

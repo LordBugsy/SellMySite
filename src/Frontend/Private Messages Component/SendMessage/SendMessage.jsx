@@ -1,5 +1,5 @@
 import styles from './SendMessage.module.scss';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
@@ -9,6 +9,9 @@ const SendMessage = (props) => {
 
     // React
     const messageAreaRef = useRef(null);
+    const attachementRef = useRef(null);
+
+    const [attachementOn, updateAttachementOn] = useState(false);
 
     useEffect(() => {
         const handleInput = () => {
@@ -51,14 +54,22 @@ const SendMessage = (props) => {
                 messageAreaRef.current.removeEventListener('keydown', handleKeyDown);
             }
         };
-    }, [props.id]);    
+    }, [props.id]);
+
+    const addAttachment = () => {
+        updateAttachementOn(bool => !bool);
+    }
 
     const sendMessage = async () => {
         if (!props.id) return;
     
+        const imgurRegex = /^https:\/\/i\.imgur\.com\/[a-zA-Z0-9]{7}\.(?:jpg|jpeg|png|gif|webp)$/;
+
         try {
-            const response = await axios.post(`http://localhost:5172/api/chatlogs/send/${props.id}`, {
-                message: messageAreaRef.current.value,
+            const response = await axios.post("http://localhost:5172/chatlogs/send", {
+                chatID: props.id,
+                attachment: imgurRegex.test(attachementRef.current?.value.trim()) && attachementOn ? attachementRef.current.value.trim() : undefined,
+                text: messageAreaRef.current.value?.trim(),
                 sender: localUserId,
             });
     
@@ -80,13 +91,25 @@ const SendMessage = (props) => {
     };
 
     return (
+        <>
         <div className={styles.textAreaContainer}>
             <textarea maxLength='320' name='textarea' ref={messageAreaRef} className={styles.textArea} placeholder={`Message ${props.username}`}></textarea>
             
+            <div onClick={addAttachment} className={styles.iconBackground}>
+                <i className={`fas fa-paperclip ${styles.icon} ${styles.attachement}`}></i>
+            </div>
+
             <div onClick={sendMessage} className={styles.iconBackground}>
                 <i className={`fas fa-paper-plane ${styles.icon} ${styles.send}`}></i>
             </div>
-        </div>    
+        </div>
+
+        {attachementOn && (
+            <div className={styles.attachementContainer}>
+                <input type='text' ref={attachementRef} className={styles.input} placeholder="Enter an imgur image's link.." />
+            </div>
+        )}
+        </>
     )
 };
 
