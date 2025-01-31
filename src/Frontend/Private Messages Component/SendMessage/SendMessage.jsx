@@ -87,6 +87,10 @@ const SendMessage = (props) => {
         finally {
             messageAreaRef.current.style.height = 'auto';
             messageAreaRef.current.value = '';
+
+            if (attachementRef.current) {
+                attachementRef.current.value = '';
+            }
         }
     };
 

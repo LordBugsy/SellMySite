@@ -146,14 +146,22 @@ router.get('/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
-        const user = await User.findById(userId).populate('privateChatsWith', 'username displayName profilePicture')
-        .populate({
-            path: 'joinedChats',
-            populate: {
-              path: 'participants',
-              select: 'username displayName profilePicture',
-            },
-          })
+        const user = await User.findById(userId)
+            .populate('mutualFollowers', 'username displayName profilePicture')
+            .populate({
+                path: 'joinedChats',
+                select: 'participants type createdBy', // Ensure 'type' is included here
+                populate: [
+                    {
+                        path: 'participants',
+                        select: 'username displayName profilePicture',
+                    },
+                    {
+                        path: 'createdBy',
+                        select: 'username displayName profilePicture',
+                    }
+                ]
+            });
 
         if (!user) return res.status(404).json({ message: 'User not found' });
 

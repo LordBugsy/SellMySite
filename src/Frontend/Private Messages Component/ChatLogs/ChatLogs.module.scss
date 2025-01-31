@@ -31,6 +31,12 @@
 
     .chatMessageLogs {
         width: 100%;
+
+        .attachment {
+            max-width: 400px;
+            border-radius: 10px;
+        }
+
         .chatHeader {
             @include flex(row, flex-start, center);
 

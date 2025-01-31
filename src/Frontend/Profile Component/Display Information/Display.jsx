@@ -18,7 +18,7 @@ const Display = (props) => {
 
         setTimeout(() => {
             dispatch(setFollowersFollowingShown(false));
-        }, 500);
+        }, 300);
     }
 
     useEffect(() => {

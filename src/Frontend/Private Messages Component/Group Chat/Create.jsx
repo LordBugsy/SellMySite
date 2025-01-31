@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './GroupChat.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateGroupCreateOptionState } from '../../Redux/store';
+import axios from 'axios';
 
 const Create = (props) => {
     // Redux
     const dispatch = useDispatch();
     const { isGroupCreateOptionShown } = useSelector((state) => state.groupChatOption);
+    const { localUserId } = useSelector((state) => state.user.user);
 
     // React
     const containerRef = useRef(null);
@@ -38,7 +40,26 @@ const Create = (props) => {
     const createGroupChat = async () => {
         if (selectedUsers.length < 2) return;
 
-        // todo: create group chat
+        const selectedParticipants = [localUserId];
+        selectedUsers.forEach(user => {
+            selectedParticipants.push(mutualFollowers[user]._id);
+        });
+
+        try {
+            const backendResponse = await axios.post('http://localhost:5172/chatlogs/create', {
+                participants: selectedParticipants,
+                createdBy: localUserId,
+                type: "group"
+
+            });
+
+            if (props.onCreate) props.onCreate();
+            closeContainer();
+        }
+
+        catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {

@@ -21,20 +21,23 @@ const Messages = () => {
     const [privateChats, updatePrivateChats] = useState([]); // State for private chats
     const [mutualFollowers, setMutualFollowers] = useState([]);
 
-    useEffect(() => {
-        const loadChats = async () => {
-            try {
-                const backendResponse = await axios.get(`http://localhost:5172/chatlogs/${localUserId}`);
-                setMutualFollowers(backendResponse.data.privateChatsWith);
-                updatePrivateChats(backendResponse.data.joinedChats);
-            }
+    const loadChats = async () => {
+        if (!localUserId) return;
 
-            catch (error) {
-                console.error(error);
-            }
+        try {
+            const backendResponse = await axios.get(`http://localhost:5172/chatlogs/${localUserId}`);
+            setMutualFollowers(backendResponse.data.mutualFollowers);
+            updatePrivateChats(backendResponse.data.joinedChats);
         }
+
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
         loadChats();
-    }, []);
+    }, [localUserId]);
 
     const toggleList = () => {
         setIsRecipientVisible(!isRecipientVisible);
@@ -89,12 +92,21 @@ const Messages = () => {
                             chatData = chat.participants[0].username === localUsername ? chat.participants[1] : chat.participants[0];
                         }
 
+                        else {
+                            chatData = chat;
+                        }
+
                         return (
                             <div key={index} onClick={() => selectPrivateChat(index)} className={`${styles.message} ${lastChatIndex === index ? styles.selected : ''}`}>
-                                <img src={`/${chatData.profilePicture}.png`} alt="Avatar" className={styles.avatar}/>
+                                <img src={chat.type === "direct" ? 
+                                    `/${chatData.profilePicture}.png` : 
+                                    `/${chatData.createdBy?.profilePicture}.png`}
+                                    alt="Avatar" className={styles.avatar}
+                                />
+
                                 <div className={styles.messagePreview}>
-                                    <p className={styles.displayName}>{chatData.displayName}</p>
-                                    <p className={styles.username}>@{chatData.username}</p>
+                                    <p className={styles.displayName}>{chatData.displayName || `${privateChats[index]?.participants[0].displayName}'s Group Chat`}</p>
+                                    {chat.type === "direct" && <p className={styles.username}>@{chatData.username || privateChats[index]?.participants[0].username}</p>}
                                 </div>
                             </div>
                         )})
@@ -113,7 +125,7 @@ const Messages = () => {
                 />
             </div>
 
-            {isGroupCreateOptionShown && <Create mutualFollowersData={mutualFollowers} />}
+            {isGroupCreateOptionShown && <Create mutualFollowersData={mutualFollowers} onCreate={loadChats} />}
 
         </div>
     );

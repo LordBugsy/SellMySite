@@ -54,6 +54,7 @@ const ChatLogs = (props) => {
                                 </div>
                             )}
                             <p className={styles.chat}>{chat.text}</p>
+                            {chat.attachment && <img src={chat.attachment} alt="Attachment" className={styles.attachment} />}
                         </div>
                     );
                     })
