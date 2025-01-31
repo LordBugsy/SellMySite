@@ -9,7 +9,7 @@ import { setFollowersFollowingShown } from '../Redux/store';
 const Profile = () => {
     // Redux
     const dispatch = useDispatch();
-    const { localUserId, role } = useSelector(state => state.user.user);
+    const { localUserId, role, profilePicture } = useSelector(state => state.user.user);
     const { isFollowersFollowingShown } = useSelector(state => state.followersFollowing);
 
     // React
@@ -17,7 +17,7 @@ const Profile = () => {
     const username = encodeURIComponent(useParams().username);
 
     const [followStatus, updateFollowStatus] = useState(false);
-    const [filterStyle, updateFilterStyle] = useState('All'); // All, Websites, Posts
+    const [filterStyle, updateFilterStyle] = useState('Posts'); // Posts or Websites
     const [profileData, updateProfileData] = useState([]);
     const [displayType, updateDisplayType] = useState("Followers");
     const [unknownUser, updateUnknownUser] = useState(false);
@@ -38,7 +38,7 @@ const Profile = () => {
         }
 
         loadProfile();
-    }, [username, followStatus, localUserId]);
+    }, [username, followStatus, localUserId, profilePicture]);
 
     useEffect(() => {
         if (isFollowersFollowingShown) dispatch(setFollowersFollowingShown(false));
@@ -156,15 +156,51 @@ const Profile = () => {
             </div>
 
             {!unknownUser ? (
-                <div className={styles.profileContent}>
+                <div className={`${styles.profileContent} background_${profileData.profilePicture}`}>
                     <div className={styles.profileFilter}>
-                        <p onClick={() => updateFilterStyle('All')} className={`${styles.filter} ${filterStyle === 'All' ? styles.selected : ''}`}>All</p>
-                        <p onClick={() => updateFilterStyle('Websites')} className={`${styles.filter} ${filterStyle === 'Websites' ? styles.selected : ''}`}>Websites</p>
-                        <p onClick={() => updateFilterStyle('Posts')} className={`${styles.filter} ${filterStyle === 'Posts' ? styles.selected : ''}`}>Posts</p>
+                        <p onClick={() => updateFilterStyle('Posts')} className={`${styles.filter} selected_${profileData.profilePicture} ${filterStyle === 'Posts' ? styles.selected : ''}`}>Posts</p>
+                        <p onClick={() => updateFilterStyle('Websites')} className={`${styles.filter} selected_${profileData.profilePicture} ${filterStyle === 'Websites' ? styles.selected : ''}`}>Websites</p>
                     </div>
 
                     <div className={styles.profileDiv}>
+                        {filterStyle === 'Posts' ? (
+                            <div className={styles.posts}>
+                                {profileData.postsPublished?.map((post, index) => (
+                                    <div onClick={() => navigate(`/post/${profileData.username}/${post.publicPostID}`)} key={index} className={styles.post}>
+                                        <div className={styles.postHeader}>
+                                            <img src={`/${profileData.profilePicture}.png`} alt="Avatar" className={styles.profilePicture} />
+                                            <div className={styles.postAuthor}>
+                                                <p className={styles.displayName}>{profileData.displayName}</p>
+                                                <p className={styles.username}>@{profileData.username}</p>
+                                            </div>
+                                        </div>
 
+                                        <div className={styles.postInfo}>
+                                            <p className={styles.postContent}>{post.content}</p>
+                                            {post.attachment && <img className={styles.postImage} src={post.attachment} alt="Post Attachment" />}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className={styles.websites}>
+                                {profileData.websitesPublished?.map((website, index) => (
+                                    <div onClick={() => navigate(`/website/${profileData.username}/${website.publicWebsiteID}`)} key={index} className={styles.website}>
+                                        <img src='/thumbnailPlaceholder.png' alt="Website Thumbnail" className={styles.websiteThumbnail} />
+
+                                        <div className={styles.websiteInfo}>
+                                            <p className={styles.websiteTitle}>
+                                                {website.title} {website.onSale ? <i className={`fas fa-tag ${styles.onSale}`}></i> : <i className={`fas fa-tag ${styles.notOnSale}`}></i>}
+                                            </p>
+                                            <div className={styles.websiteAuthor}>
+                                                <p className={styles.displayName}>{profileData.displayName}</p>
+                                                <p className={styles.username}>@{profileData.username}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
                 ) : (

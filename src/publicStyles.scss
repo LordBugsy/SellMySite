@@ -131,6 +131,48 @@ $bodyColourLight: rgb(187, 159, 133);
   }
 }
 
+// The following styles are only useful in the context of the Profile component
+.background_1 {
+	background-color: rgb(60, 155, 176);
+}
+
+.background_2 {
+	background-color: rgb(65, 80, 162);
+}
+
+.background_3 {
+	background-color: rgb(153, 122, 156);
+}
+
+.background_4 {
+	background-color: rgb(237, 217, 171);
+}
+
+.background_5 {
+	background-color: rgb(192, 187, 61);
+}
+
+.background_6 {
+	background-color: rgb(89, 219, 89);
+}
+
+.background_7 {
+	background-color: rgb(142, 45, 142);
+}
+
+.background_8 {
+	background-color: rgb(97, 159, 180);
+}
+
+.background_9 {
+	background-color: rgb(191, 133, 201);
+}
+
+.selected_9 {
+	background-color: rgb(191, 133, 201);
+}
+
+
 body {
   position: relative;
   background-color: $bodyColourDefault;

@@ -485,7 +485,8 @@ router.post('/milestones/read', async (req, res) => {
 router.get('/username/:username', async (req, res) => {
     try {
         const { username } = req.params;
-        const user = await User.findOne({ username }).populate('followers', 'username displayName profilePicture').populate('following', 'username displayName profilePicture');
+        const user = await User.findOne({ username }).populate('followers', 'username displayName profilePicture').populate('following', 'username displayName profilePicture')
+        .populate('postsPublished', 'publicPostID content attachment').populate('websitesPublished', 'title onSale publicWebsiteID price');
 
         if (!user) return res.status(404).json({ message: 'User not found' });
         else {

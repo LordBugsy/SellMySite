@@ -5,17 +5,15 @@
     align-items: $alignItems;
 }
 
-$primaryColour: rgb(20, 33, 107);
+$primaryColour: rgb(91, 106, 190);
 
 .profileContainer {
     opacity: 0;
     @include flex(column);
-    overflow-x: hidden;
     margin: auto;
-    margin-top: 6em;
     width: 95%;
     max-width: 2500px;
-    height: 100%;
+    margin-top: 7em;
     border-radius: 10px;
 
     .profileHeader {
@@ -210,16 +208,16 @@ $primaryColour: rgb(20, 33, 107);
     }
 
     .profileContent {
-        @include flex(column, center, flex-start);
+        @include flex(column, center, center);
         width: 100%;
-        background-color: $primaryColour;
-        border-radius: 10px 10px 0 0;
-        height: 80px;
+        box-shadow: 0 -1px 10px black;
+        border-radius: 10px;
+        height: 100%;
 
         .profileFilter {
             @include flex(row, center, center);
             gap: 10px;
-            width: 100%;
+            width: 50%;
             overflow-y: hidden;
 
             p {
@@ -231,14 +229,10 @@ $primaryColour: rgb(20, 33, 107);
                 padding: 10px;
                 border-radius: 10px;
                 cursor: pointer;
-                transition: color 0.3s ease-in-out;
+                transition: background-color 0.3s ease-in-out;
 
                 &.selected {
                     background-color: rgb(46, 61, 147);
-                }
-
-                &:hover {
-                    color: rgb(48, 197, 48);
                 }
             }
         }

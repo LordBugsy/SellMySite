@@ -33,7 +33,10 @@ const ProfilePicture = () => {
             if (backendResponse.data.successMessage) {
                 updateBackendMessage(backendResponse.data.successMessage);
                 dispatch(updateProfilePicture(profilePictureID));
+
+                closeContainer();
             }
+            
         }
 
         catch (error) {
