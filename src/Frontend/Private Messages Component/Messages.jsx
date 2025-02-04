@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Create from './Group Chat/Create';
 import ChatLogs from './ChatLogs/ChatLogs';
 import axios from 'axios';
-import { updateGroupCreateOptionState, updateGroupParticipantsOptionState } from '../Redux/store';
+import { updateGroupCreateOptionState } from '../Redux/store';
 
 const Messages = () => {
     // Redux
@@ -20,6 +20,10 @@ const Messages = () => {
     const [filteredChats, setFilteredChats] = useState([]); // State for filtered chats
     const [privateChats, updatePrivateChats] = useState([]); // State for private chats
     const [mutualFollowers, setMutualFollowers] = useState([]);
+
+    useEffect(() => {
+        document.title = "Private Messages - SellMySite";
+    }, []);
 
     const loadChats = async () => {
         if (!localUserId) return;

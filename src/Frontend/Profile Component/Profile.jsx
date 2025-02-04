@@ -4,13 +4,15 @@ import styles from './Profile.module.scss';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import Display from './Display Information/Display';
-import { setFollowersFollowingShown } from '../Redux/store';
+import Report from '../Website Component/Report Component/Report';
+import { setFollowersFollowingShown, setReportFormShown } from '../Redux/store';
 
 const Profile = () => {
     // Redux
     const dispatch = useDispatch();
     const { localUserId, role, profilePicture } = useSelector(state => state.user.user);
     const { isFollowersFollowingShown } = useSelector(state => state.followersFollowing);
+    const isReportFormShown = useSelector(state => state.reportForm.isReportFormShown);
 
     // React
     const navigate = useNavigate();
@@ -21,6 +23,10 @@ const Profile = () => {
     const [profileData, updateProfileData] = useState([]);
     const [displayType, updateDisplayType] = useState("Followers");
     const [unknownUser, updateUnknownUser] = useState(false);
+
+    useEffect(() => {
+        document.title = `${username}'s Profile - SellMySite`;
+    }, [username]);
 
     useEffect(() => {
         updateUnknownUser(false);
@@ -42,6 +48,7 @@ const Profile = () => {
 
     useEffect(() => {
         if (isFollowersFollowingShown) dispatch(setFollowersFollowingShown(false));
+        if (isReportFormShown) dispatch(setReportFormShown(false));
     }, [username])
 
     const setDisplayType = (type) => {
@@ -119,12 +126,13 @@ const Profile = () => {
                             </div>
                         )}
 
-                        {localUserId && localUserId !== profileData._id && (
+                        {localUserId !== profileData._id && (
                         <div className={styles.actions}>
+                            {localUserId !== profileData._id && <i onClick={() => dispatch(setReportFormShown(true))} className={`fas fa-flag ${styles.icon}`}></i>}
                             {((localUserId && profileData.mutualFollowers && profileData.mutualFollowers.includes(localUserId)) || role === "admin") && <i onClick={createChatLog} className={`fas fa-envelope ${styles.icon}`}></i>}
-                            <button onClick={followCondition} className={`button ${followStatus ? styles.unfollow : styles.follow}`}>
+                            {localUserId && <button onClick={followCondition} className={`button ${followStatus ? styles.unfollow : styles.follow}`}>
                                 {followStatus ? 'Unfollow' : 'Follow'}
-                            </button>                   
+                            </button>  }                 
                         </div>
                         )}
 
@@ -165,8 +173,10 @@ const Profile = () => {
                     <div className={styles.profileDiv}>
                         {filterStyle === 'Posts' ? (
                             <div className={styles.posts}>
-                                {profileData.postsPublished?.map((post, index) => (
-                                    <div onClick={() => navigate(`/post/${profileData.username}/${post.publicPostID}`)} key={index} className={styles.post}>
+                                {profileData.postsPublished?.length === 0 ? (
+                                    <p className={styles.noPostsText}>This user hasn't published any posts yet.</p>
+                                ) : (profileData.postsPublished?.map((post, index) => (
+                                    <div onClick={() => navigate(`/post/${profileData.username}/${post.publicPostID}`)} key={index} className={`${styles.post} creationStyle_${profileData.profilePicture}`}>
                                         <div className={styles.postHeader}>
                                             <img src={`/${profileData.profilePicture}.png`} alt="Avatar" className={styles.profilePicture} />
                                             <div className={styles.postAuthor}>
@@ -180,25 +190,23 @@ const Profile = () => {
                                             {post.attachment && <img className={styles.postImage} src={post.attachment} alt="Post Attachment" />}
                                         </div>
                                     </div>
-                                ))}
+                                )))}
                             </div>
                         ) : (
                             <div className={styles.websites}>
-                                {profileData.websitesPublished?.map((website, index) => (
-                                    <div onClick={() => navigate(`/website/${profileData.username}/${website.publicWebsiteID}`)} key={index} className={styles.website}>
+                                {profileData.websitesPublished?.length === 0 ? (
+                                    <p className={styles.noWebsitesText}>This user hasn't published any websites yet.</p>
+                                ) : (profileData.websitesPublished?.map((website, index) => (
+                                    <div onClick={() => navigate(`/website/${profileData.username}/${website.publicWebsiteID}`)} key={index} className={`${styles.website} creationStyle_${profileData.profilePicture}`}>
                                         <img src='/thumbnailPlaceholder.png' alt="Website Thumbnail" className={styles.websiteThumbnail} />
 
                                         <div className={styles.websiteInfo}>
                                             <p className={styles.websiteTitle}>
                                                 {website.title} {website.onSale ? <i className={`fas fa-tag ${styles.onSale}`}></i> : <i className={`fas fa-tag ${styles.notOnSale}`}></i>}
                                             </p>
-                                            <div className={styles.websiteAuthor}>
-                                                <p className={styles.displayName}>{profileData.displayName}</p>
-                                                <p className={styles.username}>@{profileData.username}</p>
-                                            </div>
                                         </div>
                                     </div>
-                                ))}
+                                )))}
                             </div>
                         )}
                     </div>
@@ -215,6 +223,7 @@ const Profile = () => {
                 )}
 
             {isFollowersFollowingShown && <Display displayType={displayType} username={username} displayData={displayType === "followers" ? profileData.followers : profileData.following} />}
+            {isReportFormShown && <Report reportedTarget="User" targetID={profileData._id} owner={profileData.username} targetName={profileData.username} />}
 
         </div>
     );

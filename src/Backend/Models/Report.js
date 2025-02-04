@@ -8,7 +8,7 @@ const reportSchema = new mongoose.Schema({
     status: { type: String, enum: ['pending', 'resolved'], default: 'pending' }, // The status of the report
     resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // The ID of the user who resolved the report
     owner: { type: String, required: true }, // The username of the user whos being reported
-    publicID: { type: Number, required: true }, // publicID (Post or Website)
+    publicID: { type: Number, default: undefined }, // publicID (Post or Website)
     publicReportID: { type: Number }
 }, { timestamps: true });
 

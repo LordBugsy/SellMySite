@@ -1,8 +1,8 @@
 If you want only want to make sure the backend is working properly, make sure you're in the directory where you set your "server.js" file and use 
 "node server.js" to check for any errors. If there are, fix them asap, other than that, you're good!
 
-(They should all be installed after cloning the git repo, however if they aren't for some reason, install the missing dependencies)
 
+The dependencies should all be installed after cloning the git repo, however if they aren't for some reason, install them with the following commands:
 Needed for Backend:
 - npm install dotenv
 - npm install cors

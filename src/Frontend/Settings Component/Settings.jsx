@@ -4,7 +4,7 @@ import PrivacyPolicy from './ToS PrvcyPlcy/PrivacyPolicy';
 import { useDispatch } from 'react-redux';
 import { setAnnouncementShown, setHasReadTheAnnouncement } from '../Redux/store';
 import styles from './Settings.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Settings = () => {
     // Redux
@@ -13,6 +13,10 @@ const Settings = () => {
     // React
     const [settingsTab, setSettingsTab] = useState('My Account'); // The tabs will be 'My Account', 'Delete Account' and 'Terms of Service' for now
     const [areTabsVisible, setTabsVisibility] = useState(false); // Show the settings tabs (mobile only)
+
+    useEffect(() => {
+        document.title = "Settings - SellMySite";
+    }, []);
 
     const loadTab = (tab) => {
         setSettingsTab(tab);

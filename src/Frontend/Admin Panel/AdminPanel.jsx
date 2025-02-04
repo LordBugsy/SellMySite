@@ -49,8 +49,8 @@ const AdminPanel = () => {
         try {
             const backendResponse = await axios.post("http://localhost:5172/code/create", {
                 code: codeRef.current.value,
-                maxUses: maxUsesRef.current.value || 999999,
-                value: codeValueRef.current.value,
+                maxUses: Number(maxUsesRef.current.value) || 999999,
+                value: Number(codeValueRef.current.value),
                 userID: localUserId,
                 password: passwordRef.current.value,
             });
@@ -141,7 +141,8 @@ const AdminPanel = () => {
 
     const viewReport = (type, username, publicID) => {
         if (type === "Post") window.open(`/post/${username}/${publicID}`, '_blank', 'noopener,noreferrer');
-        else  window.open(`/website/${username}/${publicID}`, '_blank', 'noopener,noreferrer');
+        else if (type === "Website") window.open(`/website/${username}/${publicID}`, '_blank', 'noopener,noreferrer');
+        else if (type === "User") window.open(`/profile/${username}`, '_blank', 'noopener,noreferrer');
     }
     
     useEffect(() => {

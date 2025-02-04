@@ -31,6 +31,10 @@ const ViewPost = () => {
 
     const likeButtonRef = useRef(null);
 
+    useEffect(() => {
+        document.title = `${username}'s Post - SellMySite`;
+    }, []);
+
     const openComments = () => {
         dispatch(setCommentSectionShown(true));
     };

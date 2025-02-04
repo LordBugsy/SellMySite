@@ -17,6 +17,10 @@ const Redeem = () => {
     const [backendData, updateBackendResponse] = useState("");
     const [isLoading, updateIsLoading] = useState(false);
 
+    useEffect(() => {
+        document.title = "Redeem Code - SellMySite";
+    }, []);
+
     const redeemCode = async () => {
         updateIsLoading(true);
         updateBackendResponse("");

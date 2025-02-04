@@ -16,6 +16,10 @@ const SearchResults = () => {
     const [isLoading, updateIsLoading] = useState(true);
 
     useEffect(() => {
+        document.title = `Search Results for "${searchTarget}" - SellMySite`;
+    }, []);
+
+    useEffect(() => {
         updateIsLoading(true);
 
         const fetchSearchResults = async () => {

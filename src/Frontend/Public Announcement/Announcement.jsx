@@ -44,18 +44,17 @@ const Announcement = () => {
         }        
     }
 
-    useEffect(() => {        
+    useEffect(() => {       
         const fetchAnnouncement = async () => {
             try {
                 const backendResponse = await axios.get("http://localhost:5172/announcement/latest");
                 updateAnnouncementData(backendResponse.data);
 
-                if (announcementData.length === 0) {
+                if (backendResponse.data.length === 0) {
                     dispatch(setAnnouncementShown(false));
                     dispatch(setHasReadTheAnnouncement(true));
                     return;
                 }
-
             }
 
             catch (error) {

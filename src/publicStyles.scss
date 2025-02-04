@@ -132,44 +132,144 @@ $bodyColourLight: rgb(187, 159, 133);
 }
 
 // The following styles are only useful in the context of the Profile component
+.background_0 {
+  background-color: rgb(171, 28, 78);
+}
+
+.creationStyle_0 {
+  background-color: rgb(171, 28, 78);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(128, 0, 51);
+  }
+}
+
 .background_1 {
 	background-color: rgb(60, 155, 176);
+}
+
+.creationStyle_1 {
+  background-color: rgb(60, 155, 176);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(23, 128, 149);
+  }
 }
 
 .background_2 {
 	background-color: rgb(65, 80, 162);
 }
 
+.creationStyle_2 {
+  background-color: rgb(65, 80, 162);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(28, 53, 135);
+  }
+}
+
 .background_3 {
 	background-color: rgb(153, 122, 156);
+}
+
+.creationStyle_3 {
+  background-color: rgb(153, 122, 156);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(116, 85, 119);
+  }
 }
 
 .background_4 {
 	background-color: rgb(237, 217, 171);
 }
 
+.creationStyle_4 {
+  background-color: rgb(237, 217, 171);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(200, 180, 134);
+  }
+}
+
 .background_5 {
 	background-color: rgb(192, 187, 61);
+}
+
+.creationStyle_5 {
+  background-color: rgb(192, 187, 61);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(155, 140, 25);
+  }
 }
 
 .background_6 {
 	background-color: rgb(89, 219, 89);
 }
 
+.creationStyle_6 {
+  background-color: rgb(89, 219, 89);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(52, 182, 52);
+  }
+}
+
 .background_7 {
 	background-color: rgb(142, 45, 142);
+}
+
+.creationStyle_7 {
+  background-color: rgb(142, 45, 142);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(105, 8, 105);
+  }
 }
 
 .background_8 {
 	background-color: rgb(97, 159, 180);
 }
 
+.creationStyle_8 {
+  background-color: rgb(97, 159, 180);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(59, 123, 144);
+  }
+}
+
 .background_9 {
 	background-color: rgb(191, 133, 201);
 }
 
-.selected_9 {
-	background-color: rgb(191, 133, 201);
+.creationStyle_9 {
+  background-color: rgb(148, 86, 159);
+  border-radius: 10px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(110, 47, 121);
+  }
 }
 
 

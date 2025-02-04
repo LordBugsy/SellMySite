@@ -16,17 +16,14 @@ import Post from "./Models/Post.js";
 import User from "./Models/User.js";
 import Website from "./Models/Website.js";
 
-// Simulate __dirname in ES6 modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Define the path to the .env file (.env and server.js are in the same directory)
 const envPath = path.resolve(__dirname, '.env');
 
-// Load environment variables from .env file
 dotenv.config({ path: envPath });
 
-const app = express(); // Setup the express server
+const app = express();
 
 // Middleware
 app.use(cors());
@@ -35,7 +32,6 @@ app.use(express.urlencoded({ extended: false }));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
@@ -52,7 +48,6 @@ mongoose.connect(process.env.MONGO_URI, {
     }
 })();
 
-// Create a counter for posts
 (async () => {
     try {
         const existingCounter = await Counter.findOne({ name: "post" });
@@ -67,7 +62,6 @@ mongoose.connect(process.env.MONGO_URI, {
     }
 })();
 
-// Create a counter for websites
 (async () => {
     try {
         const existingCounter = await Counter.findOne({ name: "website" });
@@ -180,5 +174,5 @@ app.get('*', (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5172; // localhost:5172. We're using this port because 5173 is used by the React app (using it for the API would cause a conflict)
+const PORT = process.env.PORT || 5172; // We're using this port because 5173 is used by the React app (using it for the API would cause a conflict)
 app.listen(PORT, () => console.log(`Server is running on port ${PORT} 🚀`));

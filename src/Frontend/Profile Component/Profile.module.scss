@@ -14,6 +14,7 @@ $primaryColour: rgb(91, 106, 190);
     width: 95%;
     max-width: 2500px;
     margin-top: 7em;
+    margin-bottom: 3em;
     border-radius: 10px;
 
     .profileHeader {
@@ -92,6 +93,11 @@ $primaryColour: rgb(91, 106, 190);
                         color: white;
                         background-color: rgb(64, 224, 125);
                         border-radius: 10px;
+                        transition: background-color 0.3s ease-in-out;
+
+                        &:hover {
+                            background-color: rgb(48, 197, 48);
+                        }
                     }
                 }
 
@@ -240,6 +246,122 @@ $primaryColour: rgb(91, 106, 190);
         .profileDiv {
             flex: 1;
         }
+
+        .posts {
+            width: 95%;
+            @include flex(column, flex-start, flex-start);
+            gap: 1em;
+            margin: 1.5em;
+            margin-left: 0em;
+
+            .post {
+                width: 100%;
+                padding: 20px;
+                cursor: pointer;
+                @include flex(column, center, flex-start);
+
+                .postHeader {
+                    @include flex();
+                    gap: 10px;
+
+                    .profilePicture {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+
+                    p {
+                        margin: 0;
+                        font-size: 1rem;
+
+                        &.username {
+                            font-weight: bold;
+                            color: rgb(198, 198, 198);
+                        }
+
+                        &.displayName {
+                            font-weight: bold;
+                            color: white;
+                        }
+                    }
+                }
+
+                .postInfo {
+                    width: 100%;
+                    @include flex(column, center, flex-start);
+
+                    .postContent {
+                        color: white;
+                        font-size: 1.5rem;
+                        margin: 0;
+                    }
+
+                    .postImage {
+                        margin-top: 1.25em;
+                        max-width: 50%;
+                        border-radius: 10px;
+                    }
+                }
+
+            }
+
+            .noPostsText {
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                font-size: 2rem;
+            }
+        }
+
+        .websites {
+            flex: 1;
+            width: 100%;
+            @include flex();
+            gap: 1em;
+            margin: 2em auto;
+            flex-wrap: wrap;
+
+            .website {
+                cursor: pointer;
+                padding: 10px;
+                border-radius: 10px;
+                @include flex(column, center, center);
+
+                .websiteThumbnail {
+                    width: 250px;
+                    border-radius: 10px;
+                }
+
+                .websiteInfo {
+                    width: 90%;
+                    @include flex(column, flex-start, flex-start);
+
+                    .websiteTitle {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        color: white;
+
+                        .onSale {
+                            color: rgb(67, 209, 67);
+                            text-shadow: 0 0 10px rgb(67, 209, 67);
+                        }
+
+                        .notOnSale {
+                            color: rgb(209, 67, 67);
+                            text-shadow: 0 0 10px rgb(209, 67, 67);
+                        }
+                    }
+                }
+            }
+
+            .noWebsitesText {
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                font-size: 2rem;
+            }
+        }
     }
 }
 
@@ -262,6 +384,12 @@ $primaryColour: rgb(91, 106, 190);
             }
         }
     }    
+
+    .profileContent {
+        .profileFilter {
+            width: 95% !important;
+        }
+    }
 
     .error {
         gap: 1.2em;

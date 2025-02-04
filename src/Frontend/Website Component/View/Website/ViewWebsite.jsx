@@ -32,6 +32,10 @@ const ViewWebsite = () => {
     const [websiteData, updateData] = useState([]);
     const [likeStatus, updateLikeStatus] = useState(false);
 
+    useEffect(() => {
+        document.title = `${websiteData.title} - SellMySite`;
+    }, []);
+
     const openComments = () => {
         if (!localUserId) {
             dispatch(setLoginSignupShown(true));

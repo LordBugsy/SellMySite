@@ -1,8 +1,12 @@
 import styles from './BuyTokens.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const BuyTokens = () => {
     // React
+    useEffect(() => {
+        document.title = 'Buy Tokens - SellMySite';
+    }, []);
+
     const [confirmPurchase, updateConfirmPurchase] = useState(false);
 
     const tokensList = [
@@ -38,6 +42,6 @@ const BuyTokens = () => {
             </div>
         </>
     );
-}
+};
 
 export default BuyTokens;

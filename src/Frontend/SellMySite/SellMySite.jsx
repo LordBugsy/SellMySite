@@ -7,12 +7,14 @@ import axios from 'axios';
 import NewPost from '../Website Component/New Post Component/NewPost';
 import Loading from '../Loading/Loading';
 import { useNavigate } from 'react-router-dom';
+import Announcement from '../Public Announcement/Announcement';
 
 const SellMySite = () => {
     // Redux
     const { isPublishWebsiteShown } = useSelector(state => state.publishWebsite);
     const { isPublishPostShown } = useSelector(state => state.publishPost);
     const { localUserId } = useSelector(state => state.user.user);
+    const { isAnnouncementShown } = useSelector(state => state.announcements);
 
     const dispatch = useDispatch();
 
@@ -21,6 +23,10 @@ const SellMySite = () => {
     const publishOptionsRef = useRef();
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = "Home - SellMySite";
+    }, []);
 
     const [dataState, setDataState] = useState({
         loadedPosts: [],
@@ -190,9 +196,9 @@ const SellMySite = () => {
                     </div>
                 </div>
     
-                <div className={styles.category}>
+                {/* <div className={styles.category}>
                     <h1 className="title">Ongoing Auctions</h1>
-                </div>
+                </div> */}
             </div>
     
             {/* Publish a Website / Post */}
@@ -215,9 +221,16 @@ const SellMySite = () => {
                     <i ref={iconRef} onClick={togglePublishOptions} className={`fa-solid fa-plus ${styles.icon} ${styles.static}`}></i>
                 </div>
             )}
+
+            <a className={styles.buyMeACoffeeContainer} href="https://www.buymeacoffee.com/LordBugsy" target="_blank" rel="noreferrer">
+                <div className={styles.buyMeACoffee}>
+                    <i className={`fas fa-coffee ${styles.icon}`}></i>
+                </div>
+            </a>
     
             {isPublishWebsiteShown && <PublishWebsite />}
             {isPublishPostShown && <NewPost />}
+            {isAnnouncementShown && <Announcement />}
         </>
     )
 }
