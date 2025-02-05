@@ -110,6 +110,13 @@ router.post('/signup', async (req, res) => {
             bannerColour
         });
 
+        const botUser = await User.findOne({ username: 'SellMyBot' });
+        if (botUser) {
+            newUser.following.push(botUser._id);
+            botUser.followers.push(newUser._id);
+            await botUser.save();
+        }
+
         await newUser.save();
         res.status(201).json({
             _id: newUser._id,
@@ -485,8 +492,25 @@ router.post('/milestones/read', async (req, res) => {
 router.get('/username/:username', async (req, res) => {
     try {
         const { username } = req.params;
-        const user = await User.findOne({ username }).populate('followers', 'username displayName profilePicture').populate('following', 'username displayName profilePicture')
-        .populate('postsPublished', 'publicPostID content attachment').populate('websitesPublished', 'title onSale publicWebsiteID price');
+        const user = await User.findOne({ username })
+        .populate({
+            path: 'followers',
+            select: 'username displayName profilePicture'
+        })
+        .populate({
+            path: 'following',
+            select: 'username displayName profilePicture'
+        })
+        .populate({
+            path: 'postsPublished',
+            select: 'publicPostID content attachment',
+            options: { sort: { createdAt: -1 } }
+        })
+        .populate({
+            path: 'websitesPublished',
+            select: 'title onSale publicWebsiteID price',
+            options: { sort: { createdAt: -1 } }
+        });
 
         if (!user) return res.status(404).json({ message: 'User not found' });
         else {

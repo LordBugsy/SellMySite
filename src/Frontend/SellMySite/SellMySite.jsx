@@ -222,7 +222,7 @@ const SellMySite = () => {
                 </div>
             )}
 
-            <a className={styles.buyMeACoffeeContainer} href="https://www.buymeacoffee.com/LordBugsy" target="_blank" rel="noreferrer">
+            <a className={styles.buyMeACoffeeContainer} href="https://ko-fi.com/lordbugsy" target="_blank" rel="noreferrer">
                 <div className={styles.buyMeACoffee}>
                     <i className={`fas fa-coffee ${styles.icon}`}></i>
                 </div>

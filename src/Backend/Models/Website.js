@@ -33,6 +33,7 @@ const websiteSchema = new mongoose.Schema({
     comments: [CommentSchema],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     publicWebsiteID: { type: Number, unique: true },
+    createdAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 websiteSchema.pre('save', async function (next) {
