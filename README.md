@@ -6,8 +6,11 @@ SellMySite is a social media platform where users can create posts, share their 
 ## Features
 
 **Create Posts** - Share updates, ideas, and content with the community.
+
 **Website Listings** - Showcase and sell websites to interested buyers.
+
 **Search Functionality** - Easily find posts and websites using an optimised search system.
+
 **User Interaction** - Engage with other creators through comments and messages.
 
 ### New Features
@@ -16,9 +19,13 @@ SellMySite is a social media platform where users can create posts, share their 
 - Make announcements
 - Create redeemable codes
 - Ban users
+- 
 **Image Support for Posts** - Attach images to posts (Currently, only Imgur images are accepted).
+
 **Group Chats** - Create group chats with up to 10 participants and share images within the conversation.
+
 **Create & Redeem Codes** - Generate and use codes to earn siteTokens.
+
 **Pagination with IntersectionObserver** - Load large amounts of comments efficiently without impacting performance.
 
 ## Installation
