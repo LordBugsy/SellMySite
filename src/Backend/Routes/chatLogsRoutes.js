@@ -150,7 +150,7 @@ router.get('/:userId', async (req, res) => {
             .populate('mutualFollowers', 'username displayName profilePicture')
             .populate({
                 path: 'joinedChats',
-                select: 'participants type createdBy', // Ensure 'type' is included here
+                select: 'participants type createdBy', 
                 populate: [
                     {
                         path: 'participants',

@@ -321,21 +321,28 @@ router.post("/comment/unlike", async (req, res) => {
     }
 });
 
-// Load the comments of a post
+// Load comments from a post
 router.get("/comments/:postID", async (req, res) => {
     try {
         const { postID } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-        const post = await Post.findById(postID).populate({
+        const post = await Post.findById(postID)
+            .populate({
                 path: "comments.commenter",
                 select: "username displayName profilePicture",
-            }).exec();
+            })
+            .select("comments")
+            .exec();
 
         if (!post) return res.status(404).send("Post not found");
 
-        const limitedComments = post.comments.slice(0, 15);
+        const paginatedComments = post.comments.slice(skip, skip + limit);
+        const hasMore = post.comments.length > skip + limit;
 
-        res.status(200).send(limitedComments);
+        res.status(200).json({ comments: paginatedComments, hasMore });
     } 
     
     catch (error) {
@@ -343,6 +350,7 @@ router.get("/comments/:postID", async (req, res) => {
         res.status(400).send(error.message || error);
     }
 });
+
 
 // Load the 10 most recent posts from a user
 router.get('/:username/recent', async (req, res) => {

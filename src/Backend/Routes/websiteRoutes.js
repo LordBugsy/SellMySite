@@ -165,27 +165,33 @@ router.get("/popular", async (req, res) => {
 
 // Load comments of a website
 router.get("/comments/:websiteID", async (req, res) => {
-    const { websiteID } = req.params;
+    try {
+        const { websiteID } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-    if (!websiteID) {
-        return res.status(400).send("Invalid request");
-    }
+        if (!websiteID) return res.status(400).send("Invalid request");
 
-    else {
-        try {
-            const website = await Website.findById(websiteID).populate({
-                path: "comments.commenter", 
-                select: "username displayName profilePicture"
-            }).exec();
+        const website = await Website.findById(websiteID)
+            .select("comments") 
+            .populate({
+                path: "comments.commenter",
+                select: "username displayName profilePicture",
+            })
+            .exec();
 
-            const limitedComments = website.comments.slice(0, 15);
-            res.status(200).send(limitedComments);
-        }
-        
-        catch (error) {
-            console.error(error);
-            res.status(400).send(error);
-        }
+        if (!website) return res.status(404).send("Website not found");
+
+        const paginatedComments = website.comments.slice(skip, skip + limit);
+        const hasMore = website.comments.length > skip + limit;
+
+        res.status(200).json({ comments: paginatedComments, hasMore });
+    } 
+    
+    catch (error) {
+        console.error(error);
+        res.status(400).send(error.message || error);
     }
 });
 
@@ -193,10 +199,8 @@ router.get("/comments/:websiteID", async (req, res) => {
 router.post("/comment/publish", async (req, res) => {
     const { websiteID, commenterID, content } = req.body;
 
-    if (!websiteID || !commenterID || !content) {
-        return res.status(400).send("Invalid request");
-    }
-
+    if (!websiteID || !commenterID || !content) return res.status(400).send("Invalid request");
+    
     else {
         try {
             const website = await Website.findById(websiteID);
