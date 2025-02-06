@@ -61,4 +61,5 @@ This project is provided under a custom license. Users are allowed to view, lear
 This project took me more than 3 months to complete! If you find any bugs, please let me know as soon as possible so I can fix them! 
 
 Anyway, I hope you will have fun with **SellMySite**! À la prochaine!
+
 Copyright 2024 LordBugsy. All Rights Reserved.
