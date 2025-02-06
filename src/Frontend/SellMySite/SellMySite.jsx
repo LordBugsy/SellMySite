@@ -196,7 +196,9 @@ const SellMySite = () => {
                     </div>
                 </div>
     
-                {/* <div className={styles.category}>
+                {/* 
+                At first, I thought of adding "ongoing auctions" in the main page, but I think it could've been a bit too much, especially since in order to have an auction, you need to have a website first and siteTokens.
+                <div className={styles.category}>
                     <h1 className="title">Ongoing Auctions</h1>
                 </div> */}
             </div>

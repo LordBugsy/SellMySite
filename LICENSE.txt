@@ -1,0 +1,12 @@
+SellMySite License
+
+Copyright (c) 2025 LordBugsy
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use the Software for learning purposes and bug fixes, and to distribute copies of the Software, subject to the following conditions:
+
+1. The Software may not be used for any commercial or monetized purposes.
+2. Any modifications or bug fixes must be documented and shared with the community if distributed.
+3. Proper attribution to the original author must be included in any copies or distributions of the Software.
+4. The Software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability arising from the use of the Software.
+
+By using this Software, you agree to the above terms.
