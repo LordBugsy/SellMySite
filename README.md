@@ -19,7 +19,7 @@ SellMySite is a social media platform where users can create posts, share their 
 - Make announcements
 - Create redeemable codes
 - Ban users
-- 
+
 **Image Support for Posts** - Attach images to posts (Currently, only Imgur images are accepted).
 
 **Group Chats** - Create group chats with up to 10 participants and share images within the conversation.
