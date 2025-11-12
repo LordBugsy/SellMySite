@@ -5,6 +5,8 @@ import { setAccountSettingsShown, logoutUser } from '../../../Redux/store';
 import axios from 'axios';
 
 const Popup = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUsername, localUserId, siteTokens } = useSelector(state => state.user.user);
     const { isAccountSettingsShown } = useSelector(state => state.accountSettings);
@@ -35,7 +37,7 @@ const Popup = (props) => {
         updateErrorState(false);
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/username", {
+            const backendResponse = await axios.post(`${apiURL}/user/username`, {
                 userID: localUserId,
                 newUsername: inputRef.current.value,
                 siteTokens
@@ -56,7 +58,7 @@ const Popup = (props) => {
         updateErrorState(false);
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/displayname", {
+            const backendResponse = await axios.post(`${apiURL}/user/displayname`, {
                 userID: localUserId,
                 displayName: inputRef.current.value
             });
@@ -76,7 +78,7 @@ const Popup = (props) => {
         updateErrorState(false);
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/description", {
+            const backendResponse = await axios.post(`${apiURL}/user/description`, {
                 userID: localUserId,
                 description: inputRef.current.value
             });
@@ -102,7 +104,7 @@ const Popup = (props) => {
         updateErrorState(false);
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/delete", {
+            const backendResponse = await axios.post(`${apiURL}/user/delete`, {
                 userID: localUserId,
                 password: confirmPasswordRef.current.value
             });
@@ -121,7 +123,7 @@ const Popup = (props) => {
         updateErrorState(false);
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/password", {
+            const backendResponse = await axios.post(`${apiURL}/user/password`, {
                 userID: localUserId,
                 oldPassword: currentPassword.current.value,
                 newPassword: newPassword.current.value

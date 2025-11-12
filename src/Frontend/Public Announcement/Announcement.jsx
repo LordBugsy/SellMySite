@@ -6,6 +6,8 @@ import { setHasReadTheAnnouncement, setAnnouncementShown } from '../Redux/store'
 import { useDispatch, useSelector } from 'react-redux';
 
 const Announcement = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { hasReadTheAnnouncement, localUserId } = useSelector(state => state.user.user);
@@ -29,7 +31,7 @@ const Announcement = () => {
 
         dispatch(setHasReadTheAnnouncement(true));
         try {
-            axios.post("http://localhost:5172/announcement/agree", {
+            axios.post(`${apiURL}/announcement/agree`, {
                 userID: localUserId
             });
 
@@ -47,7 +49,7 @@ const Announcement = () => {
     useEffect(() => {       
         const fetchAnnouncement = async () => {
             try {
-                const backendResponse = await axios.get("http://localhost:5172/announcement/latest");
+                const backendResponse = await axios.get(`${apiURL}/announcement/latest`);
                 updateAnnouncementData(backendResponse.data);
 
                 if (backendResponse.data.length === 0) {

@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { setConfirmDeleteShown } from '../../../../../Redux/store';
 
 const Delete = props => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { localUserId } = useSelector(state => state.user.user);
@@ -18,7 +20,7 @@ const Delete = props => {
     const confirmDelete = async () => {
         if (props.type === 'website') {
             try {
-                const backendResponse = await axios.post("http://localhost:5172/website/delete", {
+                const backendResponse = await axios.post(`${apiURL}/website/delete`, {
                     userID: localUserId,
                     websiteID: props.websiteID
                 });

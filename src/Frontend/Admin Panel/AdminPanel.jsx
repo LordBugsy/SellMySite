@@ -6,6 +6,8 @@ import { setAdminPanelShown } from '../Redux/store';
 import Loading from '../Loading/Loading';
 
 const AdminPanel = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { localUserId, localUsername } = useSelector(state => state.user.user);
@@ -47,7 +49,7 @@ const AdminPanel = () => {
         }
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/code/create", {
+            const backendResponse = await axios.post(`${apiURL}/code/create`, {
                 code: codeRef.current.value,
                 maxUses: Number(maxUsesRef.current.value) || 999999,
                 value: Number(codeValueRef.current.value),
@@ -75,7 +77,7 @@ const AdminPanel = () => {
             const announcement = textAreaRef.current.value;
 
             try {
-                const backendResponse = await axios.post("http://localhost:5172/announcement/create", {
+                const backendResponse = await axios.post(`${apiURL}/announcement/create`, {
                     content: announcement,
                     madeBy: localUserId,
                     password: passwordRef.current.value,
@@ -97,7 +99,7 @@ const AdminPanel = () => {
 
         try {
             // Resolving a report doesn't mean that the user has been punished. It just means that the report has been resolved and no further action is needed.
-            const backendResponse = await axios.post(`http://localhost:5172/report/resolve`, {
+            const backendResponse = await axios.post(`${apiURL}/report/resolve`, {
                 id: reportID,
                 resolvedBy: localUserId,
             });
@@ -125,7 +127,7 @@ const AdminPanel = () => {
         }
 
         try {
-            const backendResponse = await axios.get("http://localhost:5172/report/pending");
+            const backendResponse = await axios.get(`${apiURL}/report/pending`);
             updateReportsArray(backendResponse.data);
         }
 

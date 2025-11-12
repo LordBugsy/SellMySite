@@ -5,6 +5,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import axios from 'axios';
 
 const Comments = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { isCommentSectionShown } = useSelector(state => state.comments);
     const { localUserId } = useSelector(state => state.user.user);
@@ -37,8 +39,8 @@ const Comments = (props) => {
         setLoading(true);
         try {
             const url = props.postID 
-                ? `http://localhost:5172/post/comments/${props.postID}?page=${reset ? 1 : page}&limit=10`
-                : `http://localhost:5172/website/comments/${props.websiteID}?page=${reset ? 1 : page}&limit=10`;
+                ? `${apiURL}/post/comments/${props.postID}?page=${reset ? 1 : page}&limit=10`
+                : `${apiURL}/website/comments/${props.websiteID}?page=${reset ? 1 : page}&limit=10`;
 
             const response = await axios.get(url);
             const { comments, hasMore: more } = response.data;
@@ -86,8 +88,8 @@ const Comments = (props) => {
 
             const userHasLiked = targetComment.likes.includes(localUserId);
             const endpoint = userHasLiked 
-                ? `http://localhost:5172/${props.postID ? 'post' : 'website'}/comment/unlike` 
-                : `http://localhost:5172/${props.postID ? 'post' : 'website'}/comment/like`;
+                ? `${apiURL}/${props.postID ? 'post' : 'website'}/comment/unlike` 
+                : `${apiURL}/${props.postID ? 'post' : 'website'}/comment/like`;
 
             setComments(prev => prev.map(comment =>
                 comment._id === commentID
@@ -116,7 +118,7 @@ const Comments = (props) => {
         }
 
         try {
-            await axios.post(`http://localhost:5172/${props.postID ? 'post' : 'website'}/comment/delete`, {
+            await axios.post(`${apiURL}/${props.postID ? 'post' : 'website'}/comment/delete`, {
                 [props.postID ? "postID" : "websiteID"]: props.postID || props.websiteID,
                 commentID,
                 userID: localUserId,
@@ -142,7 +144,7 @@ const Comments = (props) => {
         }
 
         try {
-            await axios.post(`http://localhost:5172/${props.postID ? 'post' : 'website'}/comment/publish`, {
+            await axios.post(`${apiURL}/${props.postID ? 'post' : 'website'}/comment/publish`, {
                 [props.postID ? "postID" : "websiteID"]: props.postID || props.websiteID,
                 [props.postID ? "commenter" : "commenterID"]: localUserId,
                 content: message,

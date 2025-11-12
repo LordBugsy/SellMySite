@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 const LoginSignup = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const isLoginSignupShown = useSelector(state => state.loginSignup.isLoginSignupShown);
     const dispatch = useDispatch();
@@ -37,7 +39,7 @@ const LoginSignup = (props) => {
         }
 
         try {
-            const backendResponse = await axios.post('http://localhost:5172/user/login', {
+            const backendResponse = await axios.post(`${apiURL}/user/login`, {
                 username: usernameRef.current.value,
                 password: passwordRef.current.value
             });
@@ -89,7 +91,7 @@ const LoginSignup = (props) => {
         }
 
         try {
-            const backendResponse = await axios.post('http://localhost:5172/user/signup', {
+            const backendResponse = await axios.post(`${apiURL}/user/signup`, {
                 username: usernameRef.current.value,
                 displayName: displayNameRef.current.value,
                 password: passwordRef.current.value

@@ -5,6 +5,8 @@ import axios from 'axios';
 import Loading from '../../Loading/Loading';
 
 const SearchResults = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // React
     const searchTarget = useParams().query;
 
@@ -24,7 +26,7 @@ const SearchResults = () => {
 
         const fetchSearchResults = async () => {
             try {
-                const backendResponse = await axios.get(`http://localhost:5172/search/${encodeURIComponent(searchTarget)}`);
+                const backendResponse = await axios.get(`${apiURL}/search/${encodeURIComponent(searchTarget)}`);
                 if (backendResponse.data.noResultsMessage) {
                     updateIsLoading(false);
                     updatePostsSearchResults([]);

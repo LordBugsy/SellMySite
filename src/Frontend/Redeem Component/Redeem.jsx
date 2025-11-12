@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import Loading from '../Loading/Loading';
 
 const Redeem = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUserId } = useSelector(state => state.user.user);
 
@@ -33,7 +35,7 @@ const Redeem = () => {
         let message = "";
         updateInvalidCode(false);
         try {
-            const backendResponse = await axios.get(`http://localhost:5172/code/redeem/${encodeURIComponent(inputRef.current.value)}?userID=${localUserId}`);
+            const backendResponse = await axios.get(`${apiURL}/code/redeem/${encodeURIComponent(inputRef.current.value)}?userID=${localUserId}`);
             message = backendResponse.data.message;
         }
 

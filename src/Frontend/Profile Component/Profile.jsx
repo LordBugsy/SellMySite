@@ -8,6 +8,8 @@ import Report from '../Website Component/Report Component/Report';
 import { setFollowersFollowingShown, setReportFormShown } from '../Redux/store';
 
 const Profile = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { localUserId, role, profilePicture } = useSelector(state => state.user.user);
@@ -32,7 +34,7 @@ const Profile = () => {
         updateUnknownUser(false);
         const loadProfile = async () => {
             try {
-                const backendResponse = await axios.get(`http://localhost:5172/user/username/${username}`);
+                const backendResponse = await axios.get(`${apiURL}/user/username/${username}`);
                 updateProfileData(backendResponse.data);
 
                 if (backendResponse.data.followers.includes(localUserId) || backendResponse.data.mutualFollowers?.includes(localUserId)) updateFollowStatus(true); // In the future, this will be done server-side because it can take a lot of time to load
@@ -63,7 +65,7 @@ const Profile = () => {
 
     const followUser = async () => {
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/follow", {
+            const backendResponse = await axios.post(`${apiURL}/user/follow`, {
                 userID: localUserId,
                 targetID: profileData._id
             });
@@ -78,7 +80,7 @@ const Profile = () => {
 
     const unfollowUser = async () => {
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/unfollow", {
+            const backendResponse = await axios.post(`${apiURL}/user/unfollow`, {
                 userID: localUserId,
                 targetID: profileData._id
             });
@@ -98,7 +100,7 @@ const Profile = () => {
         }
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/chatlogs/create", {
+            const backendResponse = await axios.post(`${apiURL}/chatlogs/create`, {
                 participants: [localUserId, profileData._id],
                 type: "direct"
             });

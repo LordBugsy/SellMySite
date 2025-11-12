@@ -7,6 +7,8 @@ import axios from 'axios';
 import { updateGroupCreateOptionState } from '../Redux/store';
 
 const Messages = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
 
@@ -29,7 +31,7 @@ const Messages = () => {
         if (!localUserId) return;
 
         try {
-            const backendResponse = await axios.get(`http://localhost:5172/chatlogs/${localUserId}`);
+            const backendResponse = await axios.get(`${apiURL}/chatlogs/${localUserId}`);
             setMutualFollowers(backendResponse.data.mutualFollowers);
             updatePrivateChats(backendResponse.data.joinedChats);
         }

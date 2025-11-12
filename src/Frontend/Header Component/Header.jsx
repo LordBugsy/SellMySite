@@ -13,6 +13,8 @@ import ProfilePicture from "../Settings Component/My Account/Profile Picture/Pro
 import axios from "axios";
 
 const Header = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
 
@@ -66,7 +68,7 @@ const Header = () => {
         const loadNotifications = async () => {
             if (!localUserId) return;
             try {
-                const backendResponse = await axios.get(`http://localhost:5172/user/milestones/${localUserId}`);
+                const backendResponse = await axios.get(`${apiURL}/user/milestones/${localUserId}`);
                 updateNotifications(prev => [...prev, ...backendResponse.data]);
             }
 

@@ -13,6 +13,8 @@ import Report from '../../Report Component/Report';
 import ReportInfo from '../../../Admin Panel/Report Info/ReportInfo';
 
 const ViewWebsite = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUserId, role } = useSelector(state => state.user.user);
     const { isEditWebsiteShown } = useSelector(state => state.editWebsite);
@@ -66,7 +68,7 @@ const ViewWebsite = () => {
         }
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/like`, {
+            const backendResponse = await axios.post(`${apiURL}/website/like`, {
                 websiteID: websiteData._id,
                 userID: localUserId
             });
@@ -85,7 +87,7 @@ const ViewWebsite = () => {
         }
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/unlike`, {
+            const backendResponse = await axios.post(`${apiURL}/website/unlike`, {
                 websiteID: websiteData._id,
                 userID: localUserId
             });
@@ -138,7 +140,7 @@ const ViewWebsite = () => {
         const didUserLikeWebsite = async () => {
             if (websiteData._id && localUserId) {
                 try {
-                    const backendResponse = await axios.get(`http://localhost:5172/user/likedwebsites/${websiteData._id}`);
+                    const backendResponse = await axios.get(`${apiURL}/user/likedwebsites/${websiteData._id}`);
                     updateLikeStatus(backendResponse.data);
                 }
 
@@ -155,7 +157,7 @@ const ViewWebsite = () => {
             updateLoadingState(true);
 
             try {
-                const backendReponse = await axios.get(`http://localhost:5172/website/${username}/${publicWebsiteID}`);
+                const backendReponse = await axios.get(`${apiURL}/website/${username}/${publicWebsiteID}`);
                 updateData(backendReponse.data);
             }
 

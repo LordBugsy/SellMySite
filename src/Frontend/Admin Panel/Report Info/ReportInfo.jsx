@@ -7,6 +7,8 @@ import { setAdminReportFormShown } from '../../Redux/store';
 import { useNavigate } from 'react-router-dom';
 
 const ReportInfo = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUserId } = useSelector(state => state.user.user);
     const { isAdminReportFormShown } = useSelector(state => state.adminReportForm);
@@ -42,7 +44,7 @@ const ReportInfo = (props) => {
 
         if (props.websiteProp) {
             try {
-                const backendReponse = await axios.post(`http://localhost:5172/website/delete`, {
+                const backendReponse = await axios.post(`${apiURL}/website/delete`, {
                     userID: localUserId,
                     websiteID: props.websiteProp._id
                 });
@@ -55,7 +57,7 @@ const ReportInfo = (props) => {
 
         else if (props.postProp) {
             try {
-                const backendReponse = await axios.post(`http://localhost:5172/post/delete`, {
+                const backendReponse = await axios.post(`${apiURL}/post/delete`, {
                     userID: localUserId,
                     postID: props.postProp._id
                 });
@@ -75,7 +77,7 @@ const ReportInfo = (props) => {
 
         if (props.websiteProp) {
             try {
-                const backendResponse = await axios.post(`http://localhost:5172/user/ban`, {
+                const backendResponse = await axios.post(`${apiURL}/user/ban`, {
                     userID: props.websiteProp.owner._id,
                     adminID: localUserId,
                     reason: banReasonRef.current.value,
@@ -94,7 +96,7 @@ const ReportInfo = (props) => {
 
         else if (props.postProp) {
             try {
-                const backendResponse = await axios.post(`http://localhost:5172/user/ban`, {
+                const backendResponse = await axios.post(`${apiURL}/user/ban`, {
                     userID: props.postProp.owner._id,
                     adminID: localUserId,
                     reason: banReasonRef.current.value,

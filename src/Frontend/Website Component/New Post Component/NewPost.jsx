@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const NewPost = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUserId, localUsername, profilePicture } = useSelector(state => state.user.user);
     const isPublishPostShown = useSelector(state => state.publishPost.isPublishPostShown);
@@ -67,7 +69,7 @@ const NewPost = () => {
         const imgurRegex = /^https:\/\/i\.imgur\.com\/[a-zA-Z0-9]{7}\.(?:jpg|jpeg|png|gif|webp)$/;
 
         try {
-            const backendResponse = await axios.post('http://localhost:5172/post/create', {
+            const backendResponse = await axios.post(`${apiURL}/post/create`, {
                 content: messageAreaRef.current.value.trim(),
                 attachment: imgurRegex.test(attachmentLinkRef.current?.value.trim()) && attachmentOn ? attachmentLinkRef.current.value.trim() : undefined,
                 owner: localUserId

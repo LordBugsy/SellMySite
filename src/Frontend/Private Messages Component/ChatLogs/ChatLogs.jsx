@@ -5,6 +5,7 @@ import axios from 'axios';
 import Loading from '../../Loading/Loading';
 
 const ChatLogs = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
     const [chatLogs, updateChatLogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -12,7 +13,7 @@ const ChatLogs = (props) => {
         if (!props.id) return;
 
         try {
-            const response = await axios.get(`http://localhost:5172/chatlogs/messages/${props.id}`);
+            const response = await axios.get(`${apiURL}/chatlogs/messages/${props.id}`);
             updateChatLogs(response.data.messages);
         } 
         

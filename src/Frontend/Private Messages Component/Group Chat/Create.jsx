@@ -5,6 +5,8 @@ import { updateGroupCreateOptionState } from '../../Redux/store';
 import axios from 'axios';
 
 const Create = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { isGroupCreateOptionShown } = useSelector((state) => state.groupChatOption);
@@ -46,7 +48,7 @@ const Create = (props) => {
         });
 
         try {
-            const backendResponse = await axios.post('http://localhost:5172/chatlogs/create', {
+            const backendResponse = await axios.post(`${apiURL}/chatlogs/create`, {
                 participants: selectedParticipants,
                 createdBy: localUserId,
                 type: "group"

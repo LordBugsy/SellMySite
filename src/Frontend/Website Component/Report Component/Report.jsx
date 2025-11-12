@@ -5,6 +5,8 @@ import { setReportFormShown } from '../../Redux/store';
 import axios from 'axios';
 
 const Report = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const isReportFormShown = useSelector(state => state.reportForm.isReportFormShown);
 
@@ -26,7 +28,7 @@ const Report = (props) => {
         const message = messageRef.current.value || "No reason provided";
 
         try {
-            const backendResponse = await axios.post("http://localhost:5172/report/create", {
+            const backendResponse = await axios.post(`${apiURL}/report/create`, {
                 reportedTarget: props.reportedTarget,
                 reason: message.trim(),
                 targetID: props.targetID,

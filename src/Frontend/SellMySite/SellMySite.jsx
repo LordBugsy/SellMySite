@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import Announcement from '../Public Announcement/Announcement';
 
 const SellMySite = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { isPublishWebsiteShown } = useSelector(state => state.publishWebsite);
     const { isPublishPostShown } = useSelector(state => state.publishPost);
@@ -74,7 +76,7 @@ const SellMySite = () => {
 
         const loadTrendingWebsites = async () => {
             try {
-                const backendResponse = await axios.get('http://localhost:5172/website/popular');
+                const backendResponse = await axios.get(`${apiURL}/website/popular`);
                 setDataState((prev) => ({
                     ...prev,
                     loadedWebsites: backendResponse.data,
@@ -94,7 +96,7 @@ const SellMySite = () => {
 
         const loadTrendingPosts = async () => {
             try {
-                const backendResponse = await axios.get('http://localhost:5172/post/popular');
+                const backendResponse = await axios.get(`${apiURL}/post/popular`);
                 setDataState((prev) => ({
                     ...prev,
                     loadedPosts: backendResponse.data,

@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const ConfirmBuy = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { siteTokens, localUserId } = useSelector(state => state.user.user);
@@ -28,7 +30,7 @@ const ConfirmBuy = (props) => {
         if (!localUserId || siteTokens < props.websitePrice) return; // If, FOR SOME RANDOM REASON, the user still ends up here, we prevent the transaction
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/buy`, {
+            const backendResponse = await axios.post(`${apiURL}/website/buy`, {
                 websiteID: props.websiteID,
                 buyerID: localUserId
             });

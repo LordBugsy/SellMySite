@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const EditWebsite = (props) => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUserId } = useSelector(state => state.user.user);
     const { isEditWebsiteShown } = useSelector(state => state.editWebsite);
@@ -28,7 +30,7 @@ const EditWebsite = (props) => {
         if (!newTitleRef.current.value) return;
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/edit/title`, {
+            const backendResponse = await axios.post(`${apiURL}/website/edit/title`, {
                 websiteID: props.targetID,
                 newTitle: newTitleRef.current.value.trim(),
                 userID: localUserId
@@ -44,7 +46,7 @@ const EditWebsite = (props) => {
         if (!newDescriptionRef.current.value) return;
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/edit/description`, {
+            const backendResponse = await axios.post(`${apiURL}/website/edit/description`, {
                 websiteID: props.targetID,
                 newDescription: newDescriptionRef.current.value.trim(),
                 userID: localUserId
@@ -60,7 +62,7 @@ const EditWebsite = (props) => {
         if (!newLinkRef.current.value) return;
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/edit/link`, {
+            const backendResponse = await axios.post(`${apiURL}/website/edit/link`, {
                 websiteID: props.targetID,
                 newLink: newLinkRef.current.value.trim(),
                 userID: localUserId
@@ -85,7 +87,7 @@ const EditWebsite = (props) => {
         if (!newPriceRef.current.value) return;
 
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/edit/price`, {
+            const backendResponse = await axios.post(`${apiURL}/website/edit/price`, {
                 websiteID: props.targetID,
                 newPrice: newPriceRef.current.value,
                 userID: localUserId
@@ -99,7 +101,7 @@ const EditWebsite = (props) => {
 
     const deleteWebsite = async () => {
         try {
-            const backendResponse = await axios.post(`http://localhost:5172/website/delete`, {
+            const backendResponse = await axios.post(`${apiURL}/website/delete`, {
                 websiteID: props.targetID,
                 userID: localUserId
             });

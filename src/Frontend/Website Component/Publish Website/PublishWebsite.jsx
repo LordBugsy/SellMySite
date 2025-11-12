@@ -6,6 +6,8 @@ import { setPublishWebsiteShown } from '../../Redux/store';
 import axios from 'axios';
 
 const PublishWebsite = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux 
     const dispatch = useDispatch();
 
@@ -48,7 +50,7 @@ const PublishWebsite = () => {
         if (!websiteURL) return;
 
         try {
-            const backendResponse = await axios.post('http://localhost:5172/website/create', {
+            const backendResponse = await axios.post(`${apiURL}/website/create`, {
                 title: websiteName || `${localUsername}'s website`,
                 description: websiteDescription || 'Website Description',
                 link: websiteURL,

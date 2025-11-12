@@ -6,6 +6,8 @@ import { setEditProfilePictureShown, updateProfilePicture } from "../../../Redux
 import axios from 'axios';
 
 const ProfilePicture = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const dispatch = useDispatch();
     const { localUserId, profilePicture } = useSelector(state => state.user.user);
@@ -25,7 +27,7 @@ const ProfilePicture = () => {
         updateBackendMessage("");
         
         try {
-            const backendResponse = await axios.post("http://localhost:5172/user/profilePicture", {
+            const backendResponse = await axios.post(`${apiURL}/user/profilePicture`, {
                 userID: localUserId,
                 profilePictureID
             });

@@ -11,6 +11,8 @@ import Report from '../../Report Component/Report';
 import ReportInfo from '../../../Admin Panel/Report Info/ReportInfo';
 
 const ViewPost = () => {
+    const apiURL = "https://sellmysite-backend.onrender.com";
+
     // Redux
     const { localUserId, role } = useSelector(state => state.user.user);
     const { isCommentSectionShown } = useSelector(state => state.comments);
@@ -90,7 +92,7 @@ const ViewPost = () => {
         const loadPost = async () => {
             updateIsLoading(true);
             try {
-                const backendResponse = await axios.get(`http://localhost:5172/post/${username}/${publicPostID}`);
+                const backendResponse = await axios.get(`${apiURL}/post/${username}/${publicPostID}`);
                 if (backendResponse.data.likes.includes(localUserId) && localUserId) updateLikeStatus(true);
                 updatePostData(backendResponse.data);
             } 
@@ -108,7 +110,7 @@ const ViewPost = () => {
             updateIsLoading(true);
 
             try {
-                const backendResponse = await axios.get(`http://localhost:5172/post/${username}/recent`);
+                const backendResponse = await axios.get(`${apiURL}/post/${username}/recent`);
                 updateOtherPosts(backendResponse.data.filter((post) => String(post.publicPostID) !== publicPostID));
             }
 
@@ -147,7 +149,7 @@ const ViewPost = () => {
         try {
             if (likeStatus) {
                 // Unlike the post
-                const backendResponse = await axios.post(`http://localhost:5172/post/unlike`, {
+                const backendResponse = await axios.post(`${apiURL}/post/unlike`, {
                     postID: postData._id,
                     userID: localUserId,
                 });
@@ -161,7 +163,7 @@ const ViewPost = () => {
             
             else {
                 // Like the post
-                const backendResponse = await axios.post(`http://localhost:5172/post/like`, {
+                const backendResponse = await axios.post(`${apiURL}/post/like`, {
                     postID: postData._id,
                     userID: localUserId,
                 });
