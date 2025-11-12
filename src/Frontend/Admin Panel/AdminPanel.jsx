@@ -62,7 +62,7 @@ const AdminPanel = () => {
         }
 
         catch (error) {
-            console.error(error);
+            //console.error(error);
             updateActionState("Error");
         }
     }
@@ -86,7 +86,7 @@ const AdminPanel = () => {
             }
 
             catch (error) {
-                console.error(error);
+                //console.error(error);
                 updateActionState("Error");
             }
         }
@@ -104,7 +104,7 @@ const AdminPanel = () => {
         }
 
         catch (error) {
-            console.error(error);
+            //console.error(error);
             updateActionState("Error");
         }
 
@@ -130,7 +130,7 @@ const AdminPanel = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
             updateActionState("Error");
         }
 

@@ -40,7 +40,7 @@ const Announcement = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }        
     }
 
@@ -58,7 +58,7 @@ const Announcement = () => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
         }
 

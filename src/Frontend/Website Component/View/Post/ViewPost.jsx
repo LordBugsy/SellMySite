@@ -96,7 +96,7 @@ const ViewPost = () => {
             } 
             
             catch (error) {
-                console.error(error);
+                // console.error(error);
             } 
             
             finally {
@@ -113,7 +113,7 @@ const ViewPost = () => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
 
             finally {
@@ -175,7 +175,7 @@ const ViewPost = () => {
         } 
         
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     };
 

@@ -83,7 +83,7 @@ const SellMySite = () => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
                 setDataState((prev) => ({
                     ...prev,
                     consoleError: "An error occurred, please try again later.",
@@ -103,7 +103,7 @@ const SellMySite = () => {
             } 
             
             catch (error) {
-                console.error(error);
+                // console.error(error);
                 setDataState((prev) => ({
                     ...prev,
                     consoleError: "An error occurred, please try again later.",

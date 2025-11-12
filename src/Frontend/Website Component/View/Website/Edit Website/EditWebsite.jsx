@@ -36,7 +36,7 @@ const EditWebsite = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -52,7 +52,7 @@ const EditWebsite = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -68,7 +68,7 @@ const EditWebsite = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -93,7 +93,7 @@ const EditWebsite = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -108,7 +108,7 @@ const EditWebsite = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 

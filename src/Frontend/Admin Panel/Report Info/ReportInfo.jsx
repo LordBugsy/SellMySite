@@ -49,7 +49,7 @@ const ReportInfo = (props) => {
             }
     
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
         }
 
@@ -62,7 +62,7 @@ const ReportInfo = (props) => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
         }
 
@@ -84,7 +84,7 @@ const ReportInfo = (props) => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
             
             finally {
@@ -103,7 +103,7 @@ const ReportInfo = (props) => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
 
             finally {

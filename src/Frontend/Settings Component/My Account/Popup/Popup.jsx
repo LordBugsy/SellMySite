@@ -45,7 +45,7 @@ const Popup = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
             updateErrorState(true);
             updateBackendMessage("An error occurred. Please try again later.");
         }
@@ -65,7 +65,7 @@ const Popup = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
             updateErrorState(true);
             updateBackendMessage("An error occurred. Please try again later.");
         }
@@ -85,7 +85,7 @@ const Popup = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
             updateErrorState(true);
             updateBackendMessage("An error occurred. Please try again later.");
         }
@@ -131,7 +131,7 @@ const Popup = (props) => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
             updateErrorState(true);
             updateBackendMessage("An error occurred. Please try again later.");
         }

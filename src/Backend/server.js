@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-  useUnifiedTopology: true,
+  family: 4 
 });
 
 (async () => {

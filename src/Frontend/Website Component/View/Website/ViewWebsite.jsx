@@ -74,7 +74,7 @@ const ViewWebsite = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -93,7 +93,7 @@ const ViewWebsite = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -143,7 +143,7 @@ const ViewWebsite = () => {
                 }
 
                 catch (error) {
-                    console.error(error);
+                    // console.error(error);
                 }
             }
         }

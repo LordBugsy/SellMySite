@@ -77,7 +77,7 @@ const NewPost = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
             updatePostError("An error occurred, please try again later. If the problem persists, please contact support.");
         }
     }

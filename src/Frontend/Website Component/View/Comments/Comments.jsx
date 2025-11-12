@@ -29,7 +29,7 @@ const Comments = (props) => {
 
     const loadComments = useCallback(async (reset = false) => {
         if (!props.postID && !props.websiteID) {
-            console.error("Unable to load comments: No postID or websiteID provided.");
+            // console.error("Unable to load comments: No postID or websiteID provided.");
             return;
         }
         if (!hasMore || loading) return;
@@ -49,7 +49,7 @@ const Comments = (props) => {
         } 
         
         catch (error) {
-            console.error("Error loading comments:", error);
+            // console.error("Error loading comments:", error);
         }
         setLoading(false);
     }, [page, hasMore, loading, props.postID, props.websiteID]);
@@ -104,7 +104,7 @@ const Comments = (props) => {
         } 
         
         catch (error) {
-            console.error("Error toggling like:", error);
+            // console.error("Error toggling like:", error);
         }
     };
 
@@ -127,7 +127,7 @@ const Comments = (props) => {
         } 
         
         catch (error) {
-            console.error("Error deleting comment:", error);
+            // console.error("Error deleting comment:", error);
         }
     };
 
@@ -154,7 +154,7 @@ const Comments = (props) => {
         } 
         
         catch (error) {
-            console.error("Error sending message:", error);
+            // console.error("Error sending message:", error);
         }
     };
 

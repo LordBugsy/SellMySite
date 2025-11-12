@@ -17,7 +17,7 @@ const ChatLogs = (props) => {
         } 
         
         catch (error) {
-            console.error('An error occurred while loading the messages:', error);
+            // console.error('An error occurred while loading the messages:', error);
         } 
 
         finally {

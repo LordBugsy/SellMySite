@@ -81,7 +81,7 @@ const SendMessage = (props) => {
         }
     
         catch (error) {
-            console.error('An error occurred while sending the message:', error);
+            // console.error('An error occurred while sending the message:', error);
         }
     
         finally {

@@ -72,7 +72,7 @@ const Profile = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -87,7 +87,7 @@ const Profile = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -107,7 +107,7 @@ const Profile = () => {
         }
 
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 

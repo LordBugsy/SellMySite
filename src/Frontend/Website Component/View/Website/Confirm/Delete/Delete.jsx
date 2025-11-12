@@ -27,7 +27,7 @@ const Delete = props => {
             }
             
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
         }
 
@@ -42,7 +42,7 @@ const Delete = props => {
             }
 
             catch (error) {
-                console.error(error);
+                // console.error(error);
             }
         }
     }
